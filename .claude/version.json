@@ -1,5 +1,6 @@
 {
   "version": "1.1.0",
   "releaseDate": "2026-02-04",
-  "changelogUrl": "https://github.com/webclay/skillkit#changelog"
+  "repository": "webclay/skillkit",
+  "changelogUrl": "https://github.com/webclay/skillkit/releases"
 }

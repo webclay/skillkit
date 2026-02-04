@@ -15,6 +15,24 @@
    - Project is configured, proceed normally
    - Read `project/projectbrief.md` before any task
 
+## SkillKit Version Check
+
+**On conversation start (after setup check), check for SkillKit updates:**
+
+1. Read `.claude/version.json` to get local version
+2. Fetch latest version from GitHub: `https://api.github.com/repos/webclay/skillkit/releases/latest`
+3. Compare versions (semantic versioning)
+4. If update available, show notification:
+   ```
+   SkillKit update available: v1.1.0 → v1.2.0
+   Run "skillkit update" to install.
+   ```
+5. If check fails (network error, etc.), skip silently - don't block the user
+
+**Skip this check if:**
+- User is in the middle of a task (not conversation start)
+- Last check was less than 24 hours ago (check `.claude/project/.last-version-check`)
+
 ---
 
 Read `project/projectbrief.md` before any task.
@@ -104,7 +122,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Debugging errors | `workflow/debugger` |
 | Linting before commits | `workflow/ultracite` |
 | Development best practices | `workflow/best-practices` |
-| Updating the skills system | `workflow/update-system` |
+| Updating SkillKit | `workflow/update-system` (trigger: "skillkit update") |
 | Migrating from old claude-memory | `workflow/migrate-from-memory` |
 | Updating dependencies | `workflow/update-stack` |
 | Background jobs, workflows, event-driven | `backend/motia` |

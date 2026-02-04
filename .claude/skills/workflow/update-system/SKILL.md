@@ -1,18 +1,20 @@
 ---
-name: update-system
-description: Check for and apply updates to the Claude Code Skills system. Trigger words - update skills, check updates, new version, upgrade system, skills version
+name: update-skillkit
+description: Check for and apply updates to SkillKit. Trigger words - skillkit update, update skillkit, skillkit version, skillkit restore, skillkit rollback
 ---
 
-# Update System
+# Update SkillKit
 
-Handles version checking, updates, and rollback for the Claude Code Skills system.
+Handles version checking, updates, and rollback for the SkillKit system.
 
 ## When to Use This Skill
 
-- User says "update", "check for updates", or "cm update"
-- User asks about the current version
-- User wants to restore a previous version
-- User mentions "rollback" or "restore"
+- User says "skillkit update" or "update skillkit"
+- User asks about the SkillKit version
+- User wants to restore a previous SkillKit version
+- User mentions "skillkit rollback" or "skillkit restore"
+
+**Note:** Do NOT use this for "update stack" (which updates project dependencies) or generic "update" commands.
 
 ## Version Checking
 
@@ -34,7 +36,7 @@ Handles version checking, updates, and rollback for the Claude Code Skills syste
 
 ## Update Workflow
 
-### When User Says "update"
+### When User Says "skillkit update"
 
 1. **Check current version**
    - Read `.claude/version.json`
@@ -188,10 +190,10 @@ Format: `MAJOR.MINOR.PATCH`
 
 | User Says | Action |
 |-----------|--------|
-| "update" | Check for updates and guide through installation |
-| "update check" | Just check if update available (don't install) |
-| "restore" | Rollback to previous version from backup |
-| "version" | Show current version |
+| "skillkit update" | Check for updates and guide through installation |
+| "skillkit version" | Show current SkillKit version |
+| "skillkit restore" | Rollback to previous version from backup |
+| "skillkit check" | Just check if update available (don't install) |
 
 ## Safety Notes
 
@@ -205,11 +207,11 @@ Format: `MAJOR.MINOR.PATCH`
 ### Checking for Updates
 
 ```
-User: update
+User: skillkit update
 
-Claude: Checking your version...
+Claude: Checking your SkillKit version...
 
-Current version: 1.0.0
+Current version: 1.1.0
 
 Would you like to:
 A. Check GitHub for the latest release
@@ -221,7 +223,7 @@ Your choice?
 ### Restoring Previous Version
 
 ```
-User: restore
+User: skillkit restore
 
 Claude: Looking for backups...
 
