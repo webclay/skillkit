@@ -94,15 +94,23 @@ mkdir -p server/middleware
 import { defineEventHandler, setHeaders } from "h3";
 
 export default defineEventHandler((event) => {
-  setHeaders(event, {
+  const headers: Record<string, string> = {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
-    "X-XSS-Protection": "1; mode=block",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy":
       "camera=(), microphone=(), geolocation=(), payment=()",
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-  });
+    "Content-Security-Policy":
+      "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none';",
+  };
+
+  // Only add HSTS in production to avoid breaking localhost
+  if (process.env.NODE_ENV === "production") {
+    headers["Strict-Transport-Security"] =
+      "max-age=31536000; includeSubDomains";
+  }
+
+  setHeaders(event, headers);
 });
 ```
 
@@ -118,10 +126,15 @@ export default defineEventHandler((event) => {
 |--------|---------|-------|
 | `X-Content-Type-Options` | Prevents MIME-type sniffing | `nosniff` |
 | `X-Frame-Options` | Prevents clickjacking | `DENY` |
-| `X-XSS-Protection` | Legacy XSS protection | `1; mode=block` |
 | `Referrer-Policy` | Controls referer information | `strict-origin-when-cross-origin` |
 | `Permissions-Policy` | Restricts browser features | Disables camera, mic, location, payment |
-| `Strict-Transport-Security` | Forces HTTPS | 1 year max-age, includes subdomains |
+| `Content-Security-Policy` | Protects against XSS and injection attacks | Restricts resource loading |
+| `Strict-Transport-Security` | Forces HTTPS (production only) | 1 year max-age, includes subdomains |
+
+**Important notes:**
+- `X-XSS-Protection` header is **not included** because it's deprecated and can introduce vulnerabilities in older browsers
+- Modern browsers rely on Content-Security-Policy instead
+- HSTS only applies in production to avoid breaking localhost during development
 
 ### Step 5: Add .nitro/ to .gitignore
 
@@ -146,15 +159,18 @@ bun run dev
 4. Refresh page and click any request
 5. Check Response Headers section
 
-**Expected headers:**
+**Expected headers in development:**
 - `x-content-type-options: nosniff`
 - `x-frame-options: DENY`
-- `x-xss-protection: 1; mode=block`
 - `referrer-policy: strict-origin-when-cross-origin`
 - `permissions-policy: camera=(), microphone=(), geolocation=(), payment=()`
+- `content-security-policy: default-src 'self'; script-src...`
+
+**Expected headers in production (adds HSTS):**
+- All of the above, plus:
 - `strict-transport-security: max-age=31536000; includeSubDomains`
 
-**All 6 headers should be present on every response.**
+**Note:** HSTS is production-only to avoid breaking localhost in development.
 
 ## Common Issues
 
@@ -209,23 +225,49 @@ Before deploying TanStack Start to production:
 - [ ] Console.logs removed
 - [ ] Database connections use SSL
 
+### Content Security Policy Customization
+
+The default CSP is permissive to work with most TanStack Start apps. You may need to adjust it based on your app's needs:
+
+**If using external APIs or CDNs:**
+```typescript
+"Content-Security-Policy":
+  "default-src 'self'; " +
+  "script-src 'self' 'unsafe-inline'; " +
+  "style-src 'self' 'unsafe-inline'; " +
+  "img-src 'self' data: https:; " +
+  "font-src 'self' data:; " +
+  "connect-src 'self' https://api.example.com; " + // Add your APIs
+  "frame-ancestors 'none';",
+```
+
+**If not using inline styles/scripts (most secure):**
+```typescript
+"Content-Security-Policy":
+  "default-src 'self'; " +
+  "script-src 'self'; " +  // Remove 'unsafe-inline'
+  "style-src 'self'; " +   // Remove 'unsafe-inline'
+  "img-src 'self' data: https:; " +
+  "font-src 'self' data:; " +
+  "connect-src 'self'; " +
+  "frame-ancestors 'none';",
+```
+
+**CSP Violations:** Check browser console for CSP violations during development. Adjust the policy to allow legitimate resources while blocking unsafe ones.
+
 ### Additional Security Layers
 
 This middleware provides foundational security headers. Consider adding:
 
-1. **Content Security Policy (CSP)**
-   - Add to middleware headers if needed
-   - Careful with inline scripts
-
-2. **Rate Limiting**
+1. **Rate Limiting**
    - Implement in API routes
    - Protect against brute force
 
-3. **Input Validation**
+2. **Input Validation**
    - Validate all user input
    - Use Zod schemas
 
-4. **Authentication Security**
+3. **Authentication Security**
    - Use Better Auth skill patterns
    - Secure session management
 
@@ -247,12 +289,19 @@ To allow camera or location access:
 "Permissions-Policy": "camera=(self), geolocation=(self)",
 ```
 
-### Adjust HSTS Duration
+### Add CSP for External Resources
 
-For testing, reduce max-age:
+If your app loads resources from external domains:
 
 ```typescript
-"Strict-Transport-Security": "max-age=86400",  // 1 day instead of 1 year
+"Content-Security-Policy":
+  "default-src 'self'; " +
+  "script-src 'self' 'unsafe-inline' https://cdn.example.com; " +
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+  "img-src 'self' data: https: blob:; " +
+  "font-src 'self' data: https://fonts.gstatic.com; " +
+  "connect-src 'self' https://api.example.com wss://realtime.example.com; " +
+  "frame-ancestors 'none';",
 ```
 
 ## Files Changed Summary
@@ -290,7 +339,7 @@ bun run dev
 # Test with curl (in another terminal)
 curl -I http://localhost:3000
 
-# Should see all 6 security headers in response
+# Should see security headers in response (HSTS only in production)
 ```
 
 ### Production Test
@@ -307,7 +356,9 @@ test('security headers present', async () => {
   const response = await fetch('http://localhost:3000');
   expect(response.headers.get('x-frame-options')).toBe('DENY');
   expect(response.headers.get('x-content-type-options')).toBe('nosniff');
-  // ... check other headers
+  expect(response.headers.get('content-security-policy')).toBeTruthy();
+  expect(response.headers.get('x-xss-protection')).toBeNull(); // Should NOT be present
+  // In production, also check HSTS
 });
 ```
 
