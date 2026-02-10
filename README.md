@@ -2,7 +2,7 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.1.0
+**Version:** 1.1.1
 **Author:** Manuel Merz
 **License:** MIT
 **Date:** 10/02/2026
@@ -364,6 +364,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 
 ## Changelog
 
+### v1.1.1 (2026-02-10)
+- **Railway deployment** - Complete deployment guide for TanStack Start with Nitro SSR, including troubleshooting for common issues
+
 ### v1.1.0 (2026-02-04)
 - **Server-side auth patterns** - Better Auth skill now enforces secure server-side authentication
 - **TanStack Start guide** - Complete auth setup with `beforeLoad`, middleware, and `tanstackStartCookies`
@@ -373,7 +376,6 @@ The `project-setup` skill automatically recommends this stack and detects your p
 - **Package manager detection** - Auto-detects bun/pnpm/yarn/npm from lock files
 - **Recommended stack** - Default recommendation is now TanStack Start + Supabase + Drizzle + Better Auth
 - **Update stack skill** - New skill to safely update all dependencies with breaking change detection
-- **Railway deployment** - Complete deployment guide for TanStack Start with Nitro SSR, including troubleshooting for common issues
 
 ### v1.0.1 (2026-01-17)
 - **Folder reorganization** - Project-specific files moved to `project/` subfolder
