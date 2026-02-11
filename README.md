@@ -234,6 +234,7 @@ Next session, Claude picks up exactly where you left off.
 | `orpc` | oRPC type-safe APIs |
 | `unkey` | Unkey API key management |
 | `zefix` | Zefix Swiss company lookup (search, UID, SOGC publications) |
+| `apollo` | Apollo.io people and company enrichment, search, and CRM |
 
 ### Backend
 | Skill | What It Does |
@@ -377,6 +378,7 @@ The `project-setup` skill automatically recommends this stack and detects your p
 - **Database bundle leak prevention** - Prisma and Drizzle skills now enforce API route patterns to prevent client bundle leaks
 - **AutoSend email skill** - Cheaper email alternative with transactional, marketing, bulk send, Better Auth integration, and Resend drop-in compatibility
 - **Zefix API skill** - Swiss company data lookup via Zefix Public REST API (search, UID lookup, SOGC publications, legal forms)
+- **Apollo API skill** - Apollo.io people and company data enrichment, search, and CRM operations (bulk enrichment, credit-free people search)
 
 ### v1.1.0 (2026-02-04)
 - **Server-side auth patterns** - Better Auth skill now enforces secure server-side authentication

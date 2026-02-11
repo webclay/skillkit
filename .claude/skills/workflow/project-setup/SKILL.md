@@ -99,7 +99,7 @@ Do NOT add:
 
 ## Package Manager
 
-[Will be populated during setup - see Step 4]
+[Will be populated during setup - see Step 5]
 
 ## Code Review
 
@@ -135,7 +135,36 @@ Based on your tech stack, reference these skills for implementation patterns:
 
 This ensures Claude always knows which skills apply to this specific project.
 
-### Step 4: Detect Package Manager
+### Step 4: Generate Environment Files
+
+Create `.env` and `.env.production` files based on the user's confirmed tech stack, and ensure `.gitignore` is configured.
+
+**Reference:** [env-vars-template.md](../../../templates/env-vars-template.md)
+
+**Process:**
+
+1. Read the env-vars-template
+2. Determine the framework (TanStack Start, Next.js, etc.) from the user's confirmed stack
+3. For each service the user selected, include that group's variables
+4. Apply the framework prefix map - replace `[CLIENT]` variables with the correct prefix (e.g., `VITE_APP_URL` for TanStack Start)
+5. Generate `.env` with localhost defaults pre-filled where applicable, API keys left empty
+6. Generate `.env.production` with all values empty and helpful comments explaining where to find each value
+7. Handle `.gitignore`:
+   - If `.gitignore` exists: check if `.env` patterns are already present, append missing ones
+   - If `.gitignore` doesn't exist: create it with env patterns plus common defaults (`node_modules/`, `.output/`, `dist/`, `.DS_Store`)
+
+**Important rules:**
+- Only include variable groups for services the user actually confirmed
+- The App group (`APP_URL`) is always included
+- Deduplicate: if `DATABASE_URL` appears in both database and auth groups, include it only once under the database section
+- Railway's `RAILPACK_NO_SPA=1` goes in `.env.production` only (it's not needed locally)
+- For TanStack Start: add a comment at the top of `.env`: `# Loaded automatically by Nitro (requires nitro.config.ts)`
+- For Next.js: add a comment at the top: `# Next.js loads .env files automatically`
+- No quotes around values in the generated files
+
+**Tell the user:** "I've created your environment files. Fill in the API keys and secrets as you set up each service. The `.env.production` file has comments showing exactly where to find each value."
+
+### Step 5: Detect Package Manager
 
 Before recommending any commands, check for lock files:
 
@@ -167,7 +196,7 @@ Never use npm, npx, pnpm, or yarn unless they match the configured package manag
 
 This goes in `project/dev-context.md` (not CLAUDE.md) because it's project-specific config that must survive SkillKit updates.
 
-### Step 5: Recommend Skills
+### Step 6: Recommend Skills
 
 **Default Recommended Stack (for web apps):**
 
@@ -199,14 +228,14 @@ Based on project type, recommend relevant skills:
 
 Explain why each is recommended and ask for approval.
 
-### Step 6: Complete Setup
+### Step 7: Complete Setup
 
 Final checks:
 - All files created correctly
 - Skills installed and configured
 - Show user next steps
 
-### Step 7: Mark Setup Complete
+### Step 8: Mark Setup Complete
 
 **Critical:** After all files are created successfully, create the setup marker:
 

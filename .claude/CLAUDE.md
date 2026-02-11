@@ -127,6 +127,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Updating dependencies | `workflow/update-stack` |
 | Background jobs, workflows, event-driven | `backend/motia` |
 | Swiss company lookup, Zefix, UID search | `api/zefix` |
+| People/company enrichment, Apollo, sales intelligence | `api/apollo` |
 
 ## Common Mistakes to Avoid
 

@@ -287,35 +287,16 @@ lib/
 
 ---
 
-## Environment Variables Required
+## Environment Variables
 
-```bash
-# Database
-DATABASE_URL="postgresql://..."
-DIRECT_URL="postgresql://..."  # For migrations (Neon)
+Environment files are generated during project setup based on your tech stack:
 
-# Authentication
-BETTER_AUTH_SECRET="..."
-BETTER_AUTH_URL="http://localhost:3000"  # Production: https://yourdomain.com
+- `.env` - Local development values (localhost defaults pre-filled where possible)
+- `.env.production` - Production values template with comments showing where to find each value
 
-# Google OAuth (if using)
-GOOGLE_CLIENT_ID="..."
-GOOGLE_CLIENT_SECRET="..."
+See these files in your project root. Both are gitignored - never commit them.
 
-# Email (if using)
-RESEND_API_KEY="..."
-
-# AI (if using)
-OPENAI_API_KEY="..."  # or ANTHROPIC_API_KEY, etc.
-
-# Payments (if using)
-STRIPE_SECRET_KEY="..."
-STRIPE_PUBLISHABLE_KEY="..."
-STRIPE_WEBHOOK_SECRET="..."
-
-# Analytics (if using)
-NEXT_PUBLIC_POSTHOG_KEY="..."
-```
+To add variables for a new service, reference the [env-vars-template](../templates/env-vars-template.md) for the correct variable names and format.
 
 ---
 
