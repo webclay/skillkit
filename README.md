@@ -252,6 +252,7 @@ Next session, Claude picks up exactly where you left off.
 ### Email
 | Skill | What It Does |
 |-------|--------------|
+| `autosend` | AutoSend transactional and marketing email (volume-based pricing, Resend drop-in compatible) |
 | `resend` | Resend transactional email |
 
 ### Platform
@@ -373,6 +374,7 @@ The `project-setup` skill automatically recommends this stack and detects your p
 - **UI scope discipline** - New rule preventing over-application of styles to unrelated components
 - **TanStack Start security** - Nitro middleware for HTTP security headers (X-Content-Type-Options, X-Frame-Options, HSTS, etc.)
 - **Database bundle leak prevention** - Prisma and Drizzle skills now enforce API route patterns to prevent client bundle leaks
+- **AutoSend email skill** - Cheaper email alternative with transactional, marketing, bulk send, Better Auth integration, and Resend drop-in compatibility
 
 ### v1.1.0 (2026-02-04)
 - **Server-side auth patterns** - Better Auth skill now enforces secure server-side authentication

@@ -104,7 +104,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Payments, checkout, subscriptions | `payments/stripe` |
 | UI components, forms, dialogs | `ui/shadcn` |
 | AI features, chat, text generation | `ai/vercel-ai-sdk` |
-| Sending emails, notifications | `email/resend` |
+| Sending emails, notifications | `email/resend` or `email/autosend` |
 | File uploads, image storage, S3/R2 | `storage/cloudflare-r2` |
 | Framework-specific patterns | `framework/nextjs` or `framework/tanstack-start` |
 | Deploying to Railway (TanStack Start SSR) | `deployment/railway` |
