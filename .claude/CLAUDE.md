@@ -20,7 +20,7 @@
 **On conversation start (after setup check), check for SkillKit updates:**
 
 1. Read `.claude/version.json` to get local version
-2. Fetch latest version from GitHub: `https://api.github.com/repos/webclay/skillkit/releases/latest`
+2. Fetch latest version from GitHub: `https://api.github.com/repos/grasman79/skillkit/releases/latest`
 3. Compare versions (semantic versioning)
 4. If update available, show notification:
    ```
@@ -35,7 +35,7 @@
 
 ---
 
-Read `project/projectbrief.md` before any task.
+Read `project/projectbrief.md` and `project/dev-context.md` before any task.
 
 ## Core Files
 
@@ -44,10 +44,13 @@ All project-specific files are in `.claude/project/` (do not copy to other proje
 | File | Purpose |
 |------|---------|
 | `project/projectbrief.md` | Tech stack, features, design system |
+| `project/dev-context.md` | Architectural decisions, patterns, security model |
 | `project/tasks.md` | Current progress and task list |
 | `project/changelog.md` | Session history |
 
 Reusable across projects: `skills/`, `templates/`, `commands/`
+
+**Important:** Never put project-specific information into skills. Skills are generic and reusable across all projects. When a skill update happens, skill files get overwritten. All project-specific decisions go in `project/dev-context.md`.
 
 ## Communication Rules
 
@@ -62,9 +65,9 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 ## Development Rules
 
 1. **Pattern consistency** - Check existing code before building new features
-2. **Ask before installing** - Never run `npm install` or `pnpm add` without approval
+2. **Ask before installing** - Never add packages without approval
 3. **Scope discipline** - Do only what was asked
-4. **Run `npx ultracite fix`** - Before every commit
+4. **Run linter before every commit** - Use the project's configured package manager runner (check `## Package Manager` in `project/dev-context.md` or detect from lock files)
 
 ## Automated Git Workflow
 
@@ -74,19 +77,15 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 
 1. **`/branch`** - Auto-create feature branch from current task
 2. **[Work on code]** - Make your changes
-3. **`/log`** - Update changelog and mark tasks complete
-4. **`/push`** - Lint, commit, push to GitHub, create PR
-5. **[Wait for review]** - Grablite reviews your PR (3-5 min)
-6. **`/merge`** - Merge approved PR and clean up branches
+3. **`/wrap-up`** - Log, lint, commit, push, create PR, handle code review, merge, clean up. Done.
 
 ### When to Use Each Command
 
 | Command | When to use | What it does |
 |---------|-------------|--------------|
 | `/branch` | Starting a new task | Creates feature/task-name branch from tasks.md |
-| `/log` | Work session complete | Updates changelog.md and tasks.md with progress |
-| `/push` | Ready for PR review | Runs linter, commits, pushes, creates PR on GitHub |
-| `/merge` | After PR approval | Merges PR on GitHub, deletes branches, switches to dev |
+| `/wrap-up` | Done working | Logs session, lints, builds, commits, pushes, creates PR, waits for Greptile review (if configured) and auto-fixes issues, merges, cleans up branch |
+| `/log` | Mid-session progress save | Updates changelog.md and tasks.md (no push) |
 
 **Important:** Never push directly to dev/main. Always use feature branches with PRs.
 
@@ -97,9 +96,8 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | When the task involves... | Use this skill |
 |---------------------------|----------------|
 | Creating a feature branch | `workflow/create-branch` |
-| Pushing code and creating PR | `workflow/push-branch` |
-| Merging approved PR | `workflow/merge-branch` |
-| Saving session progress | `workflow/session-log` |
+| End of session (log + commit + push + merge) | `workflow/wrap-up` |
+| Saving session progress (no push) | `workflow/session-log` |
 | Task tracking, what's next | `workflow/task-tracker` |
 | Database, schema, migrations, queries | `database/prisma`, `database/drizzle`, or `database/supabase` |
 | User login, signup, sessions, OAuth | `auth/better-auth` |
@@ -142,6 +140,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 - Don't "improve" code that wasn't asked to be changed
 - Don't add features that weren't requested
 - Don't change file structure without discussion
+- **UI/styling changes:** Only modify the specific elements requested. Do not over-apply themes, colors, or styles to unrelated components (e.g., if asked to change button colors, don't touch sidebar, badges, borders, or navigation)
 
 ### Patterns
 - Match existing spacing and formatting

@@ -71,9 +71,40 @@ Use templates from `.claude/templates/` to ensure consistency:
 | File to Create | Template Source | Purpose |
 |----------------|-----------------|---------|
 | `.claude/project/projectbrief.md` | [projectbrief-template.md](../../../templates/projectbrief-template.md) | AI context - tech stack, features, patterns |
+| `.claude/project/dev-context.md` | (created empty with structure) | Architectural decisions, patterns, security model |
 | `.claude/project/tasks.md` | [tasks-template.md](../../../templates/tasks-template.md) | Task tracking with status icons |
 | `.claude/project/changelog.md` | [changelog-template.md](../../../templates/changelog-template.md) | Session history log |
 | `/docs/prd.md` (optional) | [prd-template.md](../../../templates/prd-template.md) | Human-readable requirements |
+
+**dev-context.md initial content:**
+
+```markdown
+# Development Context
+
+Project-specific architectural decisions and patterns.
+This file is read by Claude before every task and persists across skill updates.
+
+## When to Update This File
+
+Add entries when:
+- Making architectural decisions (security model, data access patterns)
+- Establishing project-wide conventions (component structure, styling)
+- Discovering project-specific quirks (linter setup, API patterns)
+- Decisions that would confuse future AI sessions if not documented
+
+Do NOT add:
+- Temporary task status (use tasks.md)
+- Session-specific notes (use changelog.md)
+- Generic best practices (those belong in skills)
+
+## Package Manager
+
+[Will be populated during setup - see Step 4]
+
+## Code Review
+
+[Will be populated during setup if Greptile is selected - see questionnaire Q8]
+```
 
 **Process:**
 1. Read the appropriate template file
@@ -108,14 +139,33 @@ This ensures Claude always knows which skills apply to this specific project.
 
 Before recommending any commands, check for lock files:
 
-| Lock File | Package Manager |
-|-----------|-----------------|
-| `bun.lockb` | bun |
-| `pnpm-lock.yaml` | pnpm |
-| `yarn.lock` | yarn |
-| `package-lock.json` | npm |
+| Lock File | Package Manager | Runner Command |
+|-----------|-----------------|----------------|
+| `bun.lockb` | bun | bunx |
+| `pnpm-lock.yaml` | pnpm | pnpm dlx |
+| `yarn.lock` | yarn | yarn dlx |
+| `package-lock.json` | npm | npx |
 
 If no lock file exists, **ask the user** which package manager they prefer. Default recommendation is **bun** (fastest).
+
+**Important:** After determining the package manager, add it to `project/dev-context.md` so all skills and future sessions use the correct commands. Add a `## Package Manager` section:
+
+```markdown
+## Package Manager
+
+This project uses **[detected/chosen package manager]**. Always use the matching commands:
+
+| Action | Command |
+|--------|---------|
+| Install | `[pm] install` |
+| Add package | `[pm] add [package]` |
+| Run script | `[pm] run [script]` |
+| Execute binary | `[runner] [binary]` |
+
+Never use npm, npx, pnpm, or yarn unless they match the configured package manager above.
+```
+
+This goes in `project/dev-context.md` (not CLAUDE.md) because it's project-specific config that must survive SkillKit updates.
 
 ### Step 5: Recommend Skills
 

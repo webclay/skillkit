@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Author:** Manuel Merz
 **License:** MIT
-**Date:** 10/02/2026
+**Date:** 11/02/2026
 
 ---
 
@@ -107,7 +107,7 @@ These files give Claude context about your project:
 | `project/projectbrief.md` | Describes your app, tech stack, and features | Every conversation - Claude reads this first |
 | `project/tasks.md` | Tracks what needs building and progress | When asking about status or next steps |
 | `project/changelog.md` | Records session history | When saving progress or resuming work |
-| `dev-context.md` | Preserves in-progress feature state | When picking up unfinished work |
+| `project/dev-context.md` | Architectural decisions, project config, in-progress state | Every conversation and when picking up unfinished work |
 
 ### Sharing Skills Across Projects
 
@@ -363,6 +363,16 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.0 (2026-02-11)
+- **Simplified workflow** - Consolidated /push + /merge into single `/wrap-up` command (log, lint, build, commit, push, PR, merge, cleanup)
+- **Greptile code review** - Optional automated code review cycle with confidence scoring, auto-fix, and 100-file limit detection
+- **Project config in dev-context.md** - Package Manager and Code Review config now live in `project/dev-context.md` (survives SkillKit updates)
+- **CLAUDE.md stays generic** - No more project-specific sections in CLAUDE.md, safe to overwrite on updates
+- **Dynamic package manager** - All skills use project-configured runner instead of hardcoded `npx`
+- **UI scope discipline** - New rule preventing over-application of styles to unrelated components
+- **TanStack Start security** - Nitro middleware for HTTP security headers (X-Content-Type-Options, X-Frame-Options, HSTS, etc.)
+- **Database bundle leak prevention** - Prisma and Drizzle skills now enforce API route patterns to prevent client bundle leaks
 
 ### v1.1.0 (2026-02-04)
 - **Server-side auth patterns** - Better Auth skill now enforces secure server-side authentication

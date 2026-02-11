@@ -102,10 +102,7 @@ Branch: feature/user-authentication
 Based on: dev (or main)
 Task: Add user authentication
 
-Ready to start working. When done:
-1. /log - Update changelog and tasks
-2. /push - Push to GitHub and create PR
-3. /merge - Merge PR after approval
+Ready to start working. When done, use /wrap-up to ship everything.
 ```
 
 ## Examples
@@ -135,7 +132,7 @@ Branch: feature/stripe-payment-integration
 Based on: dev
 Task: Add Stripe payment integration
 
-Ready to start working. When done, use /log then /push."
+Ready to start working. When done, use /wrap-up to ship everything."
 ```
 
 ---
@@ -246,14 +243,11 @@ git remote add origin [your-repo-url]
 **With /tasks:**
 Use task-tracker to find and start the next recommended task, then create its branch automatically.
 
+**With /wrap-up:**
+Once work is done, /wrap-up handles everything: logs session, lints, commits, pushes, creates PR, handles code review, merges, and cleans up the branch.
+
 **With /log:**
-After finishing work, use /log to update changelog and mark task complete.
-
-**With /push:**
-Once branch is created and work is done, /push will push this branch to GitHub and create a PR.
-
-**With /merge:**
-After PR approval, /merge will merge the branch and clean it up.
+Use /log for mid-session progress saves when you're not ready to push yet.
 
 ## Branch Naming Best Practices
 

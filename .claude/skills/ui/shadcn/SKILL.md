@@ -20,39 +20,51 @@ Copy-paste component libraries built on Radix UI primitives and Tailwind CSS. Fu
 
 **IMPORTANT:** Organize components by source library in subfolders to avoid conflicts and keep track of where components came from.
 
-### Folder Structure
+### Folder Structure (VoltrixCRM)
+
+Base shadcn/ui primitives live in `components/ui/`. Third-party library components each get their own folder under `components/`:
 
 ```
-components/
-└── ui/
-    ├── shadcn/           # Base shadcn/ui components
-    │   ├── button.tsx
-    │   ├── card.tsx
-    │   └── dialog.tsx
-    ├── chatcn/           # ChatCN Studio components
-    │   ├── animated-card.tsx
-    │   └── gradient-button.tsx
-    ├── magic-ui/         # Magic UI components
-    │   ├── shimmer-button.tsx
-    │   └── border-beam.tsx
-    ├── aceternity/       # Aceternity UI components
-    │   ├── spotlight.tsx
-    │   └── 3d-card.tsx
-    └── custom/           # Your custom components
-        └── logo.tsx
+src/components/
+├── ui/                   # Base shadcn/ui primitives (button, card, dialog, input, etc.)
+│   ├── button.tsx        # NEVER overwrite these with third-party installs
+│   ├── card.tsx
+│   └── ...
+├── reui/                 # ReUI library components
+│   └── area-chart-1.tsx
+├── shadcn-studio/        # Shadcn Studio blocks and components
+│   ├── blocks/
+│   ├── sonner/
+│   └── table/
+├── kibo-ui/              # Kibo UI components
+│   └── kanban/
+├── admin/                # App-specific: admin components
+├── contacts/             # App-specific: contacts components
+├── deals/                # App-specific: deals components
+├── companies/            # App-specific: companies components
+├── products/             # App-specific: products components
+└── layout/               # App-specific: layout components
 ```
 
 ### Adding Components from Different Libraries
 
-**Rule: Never override existing components. Always use subfolders.**
+**Rule: NEVER override existing base components in `ui/`. Always use library subfolders under `components/`.**
 
 | Source | Folder | Import Path |
 |--------|--------|-------------|
-| shadcn/ui | `components/ui/shadcn/` | `@/components/ui/shadcn/button` |
-| ChatCN Studio | `components/ui/chatcn/` | `@/components/ui/chatcn/animated-card` |
-| Magic UI | `components/ui/magic-ui/` | `@/components/ui/magic-ui/shimmer-button` |
-| Aceternity | `components/ui/aceternity/` | `@/components/ui/aceternity/spotlight` |
-| Custom | `components/ui/custom/` | `@/components/ui/custom/logo` |
+| shadcn/ui (base) | `components/ui/` | `@/components/ui/card` |
+| ReUI | `components/reui/` | `@/components/reui/area-chart-1` |
+| Shadcn Studio | `components/shadcn-studio/` | `@/components/shadcn-studio/blocks/...` |
+| Kibo UI | `components/kibo-ui/` | `@/components/kibo-ui/kanban` |
+| Magic UI | `components/magic-ui/` | `@/components/magic-ui/shimmer-button` |
+| Aceternity | `components/aceternity/` | `@/components/aceternity/spotlight` |
+
+### CLI Install Safety
+
+When running any component CLI (`npx shadcn`, `npx reui`, etc.):
+1. **NEVER say yes to overwriting** existing files like `card.tsx`, `utils.ts`, etc.
+2. If the CLI places files in the wrong location, move them to the correct library subfolder after install
+3. Update imports inside the moved component if needed (though `@/` aliases usually still work)
 
 ### When User Provides Component Code
 

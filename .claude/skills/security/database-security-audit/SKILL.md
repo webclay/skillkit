@@ -9,20 +9,44 @@ Reviews database security configuration to ensure data is only accessed through 
 
 ## Core Principle
 
-**RLS is not enough.** AI models default to RLS rules, but that's a bad pattern. The secure architecture is:
+There are two valid security models for Supabase projects. The right choice depends on your architecture. **For a detailed comparison with examples, migration paths, and decision matrix, see the Supabase skill's "Security Architecture: Choosing Your Approach" section.**
 
-1. Enable RLS on all tables with NO permissive rules (closes DB to outside world)
-2. Only the service role key can access data
-3. All data access goes through API routes or server actions
-4. Backend validates user authentication before any database operation
-5. Invalid tokens return 403 immediately
-6. Frontend NEVER directly talks to the database
+### Model 1: Database-Layer Security (RLS Policies)
 
-**Benefits of this approach:**
+For simple apps where the frontend queries the database directly using the anon key. RLS policies enforce permissions at the database level.
+
+**When auditing a Model 1 project, verify:**
+- RLS is enabled on ALL tables
+- RLS policies exist for every table (no policies = data is inaccessible or wide open)
+- Policies use `(SELECT auth.uid())` for performance
+- Anon key is the only key exposed to the frontend
+- Service role key is never in client code
+
+### Model 2: Application-Layer Security (Middleware Auth) - Recommended for server-rendered apps
+
+All data access goes through backend API routes or server actions. The frontend never directly queries the database.
+
+**When auditing a Model 2 project, verify:**
+1. All data access goes through API routes or server actions
+2. Backend validates user authentication before any database operation
+3. Invalid tokens return 403 immediately
+4. Frontend NEVER directly talks to the database
+5. RLS is enabled on all tables with NO permissive rules (defense in depth)
+6. Only the service role key can access data (server-side only)
+
+**Benefits of Model 2:**
 - Ultimate control over access
 - Can update logic without app releases (critical for mobile)
 - Can cut access immediately if issues arise
 - Fix bugs without redeploying clients
+
+### Understanding "RLS enabled but no policies" Warnings
+
+| Architecture | Is this a problem? | Action |
+|---|---|---|
+| Frontend queries DB directly (Model 1) | Yes - security risk | Implement RLS policies immediately |
+| Backend API routes + middleware (Model 2) | No - expected behavior | Ignore, this is defense in depth |
+| Exposing anon key to frontend | Yes - security risk | Add RLS policies or switch to Model 2 |
 
 ## When to Use This Skill
 
@@ -43,29 +67,30 @@ Check `package.json` for:
 - `@prisma/client` - Prisma
 - `drizzle-orm` - Drizzle
 
-### Step 2: Audit Architecture
+### Step 2: Determine Security Model
 
-**Critical Question:** Does the frontend ever directly access the database?
+**Critical Question:** Which security model does this project use?
 
-Search for red flags in client code:
+Search for frontend database access patterns:
 
 ```bash
-# Supabase anti-patterns - frontend calling database directly
+# Check for frontend-to-database access
 grep -rn "createBrowserClient" --include="*.tsx" --include="*.ts" components/ app/
 grep -rn "\.from\(" --include="*.tsx" --include="*.ts" components/
 grep -rn "\.select\(" --include="*.tsx" --include="*.ts" components/
 grep -rn "\.insert\(" --include="*.tsx" --include="*.ts" components/
 ```
 
-**Good:** All `.from()` calls are in:
-- `app/api/` routes
-- Server actions (`'use server'` files)
-- Files that only run on server
+**If frontend queries the DB directly (Model 1):**
+- This is valid IF RLS policies exist on every table
+- Verify `.from()` calls in client components are protected by RLS
+- Check that every table has appropriate SELECT/INSERT/UPDATE/DELETE policies
+- Flag any table without policies as a critical issue
 
-**Bad:** `.from()` calls in:
-- `components/` directory
-- Client components (`'use client'`)
-- Any file imported by client components
+**If all DB access is through backend (Model 2):**
+- All `.from()` calls should be in `app/api/` routes, server actions (`'use server'`), or server-only files
+- `.from()` calls in `components/` or `'use client'` files are red flags
+- RLS without policies is expected and correct (defense in depth)
 
 ### Step 3: Audit Auth Checks
 
@@ -189,11 +214,12 @@ Run full audit:
 
 ## Critical Rules
 
-1. **Never trust RLS alone** - It's a safety net, not the security layer
-2. **Always check auth first** - Every API route, every server action
-3. **Filter by userId** - Even with auth, always add `where: { userId }`
-4. **Service key server-only** - Never import in client code
-5. **Return 403 fast** - Don't process requests from unauthenticated users
+1. **Identify the security model first** - Model 1 (RLS) and Model 2 (middleware) have different audit criteria
+2. **Model 1: RLS policies are mandatory** - Every table needs policies, no exceptions
+3. **Model 2: Auth middleware is mandatory** - Every API route and server action must check auth first
+4. **Filter by userId** - Whether in RLS policies or backend code, always scope data to the user
+5. **Service key server-only** - Never import in client code
+6. **Return 403 fast** - Don't process requests from unauthenticated users
 
 ## Tips
 

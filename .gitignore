@@ -70,5 +70,8 @@ docs/prd.md
 # Publishing guide (personal reference, not for users)
 PUBLISHING.md
 
+# Maintainer guide (internal SkillKit maintenance, not for users)
+.claude/MAINTAINER_GUIDE.md
+
 # Misc
 .mcp.json

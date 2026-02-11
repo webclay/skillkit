@@ -105,7 +105,7 @@ These files are NEVER modified during updates:
 - `.claude/project/projectbrief.md` - User's project configuration
 - `.claude/project/tasks.md` - User's task tracking
 - `.claude/project/changelog.md` - User's session history
-- `.claude/dev-context.md` - User's in-progress work
+- `.claude/project/dev-context.md` - User's architectural decisions and project config
 - `.claude/project/.setup-complete` - User's setup marker
 - Any custom files user added
 

@@ -14,8 +14,8 @@ Follow the session-log workflow to save this session's progress.
    - Current state of in-progress features
 
 3. Update these files:
-   - `.claude/changelog.md` - Add session entry with date and accomplishments
-   - `.claude/tasks.md` - Update task statuses (completed, in-progress, blocked)
-   - `.claude/dev-context.md` - Update if there's work in progress to continue
+   - `.claude/project/changelog.md` - Add session entry with date and accomplishments
+   - `.claude/project/tasks.md` - Update task statuses (completed, in-progress, blocked)
+   - `.claude/project/dev-context.md` - Update if there's work in progress to continue
 
 4. Summarize what was saved for the user

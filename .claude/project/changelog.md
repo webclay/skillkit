@@ -1,12 +1,67 @@
 # Changelog
 
-**Last Updated:** 2026-02-09
+**Last Updated:** 2026-02-11
 
 This file tracks work completed across sessions to help maintain context.
 
 ---
 
 ## Session Log
+
+### 2026-02-11 - Workflow Simplification and Architecture Refactor
+
+**Summary:** Major refactor based on Claude Code Insights report analysis across 135 sessions. Simplified git workflow from 4 commands to 3, moved project-specific config from CLAUDE.md to dev-context.md, added optional Greptile code review automation, and updated GitHub repo URL.
+
+**Completed:**
+- Created `/wrap-up` skill combining log + lint + build + commit + push + PR + merge + cleanup
+- Removed `/push` skill and command (absorbed into /wrap-up)
+- Removed `/merge` skill and command (absorbed into /wrap-up)
+- Created `/wrap-up` command file
+- Added optional Greptile code review cycle to wrap-up (polls for review, auto-fixes, merges)
+- Moved Package Manager config from CLAUDE.md to project/dev-context.md
+- Moved Code Review config from CLAUDE.md to project/dev-context.md
+- Updated project-setup to write PM and Code Review to dev-context.md
+- Updated questionnaire with Greptile recommendation (plain language for non-coders)
+- Updated ultracite and wrap-up skills to read PM from dev-context.md
+- Fixed dev-context.md path in update-system skill
+- Fixed log command paths to use project/ prefix
+- Updated all repo URLs from webclay/skillkit to grasman79/skillkit
+- Updated git remote to new repo URL
+- Made Co-Authored-By tag model-agnostic
+- Added UI/styling scope rule to prevent over-application
+- Updated create-branch to reference /wrap-up
+
+**Key Decisions:**
+- Skills must stay generic - project-specific config goes in project/dev-context.md
+- CLAUDE.md is a pure template that can be safely overwritten during SkillKit updates
+- dev-context.md is protected during updates (user data)
+- Greptile integration is optional - configured per-project during setup
+- Auto-merge (`gh pr merge --auto --squash --delete-branch`) for non-Greptile users
+
+**Files Changed:**
+- `.claude/skills/workflow/wrap-up/SKILL.md` (new)
+- `.claude/commands/wrap-up.md` (new)
+- `.claude/skills/workflow/push-branch/` (deleted)
+- `.claude/skills/workflow/merge-branch/` (deleted)
+- `.claude/commands/push.md` (deleted)
+- `.claude/commands/merge.md` (deleted)
+- `.claude/skills/workflow/project-setup/SKILL.md`
+- `.claude/skills/workflow/project-setup/questionnaire.md`
+- `.claude/skills/workflow/ultracite/SKILL.md`
+- `.claude/skills/workflow/wrap-up/SKILL.md`
+- `.claude/skills/workflow/create-branch/SKILL.md`
+- `.claude/skills/workflow/update-system/SKILL.md`
+- `.claude/commands/log.md`
+- `.claude/CLAUDE.md`
+- `.claude/version.json`
+- `.claude/MAINTAINER_GUIDE.md`
+- `.claude/project/changelog.md`
+
+**Next Steps:**
+- Bump version to 1.2.0 and create GitHub release
+- Copy updated .claude folder to other projects using SkillKit
+
+---
 
 ### 2026-02-09 - TanStack Start Security and Database Integration
 
@@ -45,7 +100,7 @@ This file tracks work completed across sessions to help maintain context.
 - `.claude/CLAUDE.md`
 
 **Pull Request:**
-- Created PR #1: https://github.com/webclay/skillkit/pull/1
+- Created PR #1: https://github.com/grasman79/skillkit/pull/1
 - Branch: feature/tanstack-start-security-integration
 - Status: Ready for review
 

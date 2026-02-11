@@ -16,10 +16,21 @@ Runs linting and TypeScript validation before commits.
 
 ## Instructions
 
+### Step 0: Determine Runner Command
+
+Check `project/dev-context.md` for the project's `## Package Manager` section to determine the correct runner command. If not specified, check for lock files (`bun.lockb`, `pnpm-lock.yaml`, etc.). Default to `bunx`.
+
+| Package Manager | Runner |
+|-----------------|--------|
+| bun | bunx |
+| pnpm | pnpm dlx |
+| npm | npx |
+| yarn | yarn dlx |
+
 ### Step 1: Run Ultracite
 
 ```bash
-npx ultracite fix
+[runner] ultracite fix
 ```
 
 This runs:
@@ -30,7 +41,7 @@ This runs:
 ### Step 2: Check for Remaining Errors
 
 ```bash
-npx tsc --noEmit
+[runner] tsc --noEmit
 ```
 
 ### Step 3: Report Results
@@ -98,6 +109,6 @@ For each error that wasn't auto-fixed:
 
 ## How to Verify
 
-- `npx ultracite fix` runs without errors
-- `npx tsc --noEmit` passes
+- `[runner] ultracite fix` runs without errors
+- `[runner] tsc --noEmit` passes
 - All auto-fixable issues resolved

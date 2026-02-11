@@ -147,6 +147,45 @@ This helps me prioritize features.
 
 ---
 
+#### Question 8: Code Review
+
+```
+Would you like a second AI to review your code before it goes live?
+
+A. Yes, set up Greptile (Recommended)
+B. No, skip code review
+
+Here's why I recommend it: I write your code, but I can make mistakes -
+wrong patterns, security issues, or bugs I don't catch. Greptile is a
+separate AI that reviews every pull request and gives it a confidence
+score from 1 to 5. If the score is high (4 or 5), your code merges
+automatically. If the score is low, I read Greptile's feedback, fix
+the issues, and resubmit - all without you needing to understand the code.
+
+It's like having a senior developer double-check everything before it ships.
+Used by teams at NVIDIA, Brex, and Coinbase.
+
+Free plan available at: https://greptile.com
+```
+
+**If Greptile is selected:** Add a `## Code Review` section to `project/dev-context.md`:
+
+```markdown
+## Code Review
+
+Provider: Greptile
+Auto-merge threshold: 4/5
+Max fix cycles: 3
+```
+
+Also recommend the user install Greptile on their GitHub repo if they haven't already.
+
+**If not selected:** Skip this section in dev-context.md. The wrap-up skill will use auto-merge instead (code still gets linted and built, just no external review).
+
+**Why dev-context.md?** This is project-specific config that must survive SkillKit updates. CLAUDE.md gets overwritten on updates, but dev-context.md is protected.
+
+---
+
 ### After Questionnaire
 
 Present recommendations:
@@ -266,6 +305,7 @@ When creating documentation files, map questionnaire answers to template section
 | Q5: Experience level | (internal - affects explanation depth, not stored) |
 | Q6: Tech preferences | `## Tech Stack` → All subsections |
 | Q7: Timeline | `## Project Overview` → "Target launch" |
+| Q8: Code review | `## Code Review` in dev-context.md (if Greptile) |
 
 ### Additional Fields to Populate
 
