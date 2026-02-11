@@ -8,6 +8,30 @@ This file tracks work completed across sessions to help maintain context.
 
 ## Session Log
 
+### 2026-02-11 - Auto-Fetch Update System
+
+**Summary:** Upgraded the `skillkit update` command from a manual guided download process to a fully automated GitHub fetch. Also fixed the startup version check URL that was returning 404.
+
+**Completed:**
+- Rewrote `update-system/SKILL.md` with auto-fetch workflow (backup, download tarball, extract, replace system files, verify)
+- Version checking now uses `raw.githubusercontent.com` instead of GitHub Releases API (no releases exist yet)
+- Tarball download uses `api.github.com/repos/{repo}/tarball/main`
+- Fixed CLAUDE.md startup version check to use same working URL
+- Added `gh` CLI fallback for GitHub API rate limits
+- Kept rollback support (restore from `.claude/.backup-v{version}/`)
+
+**Key Decisions:**
+- Use `raw.githubusercontent.com` for version checks (works without GitHub releases/tags)
+- Use main branch tarball for downloads (works today, scales to tagged releases later)
+- Always back up before updating, never auto-delete backups
+- Protected files list expanded: settings.json, settings.local.json, MAINTAINER_GUIDE.md
+
+**Files Changed:**
+- `.claude/skills/workflow/update-system/SKILL.md` (rewritten)
+- `.claude/CLAUDE.md` (fixed version check URL)
+
+---
+
 ### 2026-02-11 - Workflow Simplification and Architecture Refactor
 
 **Summary:** Major refactor based on Claude Code Insights report analysis across 135 sessions. Simplified git workflow from 4 commands to 3, moved project-specific config from CLAUDE.md to dev-context.md, added optional Greptile code review automation, and updated GitHub repo URL.

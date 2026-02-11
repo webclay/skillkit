@@ -5,7 +5,7 @@ description: Check for and apply updates to SkillKit. Trigger words - skillkit u
 
 # Update SkillKit
 
-Handles version checking, updates, and rollback for the SkillKit system.
+Auto-fetch updates from GitHub, with backup and rollback support.
 
 ## When to Use This Skill
 
@@ -16,86 +16,215 @@ Handles version checking, updates, and rollback for the SkillKit system.
 
 **Note:** Do NOT use this for "update stack" (which updates project dependencies) or generic "update" commands.
 
-## Version Checking
+## Commands Reference
 
-### How It Works
+| User Says | Action |
+|-----------|--------|
+| "skillkit update" | Check for updates and auto-install if available |
+| "skillkit version" | Show current SkillKit version |
+| "skillkit restore" | Rollback to previous version from backup |
+| "skillkit check" | Just check if update available (don't install) |
 
-1. Read local version from `.claude/version.json`
-2. Compare with latest version (user provides or checks GitHub)
-3. Show what's new if update available
+---
 
-### Version File Format
+## "skillkit version"
 
-`.claude/version.json`:
-```json
-{
-  "version": "1.0.0",
-  "releaseDate": "2025-01-04"
-}
+Read `.claude/version.json` and display:
+
+```
+SkillKit v1.2.0 (released 2026-02-11)
+Repository: grasman79/skillkit
 ```
 
-## Update Workflow
+---
 
-### When User Says "skillkit update"
+## "skillkit check"
 
-1. **Check current version**
-   - Read `.claude/version.json`
-   - Show current version to user
-
-2. **Ask update method**
+1. Read `.claude/version.json` to get `version` and `repository`
+2. Fetch remote version:
+   ```bash
+   curl -s https://raw.githubusercontent.com/{repository}/main/.claude/version.json
    ```
-   Current version: 1.0.0
+3. Compare versions using semantic versioning
+4. Report result:
+   - If up to date: `SkillKit v1.2.0 is up to date.`
+   - If update available: `SkillKit update available: v1.2.0 -> v1.3.0. Run "skillkit update" to install.`
+   - If fetch fails: `Could not check for updates (network error). Current version: v1.2.0`
 
-   How would you like to update?
+---
 
-   A. Automatic - I'll guide you through downloading from GitHub
-   B. Manual - You already have the new files, I'll help copy them
+## "skillkit update"
 
-   Your choice?
+### Step 1: Check Versions
+
+1. Read `.claude/version.json` - extract `version` (local) and `repository`
+2. Fetch the remote version:
+   ```bash
+   curl -s https://raw.githubusercontent.com/{repository}/main/.claude/version.json
    ```
+3. Parse the remote JSON to get the remote `version`
+4. Compare using semantic versioning (MAJOR.MINOR.PATCH)
 
-3. **Guide through update** (see flows below)
+If local version >= remote version, report:
+```
+SkillKit v1.2.0 is already up to date.
+```
+And stop.
 
-### Automatic Update Flow
+### Step 2: Confirm with User
+
+Show the user what will happen:
+```
+SkillKit update available: v1.2.0 -> v1.3.0
+
+This will update:
+- All skills (.claude/skills/)
+- All templates (.claude/templates/)
+- All commands (.claude/commands/)
+- Main instructions (.claude/CLAUDE.md)
+- Version file (.claude/version.json)
+
+Your project files are SAFE and won't be touched:
+- project/projectbrief.md
+- project/tasks.md
+- project/changelog.md
+- project/dev-context.md
+
+A backup of your current version will be created.
+
+Proceed with update? (yes/no)
+```
+
+Wait for user confirmation before continuing.
+
+### Step 3: Create Backup
+
+```bash
+mkdir -p .claude/.backup-v{LOCAL_VERSION}
+cp -r .claude/skills .claude/.backup-v{LOCAL_VERSION}/skills
+cp -r .claude/templates .claude/.backup-v{LOCAL_VERSION}/templates
+cp -r .claude/commands .claude/.backup-v{LOCAL_VERSION}/commands
+cp .claude/CLAUDE.md .claude/.backup-v{LOCAL_VERSION}/CLAUDE.md
+cp .claude/version.json .claude/.backup-v{LOCAL_VERSION}/version.json
+```
+
+Confirm backup was created:
+```
+Backup created at .claude/.backup-v1.2.0/
+```
+
+### Step 4: Download and Extract
+
+```bash
+# Download the latest tarball from main branch
+curl -sL "https://api.github.com/repos/{repository}/tarball/main" -o /tmp/skillkit-update.tar.gz
+
+# Create extraction directory and extract
+mkdir -p /tmp/skillkit-update
+tar xzf /tmp/skillkit-update.tar.gz -C /tmp/skillkit-update --strip-components=1
+```
+
+Verify extraction succeeded by checking the extracted `.claude/version.json` exists:
+```bash
+cat /tmp/skillkit-update/.claude/version.json
+```
+
+If extraction fails, report the error and stop. The backup is still intact.
+
+### Step 5: Apply Update
+
+```bash
+# Remove old system files
+rm -rf .claude/skills .claude/templates .claude/commands
+
+# Copy fresh system files
+cp -r /tmp/skillkit-update/.claude/skills .claude/skills
+cp -r /tmp/skillkit-update/.claude/templates .claude/templates
+cp -r /tmp/skillkit-update/.claude/commands .claude/commands
+cp /tmp/skillkit-update/.claude/CLAUDE.md .claude/CLAUDE.md
+cp /tmp/skillkit-update/.claude/version.json .claude/version.json
+```
+
+### Step 6: Clean Up
+
+```bash
+rm -rf /tmp/skillkit-update /tmp/skillkit-update.tar.gz
+```
+
+### Step 7: Verify and Report
+
+Read the new `.claude/version.json` and confirm it matches the remote version.
+
+Report:
+```
+SkillKit updated successfully: v1.2.0 -> v1.3.0
+
+Updated:
+- Skills, templates, and commands
+- Main instructions (CLAUDE.md)
+
+Your project files were not touched.
+Backup of v1.2.0 saved at .claude/.backup-v1.2.0/
+
+To rollback: run "skillkit restore"
+```
+
+---
+
+## "skillkit restore" / "skillkit rollback"
+
+### Step 1: Find Backups
+
+List backup directories:
+```bash
+ls -d .claude/.backup-v*/ 2>/dev/null
+```
+
+If no backups found:
+```
+No backups found. Cannot rollback.
+You can manually restore from GitHub: https://github.com/{repository}
+```
+
+### Step 2: Show Available Backups
 
 ```
-Step 1: Download the latest release from GitHub
-→ Go to: [repository URL]/releases
-→ Download the .claude folder ZIP
+Found backup(s):
+- v1.2.0 (at .claude/.backup-v1.2.0/)
 
-Step 2: Extract the ZIP
+Your project files (projectbrief, tasks, changelog) will NOT be affected.
 
-Step 3: I'll help you copy the files...
-
-First, copy the `skills/` folder from the download
-to your project's `.claude/skills/` folder.
-
-Done? (yes/no)
-
-[Continue with each folder/file...]
+Restore to v1.2.0? (yes/no)
 ```
 
-### Manual Update Flow
+If multiple backups exist, list all and ask which one to restore.
 
-If user already downloaded:
+### Step 3: Restore
+
+```bash
+# Remove current system files
+rm -rf .claude/skills .claude/templates .claude/commands
+
+# Restore from backup
+cp -r .claude/.backup-v{VERSION}/skills .claude/skills
+cp -r .claude/.backup-v{VERSION}/templates .claude/templates
+cp -r .claude/.backup-v{VERSION}/commands .claude/commands
+cp .claude/.backup-v{VERSION}/CLAUDE.md .claude/CLAUDE.md
+cp .claude/.backup-v{VERSION}/version.json .claude/version.json
+```
+
+### Step 4: Verify and Report
+
+Read restored `.claude/version.json` and confirm version matches.
 
 ```
-Great! You have the new files ready.
+Restored SkillKit to v1.2.0.
 
-Copy these folders (replace when asked):
-1. skills/
-2. templates/
-3. commands/
-
-Copy these files:
-1. CLAUDE.md
-2. version.json
-
-Your project/projectbrief.md, project/tasks.md, and project/changelog.md are SAFE -
-they won't be touched.
-
-Done? (yes/no)
+Your project files were not affected.
+The backup has been kept at .claude/.backup-v1.2.0/ in case you need it again.
 ```
+
+---
 
 ## File Categories
 
@@ -105,158 +234,75 @@ These files are NEVER modified during updates:
 - `.claude/project/projectbrief.md` - User's project configuration
 - `.claude/project/tasks.md` - User's task tracking
 - `.claude/project/changelog.md` - User's session history
-- `.claude/project/dev-context.md` - User's architectural decisions and project config
+- `.claude/project/dev-context.md` - User's architectural decisions
 - `.claude/project/.setup-complete` - User's setup marker
+- `.claude/settings.json` - User's IDE settings
+- `.claude/settings.local.json` - User's local settings
+- `.claude/MAINTAINER_GUIDE.md` - SkillKit repo only (gitignored)
 - Any custom files user added
 
 ### Always Update (System Files)
 
-These files are updated:
+These files are replaced during updates:
 - `.claude/CLAUDE.md` - Main instructions
 - `.claude/version.json` - Version tracking
 - `.claude/skills/**/*` - All skills
 - `.claude/templates/**/*` - All templates
 - `.claude/commands/**/*` - All slash commands
 
-## Backup Strategy
-
-### Before Updating
-
-Create backup of current system files:
-
-```
-.claude/.backup-v1.0.0/
-├── CLAUDE.md
-├── skills/
-├── templates/
-└── commands/
-```
-
-### Backup Command
-
-```
-I'll create a backup before updating...
-
-Created backup at: .claude/.backup-v1.0.0/
-
-Your user files (projectbrief, tasks, changelog) are safe
-and won't be included in the backup.
-
-Ready to proceed with update? (yes/no)
-```
-
-## Rollback
-
-### When User Says "restore" or "rollback"
-
-1. Check for existing backups
-2. Show available versions
-3. Restore selected version
-
-```
-Found backup from before last update:
-- .backup-v1.0.0 (created: 2025-01-04)
-
-Restore to version 1.0.0? This will undo the update.
-
-Your project/projectbrief.md and project/tasks.md won't be affected.
-
-Restore? (yes/no)
-```
-
-### Restore Process
-
-1. Copy backup files back to main locations
-2. Update version.json to restored version
-3. Verify files are restored
-4. Confirm to user
-
-## Version Comparison
-
-### Semantic Versioning
+## Semantic Versioning
 
 Format: `MAJOR.MINOR.PATCH`
 - **Major** (1.x.x) - Breaking changes, new architecture
-- **Minor** (x.1.x) - New features, backward compatible
-- **Patch** (x.x.1) - Bug fixes, small improvements
-
-### Update Priority
-
-- **Major** - Review changes carefully before updating
-- **Minor** - Safe to update, new features available
-- **Patch** - Recommended, fixes issues
-
-## Commands Reference
-
-| User Says | Action |
-|-----------|--------|
-| "skillkit update" | Check for updates and guide through installation |
-| "skillkit version" | Show current SkillKit version |
-| "skillkit restore" | Rollback to previous version from backup |
-| "skillkit check" | Just check if update available (don't install) |
+- **Minor** (x.1.x) - New features, multiple skills, backward compatible
+- **Patch** (x.x.1) - Bug fixes, single skill, small improvements
 
 ## Safety Notes
 
-1. **User data is sacred** - Never touch projectbrief, tasks, or changelog
+1. **User data is sacred** - Never touch project/, settings, or custom files
 2. **Always backup first** - Create backup before any update
-3. **Verify after update** - Check that skills load correctly
-4. **Keep old backups** - Maintain last 2-3 backups for safety
-
-## Example Conversations
-
-### Checking for Updates
-
-```
-User: skillkit update
-
-Claude: Checking your SkillKit version...
-
-Current version: 1.1.0
-
-Would you like to:
-A. Check GitHub for the latest release
-B. I already downloaded an update
-
-Your choice?
-```
-
-### Restoring Previous Version
-
-```
-User: skillkit restore
-
-Claude: Looking for backups...
-
-Found backup:
-- v1.0.0 (from 2 days ago)
-
-This will restore:
-- CLAUDE.md
-- All skills
-- All templates
-
-Your project/projectbrief.md and project/tasks.md will NOT be changed.
-
-Restore to v1.0.0? (yes/no)
-```
+3. **Verify after update** - Check that version.json shows new version
+4. **Keep backups** - Don't delete backups automatically; let users manage them
+5. **Ask before proceeding** - Always get user confirmation before applying updates
 
 ## Troubleshooting
 
-### Update Didn't Work
+### Network Error During Version Check
 
-1. Check that all files were copied
-2. Verify version.json shows new version
-3. Try running `setup` to verify configuration
+```
+Could not reach GitHub. Check your internet connection.
+Current local version: v1.2.0
+```
 
-### Missing Skills After Update
+Skip the update; don't block the user.
 
-1. Check `.claude/skills/` folder exists
-2. Verify skill folders have SKILL.md files
-3. Re-copy skills folder from update package
+### Download Failed
 
-### Backup Not Found
+If the tarball download fails:
+1. Check internet connection
+2. Try again: `curl -sL "https://api.github.com/repos/{repository}/tarball/main" -o /tmp/skillkit-update.tar.gz`
+3. If GitHub API rate limited (403), wait a few minutes and retry
+4. Backup is untouched - no damage done
 
-If no backup exists:
+### Extraction Failed
+
+If tar extraction fails:
+1. Delete the corrupted file: `rm /tmp/skillkit-update.tar.gz`
+2. Re-download and try again
+3. Backup is untouched
+
+### Update Broke Something
+
+Run `skillkit restore` to rollback to the backup.
+
+### No Backup Found for Rollback
+
 1. Cannot rollback automatically
-2. User needs to manually restore from GitHub
-3. Create backup before future updates
+2. Download the desired version manually from GitHub
+3. Copy `.claude/skills/`, `.claude/templates/`, `.claude/commands/`, `.claude/CLAUDE.md`, and `.claude/version.json` from the download
+
+### GitHub API Rate Limit
+
+Unauthenticated requests: 60/hour. If rate limited:
+- Wait a few minutes
+- Or use `gh api repos/{repository}/tarball/main > /tmp/skillkit-update.tar.gz` (uses authenticated GitHub CLI)

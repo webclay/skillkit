@@ -19,12 +19,12 @@
 
 **On conversation start (after setup check), check for SkillKit updates:**
 
-1. Read `.claude/version.json` to get local version
-2. Fetch latest version from GitHub: `https://api.github.com/repos/grasman79/skillkit/releases/latest`
+1. Read `.claude/version.json` to get local `version` and `repository`
+2. Fetch latest version: `curl -s https://raw.githubusercontent.com/{repository}/main/.claude/version.json`
 3. Compare versions (semantic versioning)
 4. If update available, show notification:
    ```
-   SkillKit update available: v1.1.0 → v1.2.0
+   SkillKit update available: v1.1.0 -> v1.2.0
    Run "skillkit update" to install.
    ```
 5. If check fails (network error, etc.), skip silently - don't block the user
