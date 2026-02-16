@@ -34,7 +34,9 @@ Look for Astro + Payload in the project folder:
 - `astro.config.*` + `payload.config.ts` files
 - A monorepo with `backend/` and `frontend/` folders containing these
 
-**If Astro + Payload detected:** Skip the project type question entirely. Go straight to the content website questionnaire (deployment questions only). The template code is already in place - the wizard only creates documentation files and updates environment variables. See [content-questionnaire.md](content-questionnaire.md).
+**If Astro + Payload detected:** Skip the project type question entirely. Go straight to the content website questionnaire (deployment questions only). The template code is already in place - the wizard only creates documentation files and updates environment variables.
+
+**Important:** Before starting the questionnaire, read `project/projectbrief.md`. If it already contains technical content (collections, routes, components, design tokens, etc.), this is a pre-filled template reference - preserve it. The questionnaire only updates deployment config, project description, and relevant skills. Do NOT overwrite existing technical sections. See [content-questionnaire.md](content-questionnaire.md).
 
 **If other code detected:** Run the existing codebase detection flow. See [detection.md](detection.md).
 

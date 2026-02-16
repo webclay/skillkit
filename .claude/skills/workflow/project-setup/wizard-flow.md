@@ -11,11 +11,13 @@ User starts conversation
         ↓
 Check environment:
 ├── project/projectbrief.md empty/missing?
+├── project/projectbrief.md has content? (pre-filled template reference)
 ├── Code files exist?
 └── package.json present?
         ↓
 Route to appropriate flow:
 ├── Has Astro + Payload code → Content Website Flow (auto-detected, skip project type question)
+│   └── projectbrief.md has content? → Read it, preserve it, merge questionnaire answers in
 ├── Has other code → Existing Codebase Flow
 ├── Empty folder → Ask Project Type Question
 │   ├── Web application → New Web App Flow
@@ -242,16 +244,19 @@ Does this look good?
 
 ### Step 3: Create Documentation Files
 
-Same documentation files as web app flow, but with a slim projectbrief:
+**Check projectbrief.md first:**
+
+- **If projectbrief.md already has content** (technical reference with collections, routes, components, etc.): Read it, preserve all existing content, and only add/update the sections from the questionnaire (deployment, description, relevant skills). Do NOT overwrite or regenerate the file.
+- **If projectbrief.md is empty or missing:** Generate a slim projectbrief from the template.
 
 | File | Content |
 |------|---------|
-| `project/projectbrief.md` | Project type, description, fixed stack (Astro + Payload + Tailwind), deployment targets, relevant skills |
+| `project/projectbrief.md` | If pre-filled: merge in deployment + description. If empty: project type, description, fixed stack (Astro + Payload + Tailwind), deployment targets, relevant skills |
 | `project/dev-context.md` | Package manager, code review config |
 | `project/tasks.md` | Configuration and deployment tasks (no scaffolding tasks - template is ready) |
 | `project/changelog.md` | Setup session entry |
 
-**Sections to skip in projectbrief:** Auth, Payments, AI Integration, Database Schema, API Endpoints, Real-time features (all handled by the Payload template).
+**Sections to skip in projectbrief (when generating new):** Auth, Payments, AI Integration, Database Schema, API Endpoints, Real-time features (all handled by the Payload template).
 
 ### Step 4: Update Environment Variables
 

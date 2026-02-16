@@ -12,6 +12,21 @@ The content website stack is fixed - Astro frontend, Payload CMS backend, Tailwi
 2. Create project documentation files (projectbrief, tasks, changelog, dev-context)
 3. Update environment variables based on the user's hosting choices
 
+### Pre-Existing Project Brief
+
+**Before starting the questionnaire, check if `project/projectbrief.md` already has real content.**
+
+- **If projectbrief has technical content** (collections, routes, components, design tokens, etc.):
+  1. Read it first - this is the template's technical reference
+  2. Preserve all existing content - treat it as the project's foundation
+  3. Only add/update the sections covered by the questionnaire (deployment, description, relevant skills)
+  4. Merge, don't overwrite - append new sections below the existing content or update specific sections in place
+
+- **If projectbrief is empty or has only template placeholders:**
+  - Generate a new projectbrief from the template as usual
+
+**Why this matters:** Content website templates often ship with a pre-written projectbrief documenting collections, routes, components, CSS tokens, and API patterns. This technical reference is fixed and should not be replaced by the wizard's slim output.
+
 ### How This Flow Gets Triggered
 
 This questionnaire is reached in two ways:
@@ -138,6 +153,10 @@ Max fix cycles: 3
 ---
 
 ### After Questionnaire
+
+**If projectbrief.md already has content:** Update it in place - add the deployment section, update the project description, and append the relevant skills mapping. Do not regenerate or overwrite existing technical sections.
+
+**If projectbrief.md is empty:** Generate a new projectbrief using the template field mapping below.
 
 Present the setup summary:
 

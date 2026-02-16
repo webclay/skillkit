@@ -2,7 +2,7 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.4
+**Version:** 1.2.5
 **Author:** Manuel Merz
 **License:** MIT
 **Date:** 16/02/2026
@@ -376,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.5 (2026-02-16)
+- **Pre-filled projectbrief support** - Content website setup wizard now reads and preserves existing projectbrief.md content instead of overwriting it, enabling templates to ship with pre-written technical references
 
 ### v1.2.4 (2026-02-16)
 - **Typography skill** - Web typography rules based on Butterick's Practical Typography: font sizes (15-25px body), line height (120-145%), line length (45-90 chars), heading hierarchy, font pairing, color, letter spacing, kerning, paragraph spacing, responsive typography, and a complete starter stylesheet
