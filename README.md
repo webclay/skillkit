@@ -2,7 +2,7 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.5
+**Version:** 1.2.6
 **Author:** Manuel Merz
 **License:** MIT
 **Date:** 16/02/2026
@@ -376,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.6 (2026-02-16)
+- **External brief import** - Setup wizard now asks "Do you have a project brief?" before the questionnaire. Users can paste briefs from Claude Projects, Google Docs, or any source. The wizard extracts relevant info, skips already-answered questions, and merges everything into the internal projectbrief format. Works for both web apps and content websites.
 
 ### v1.2.5 (2026-02-16)
 - **Pre-filled projectbrief support** - Content website setup wizard now reads and preserves existing projectbrief.md content instead of overwriting it, enabling templates to ship with pre-written technical references

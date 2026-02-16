@@ -25,6 +25,24 @@ Check what exists in the project:
 2. **Check for existing code** - No code → fresh start; Has code → analyze codebase
 3. **Check for installed skills** - Recommend missing skills based on project needs
 
+### Step 1.5: Check for External Brief
+
+**Before starting the questionnaire, ask if the user has a project brief to share.**
+
+Users often create comprehensive project briefs in Claude Projects (using uploaded documents, graphics, design files) or have them in Google Docs, Notion, etc. If they paste one, it saves time and produces a richer projectbrief.md.
+
+See [brief-import.md](brief-import.md) for the full flow:
+
+1. Ask: "Do you have a project brief you'd like to share?"
+2. If yes: user pastes it, you extract and map info to internal sections
+3. Confirm what was extracted with the user
+4. Skip questionnaire questions that are already answered
+5. Only ask remaining questions (deployment, package manager, code review, experience level)
+
+**If the user says no:** Continue with the normal questionnaire flow - nothing changes.
+
+**If the user pastes a brief:** The project type (web app vs content website) may be determinable from the brief content - skip the project type question if it's clear. Otherwise, still ask it.
+
 ### Step 2: Detect Project Type
 
 **Before asking any questions, check if the project is a content website:**

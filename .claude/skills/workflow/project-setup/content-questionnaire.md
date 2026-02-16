@@ -44,6 +44,16 @@ In both cases, the stack is already known. Only deployment and description quest
 4. **Offer recommendations** - Always suggest a best option
 5. **Auto-detect project name** - Use the parent folder name
 
+### Handling Pre-Filled Answers (from External Brief)
+
+If the user pasted an external brief (see [brief-import.md](brief-import.md)), the project description is likely already covered. For content websites, the external brief is especially valuable because it often contains design system details, content structure, page layouts, and brand guidelines that go directly into the projectbrief.
+
+1. **Q1-Q3 (Deployment):** Always ask - these are SkillKit-specific and won't be in the brief
+2. **Q4 (Project description):** Skip if the brief already describes the website
+3. **Q5 (Code review):** Always ask - SkillKit-specific
+
+**Triple merge for content websites:** When there's a template projectbrief, an external brief, AND questionnaire answers, merge with this priority: External brief > Template projectbrief > Questionnaire answers. See [brief-import.md](brief-import.md) for full merge rules.
+
 ### Question Flow
 
 #### Question 1: Backend Deployment (Payload CMS)

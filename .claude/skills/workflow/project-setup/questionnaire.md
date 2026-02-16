@@ -12,6 +12,31 @@ This questionnaire guides new project setup. Follow these rules:
 4. **Offer recommendations** - Always suggest a best option
 5. **Auto-detect project name** - Use the parent folder name
 
+### Handling Pre-Filled Answers (from External Brief)
+
+If the user pasted an external brief (see [brief-import.md](brief-import.md)), some questions may already be answered. For each question in the flow below:
+
+1. **Check if the answer was extracted from the external brief**
+2. **If fully answered:** Skip the question entirely - don't ask it again
+3. **If partially answered:** Show what was found and ask for the remaining details
+4. **If not answered:** Ask the question as normal
+
+**Questions that are always asked** (never pre-filled):
+- Q0b: Package manager (SkillKit-specific)
+- Q5: Experience level (SkillKit-specific)
+- Q8: Code review / Greptile (SkillKit-specific)
+
+**Questions that can be skipped** if covered by the external brief:
+- Q0a: Project type (if determinable from brief)
+- Q1: Project description
+- Q2: Target users
+- Q3: Application type
+- Q4: Key features
+- Q6: Technology preferences (partially - brief may mention specific tools)
+- Q7: Timeline
+
+When generating the projectbrief, merge the external brief's rich content into the template. See [brief-import.md](brief-import.md) for merge rules.
+
 ### Question Flow
 
 #### Opening

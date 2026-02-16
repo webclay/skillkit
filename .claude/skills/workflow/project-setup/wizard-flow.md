@@ -15,15 +15,21 @@ Check environment:
 ├── Code files exist?
 └── package.json present?
         ↓
-Route to appropriate flow:
+Ask: "Do you have a project brief to share?"
+├── Yes → User pastes brief → Extract & confirm info → Pre-fill answers
+└── No  → Continue normally
+        ↓
+Route to appropriate flow (with pre-filled answers skipping questions):
 ├── Has Astro + Payload code → Content Website Flow (auto-detected, skip project type question)
 │   └── projectbrief.md has content? → Read it, preserve it, merge questionnaire answers in
 ├── Has other code → Existing Codebase Flow
-├── Empty folder → Ask Project Type Question
-│   ├── Web application → New Web App Flow
-│   └── Content website → Content Website Flow
+├── Empty folder → Ask Project Type Question (skip if determinable from brief)
+│   ├── Web application → New Web App Flow (skip pre-answered questions)
+│   └── Content website → Content Website Flow (skip pre-answered questions)
 └── Has projectbrief → Analyze & Recommend
 ```
+
+**External brief import:** Before starting the questionnaire, ask if the user has a project brief to share (from Claude Projects, Google Docs, etc.). If they paste one, extract the relevant info, confirm it with the user, and skip questions that are already covered. See [brief-import.md](brief-import.md) for the full extraction and merge flow.
 
 **Auto-detection for content websites:** Before asking any questions, check if the project folder contains both Astro and Payload. Look for `astro` + `payload` in package.json dependencies, or `astro.config.*` + `payload.config.ts` files, or a monorepo with `backend/` and `frontend/` folders containing these. If detected, skip the project type question and go straight to the Content Website Flow (deployment questions only).
 
@@ -31,12 +37,14 @@ Route to appropriate flow:
 
 ## New Project Flow
 
-### Step 1: Welcome & Project Type
+### Step 1: Welcome & External Brief Check
 
 **What to do:**
 - Greet the user warmly
 - Detect project name from folder
-- Ask the project type question (this is always the first question)
+- Ask if they have a project brief to share (see [brief-import.md](brief-import.md))
+- If they paste a brief: extract info, confirm with user, then continue
+- Ask the project type question (skip if determinable from the brief or auto-detected)
 
 **Example output:**
 ```
