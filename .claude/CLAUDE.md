@@ -129,6 +129,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Background jobs, workflows, event-driven | `backend/motia` |
 | Swiss company lookup, Zefix, UID search | `api/zefix` |
 | People/company enrichment, Apollo, sales intelligence | `api/apollo` |
+| Typography, font sizes, line height, readability | `design/typography` |
 
 ## Common Mistakes to Avoid
 

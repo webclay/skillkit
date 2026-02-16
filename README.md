@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.3
+**Version:** 1.2.4
 **Author:** Manuel Merz
 **License:** MIT
-**Date:** 15/02/2026
+**Date:** 16/02/2026
 
 ---
 
@@ -282,6 +282,11 @@ Next session, Claude picks up exactly where you left off.
 | `ultracite` | Ultracite linting |
 | `validation` | Zod/Valibot/ArkType validation |
 
+### Design
+| Skill | What It Does |
+|-------|--------------|
+| `typography` | Web typography rules - font sizes, line height, line length, font pairing, headings, spacing |
+
 ### Tools
 | Skill | What It Does |
 |-------|--------------|
@@ -371,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.4 (2026-02-16)
+- **Typography skill** - Web typography rules based on Butterick's Practical Typography: font sizes (15-25px body), line height (120-145%), line length (45-90 chars), heading hierarchy, font pairing, color, letter spacing, kerning, paragraph spacing, responsive typography, and a complete starter stylesheet
 
 ### v1.2.3 (2026-02-15)
 - **Content website setup wizard** - Project setup now asks "Web application or Content website?" as the first question, routing to the appropriate questionnaire
