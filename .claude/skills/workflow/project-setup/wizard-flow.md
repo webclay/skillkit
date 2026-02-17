@@ -266,9 +266,9 @@ Does this look good?
 
 **Sections to skip in projectbrief (when generating new):** Auth, Payments, AI Integration, Database Schema, API Endpoints, Real-time features (all handled by the Payload template).
 
-### Step 4: Update Environment Variables
+### Step 4: Create Environment Files
 
-Update `.env` and `.env.production` based on the user's hosting choices. The template may already have default env files - check first and update rather than overwrite.
+Create `.env` files in both backend and frontend based on the user's hosting choices. Content websites do not use `.env.production` - production variables are set directly in the deployment platform's dashboard. The wizard generates `.env` files directly (no `.env.example` to copy from).
 
 **See:** [content-questionnaire.md](content-questionnaire.md) → Environment Variables section
 
@@ -297,7 +297,7 @@ Let's get your project running locally. First, I'll set up your environment file
 ```
 
 Then walk through the Getting Started steps one at a time:
-1. Set up .env and .env.production files (Claude does this automatically)
+1. Set up .env files (Claude creates these directly, no .env.example)
 2. Install dependencies
 3. Start both dev servers
 4. Create admin account
