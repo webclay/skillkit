@@ -245,35 +245,24 @@ Content websites don't need these projectbrief sections:
 
 ### Environment Variables
 
-Environment variables depend on the deployment choice.
+Content websites only need a `.env` file - there is no `.env.production`. All database connections point to external services (never local), so the same `.env` structure works for development. Production environment variables are configured directly in the deployment platform's dashboard (Cloudflare, Railway, Vercel, etc.).
 
-Environment variables depend on the database and deployment choices.
+The wizard creates `.env` files directly based on the user's database and deployment choices. There are no `.env.example` files to copy from.
 
 #### PostgreSQL Setup
 
-**`.env` (local development):**
+**`.env`:**
 ```
 # App
 APP_URL=http://localhost:4321
 
 # Payload CMS
 PAYLOAD_URL=http://localhost:3000
-PAYLOAD_SECRET=dev-secret-change-in-production
-DATABASE_URL=postgres://localhost:5432/payload-dev
-```
-
-**`.env.production`:**
-```
-# App
-APP_URL=  # Your domain (e.g., https://example.com)
-
-# Payload CMS
-PAYLOAD_URL=  # Your Payload deployment URL
 PAYLOAD_SECRET=  # Generate: openssl rand -base64 32
-DATABASE_URL=  # From your database provider (Postgres connection string)
+DATABASE_URL=  # From your database provider (see table below)
 ```
 
-**Database hosting by backend platform:**
+**Where to get DATABASE_URL:**
 
 | Backend + DB Provider | DATABASE_URL source |
 |----------------------|---------------------|
@@ -285,50 +274,27 @@ DATABASE_URL=  # From your database provider (Postgres connection string)
 
 #### SQLite / D1 Setup
 
-**`.env` (local development):**
+**`.env`:**
 ```
 # App
 APP_URL=http://localhost:4321
 
 # Payload CMS
 PAYLOAD_URL=http://localhost:3000
-PAYLOAD_SECRET=dev-secret-change-in-production
-```
-
-Locally, Payload uses a SQLite file - no DATABASE_URL needed.
-
-**`.env.production` (Cloudflare D1):**
-```
-# App
-APP_URL=  # Your domain (e.g., https://example.com)
-
-# Payload CMS
-PAYLOAD_URL=  # Your Workers URL (e.g., https://cms.example.com)
 PAYLOAD_SECRET=  # Generate: openssl rand -base64 32
 ```
 
-D1 is configured via `wrangler.toml` bindings, not environment variables.
+Locally, Payload uses a SQLite file - no DATABASE_URL needed. D1 is configured via `wrangler.toml` bindings for production.
 
 #### MongoDB Setup
 
-**`.env` (local development):**
+**`.env`:**
 ```
 # App
 APP_URL=http://localhost:4321
 
 # Payload CMS
 PAYLOAD_URL=http://localhost:3000
-PAYLOAD_SECRET=dev-secret-change-in-production
-MONGODB_URI=mongodb://localhost:27017/payload-dev
-```
-
-**`.env.production`:**
-```
-# App
-APP_URL=  # Your domain (e.g., https://example.com)
-
-# Payload CMS
-PAYLOAD_URL=  # Your Payload deployment URL
 PAYLOAD_SECRET=  # Generate: openssl rand -base64 32
 MONGODB_URI=  # From MongoDB Atlas (connection string)
 ```
@@ -352,7 +318,7 @@ Generate these initial tasks in `project/tasks.md`. Since the template is alread
 ## Tasks
 
 ### Getting Started
-- [ ] Set up environment files (copy .env.example to .env and .env.production in both backend and frontend)
+- [ ] Set up environment files (.env in both backend and frontend)
 - [ ] Install dependencies in both backend and frontend
 - [ ] Start both dev servers (backend on :3000, frontend on :4321)
 - [ ] Create first admin account at localhost:3000/admin
@@ -380,27 +346,23 @@ After the setup wizard completes, walk the user through getting the project runn
 
 #### Step 1: Set Up Environment Files
 
-Both the backend and frontend have `.env.example` files. Create two environment files from each:
+Create a `.env` file in both backend and frontend based on the user's database and deployment choices. There are no `.env.example` files to copy from - the wizard generates `.env` files directly using the templates in the Environment Variables section above.
 
 ```
 Backend:
-- Copy backend/.env.example to backend/.env (local development)
-- Copy backend/.env.example to backend/.env.production (production deployment)
-- In .env: Change PAYLOAD_SECRET to a new random string (this secures the admin panel)
-- In .env.production: Leave all values empty with comments explaining where to find each value
+- Create backend/.env with the appropriate variables for the chosen database
+- Generate a random PAYLOAD_SECRET (this secures the admin panel)
+- DATABASE_URL left empty for user to fill in from their provider (PostgreSQL)
+- Or no DATABASE_URL needed (SQLite/D1 - uses local file)
 
 Frontend:
-- Copy frontend/.env.example to frontend/.env (local development)
-- Copy frontend/.env.example to frontend/.env.production (production deployment)
-- In .env: Defaults are fine for local development
-- In .env.production: Leave all values empty with comments explaining where to find each value
+- Create frontend/.env with APP_URL=http://localhost:4321
+- Defaults are fine for local development
 ```
 
-**Claude should do this for the user** - read the .env.example files, generate a random PAYLOAD_SECRET, and create both `.env` (with dev defaults) and `.env.production` (with empty values and helpful comments) for each folder.
+**Claude should do this for the user** - generate the `.env` files directly with a random PAYLOAD_SECRET and the correct variables for the chosen database type.
 
-**For PostgreSQL setups:** The `DATABASE_URL` in `.env` should point to the external database provider (Supabase, Neon, Railway, etc.). There is no local PostgreSQL - content websites use external database services. The user needs to create their database on the chosen provider and paste the connection string.
-
-**For D1/SQLite setups:** No `DATABASE_URL` needed locally - Payload uses a local SQLite file. D1 bindings are configured via `wrangler.toml` for production.
+**No `.env.production` for content websites.** Production environment variables are configured directly in the deployment platform's dashboard (Cloudflare, Railway, Vercel, etc.). The `.env` file is only for local development.
 
 #### Step 2: Install Dependencies
 

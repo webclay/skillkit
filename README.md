@@ -2,7 +2,7 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.7
+**Version:** 1.2.8
 **Author:** Manuel Merz
 **License:** MIT
 **Date:** 17/02/2026
@@ -376,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.8 (2026-02-17)
+- **Content website env simplification** - Content websites no longer create `.env.production` (production vars go directly in deployment platform dashboards). Removed `.env.example` concept from content website wizard - Claude generates `.env` files directly. Database URLs point to external services by default.
 
 ### v1.2.7 (2026-02-17)
 - **Content website setup fix** - Environment setup now creates both `.env` and `.env.production` files (was only creating `.env`). Removed incorrect "Start PostgreSQL via Docker Compose" task since content websites use external database services (Cloudflare D1, Supabase, Neon, Railway, etc.)
