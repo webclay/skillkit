@@ -183,14 +183,25 @@ if (!session) return new Response("Unauthorized", { status: 401 });
 
 ## Reference Files
 
+### Framework-Specific Guides
 - [tanstack-start.md](tanstack-start.md) - **TanStack Start complete setup** (server-side auth patterns)
 - [trpc.md](trpc.md) - **tRPC authentication** (protected procedures)
+- [convex.md](convex.md) - Convex integration (use when Convex is your database)
+
+### Setup & Configuration
 - [setup.md](setup.md) - Full installation and configuration
 - [forms.md](forms.md) - Complete form examples with error handling
 - [oauth.md](oauth.md) - Social login providers setup
 - [middleware.md](middleware.md) - Route protection patterns (all frameworks)
 - [database.md](database.md) - Prisma schema and database setup
-- [convex.md](convex.md) - Convex integration (use when Convex is your database)
+
+### Official Better Auth Guides (from better-auth/skills)
+- [official-best-practices.md](official-best-practices.md) - Core config, session management, hooks, plugins, type safety, common gotchas
+- [official-security.md](official-security.md) - Rate limiting, CSRF, trusted origins, cookies, OAuth PKCE, IP tracking, audit logging
+- [official-create-auth.md](official-create-auth.md) - Planning wizard for adding auth to any project (auto-detection + questionnaire)
+- [official-email-password.md](official-email-password.md) - Email verification, password reset, password hashing, timing attack prevention
+- [official-organization.md](official-organization.md) - Multi-tenant orgs, teams, RBAC, invitations, dynamic access control
+- [official-two-factor.md](official-two-factor.md) - TOTP, OTP, backup codes, trusted devices, 2FA session flow
 
 ## Tips
 

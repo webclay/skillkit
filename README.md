@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.8
+**Version:** 1.2.9
 **Author:** Manuel Merz
 **License:** MIT
-**Date:** 17/02/2026
+**Date:** 19/02/2026
 
 ---
 
@@ -207,7 +207,7 @@ Next session, Claude picks up exactly where you left off.
 ### Auth
 | Skill | What It Does |
 |-------|--------------|
-| `better-auth` | Better Auth with server-side protection, tRPC integration, TanStack Start patterns |
+| `better-auth` | Better Auth with server-side protection, tRPC integration, TanStack Start patterns, plus official BetterAuth guides for security, 2FA, organizations, email/password |
 
 ### Payments
 | Skill | What It Does |
@@ -376,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.9 (2026-02-19)
+- **Official BetterAuth skills** - Integrated 6 official skills from `better-auth/skills` into the Better Auth skill: best practices (config, sessions, hooks, plugins), security (rate limiting, CSRF, trusted origins, cookies, OAuth PKCE, IP tracking, audit logging), create-auth wizard (project scanning + questionnaire), email/password (verification, password reset, hashing, timing attack prevention), organizations (multi-tenant, teams, RBAC, invitations, dynamic access control), and two-factor auth (TOTP, OTP, backup codes, trusted devices)
 
 ### v1.2.8 (2026-02-17)
 - **Content website env simplification** - Content websites no longer create `.env.production` (production vars go directly in deployment platform dashboards). Removed `.env.example` concept from content website wizard - Claude generates `.env` files directly. Database URLs point to external services by default.
