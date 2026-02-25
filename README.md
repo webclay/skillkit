@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.9
+**Version:** 1.2.10
 **Author:** Manuel Merz
 **License:** MIT
-**Date:** 19/02/2026
+**Date:** 25/02/2026
 
 ---
 
@@ -376,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.10 (2026-02-25)
+- **Official Ultracite skill integration** - Rewrote the Ultracite skill based on the official `haydenbleasel/ultracite` skill from skills.sh. Now covers all three linter backends (Biome, ESLint + Prettier, Oxlint + Oxfmt), full CLI commands (check, fix, doctor, init), non-interactive init flags for CI, framework presets, comprehensive code standards (formatting, style, type safety, async, React, performance, security), troubleshooting with `doctor`, and context-aware rule overrides.
 
 ### v1.2.9 (2026-02-19)
 - **Official BetterAuth skills** - Integrated 6 official skills from `better-auth/skills` into the Better Auth skill: best practices (config, sessions, hooks, plugins), security (rate limiting, CSRF, trusted origins, cookies, OAuth PKCE, IP tracking, audit logging), create-auth wizard (project scanning + questionnaire), email/password (verification, password reset, hashing, timing attack prevention), organizations (multi-tenant, teams, RBAC, invitations, dynamic access control), and two-factor auth (TOTP, OTP, backup codes, trusted devices)

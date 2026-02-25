@@ -1,12 +1,40 @@
 # Changelog
 
-**Last Updated:** 2026-02-13
+**Last Updated:** 2026-02-25
 
 This file tracks work completed across sessions to help maintain context.
 
 ---
 
 ## Session Log
+
+### 2026-02-25 - Official Ultracite Skill Integration
+
+**Summary:** Rewrote the Ultracite linting skill based on the official `haydenbleasel/ultracite` skill from skills.sh, significantly expanding its coverage.
+
+**Completed:**
+- Rewrote `.claude/skills/workflow/ultracite/SKILL.md` with official skill content
+- Added support for three linter backends (Biome, ESLint + Prettier, Oxlint + Oxfmt)
+- Added linter detection logic (biome.jsonc, eslint.config.mjs, .oxlintrc.json)
+- Added full CLI commands (check, fix, doctor, init)
+- Added non-interactive init flags for CI/scripted setups
+- Added framework presets (React, Next, Solid, Vue, Svelte, Qwik, Remix, Angular, Astro, NestJS)
+- Added comprehensive code standards (formatting, style, type safety, async, React, performance, security)
+- Added troubleshooting section with `doctor` command
+- Added context-aware rule overrides (config files, tests, scripts, storybook, build output)
+- Updated README.md changelog and version to 1.2.10
+- Updated version.json to 1.2.10
+
+**Key Decisions:**
+- Kept SkillKit-specific patterns (`[runner]` placeholder, pre-commit workflow, output format)
+- Content sourced from skills.sh page and raw GitHub code-standards.md reference
+
+**Files Changed:**
+- `.claude/skills/workflow/ultracite/SKILL.md`
+- `README.md`
+- `.claude/version.json`
+
+---
 
 ### 2026-02-13 - Payload CMS Skill, Astro Enhancements, and Loading Best Practices
 

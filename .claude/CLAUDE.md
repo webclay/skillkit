@@ -69,6 +69,31 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 3. **Scope discipline** - Do only what was asked
 4. **Run linter before every commit** - Use the project's configured package manager runner (check `## Package Manager` in `project/dev-context.md` or detect from lock files)
 
+## Working Principles
+
+### Plan Before Building
+- Enter plan mode for any non-trivial task (3+ steps or architectural decisions)
+- Write detailed specs upfront to reduce ambiguity
+- If something goes sideways, STOP and re-plan immediately - don't keep pushing
+- Use plan mode for verification steps, not just building
+
+### Verify Before Done
+- Never mark a task complete without proving it works
+- Run tests, check the dev server, review logs - demonstrate correctness
+- Ask yourself: "Would a senior developer approve this?"
+- Diff behavior between main and your changes when relevant
+
+### Learn From Corrections
+- After ANY correction from the user, capture the lesson in auto-memory
+- Write rules for yourself that prevent the same mistake from happening again
+- Review lessons at session start for the relevant project
+
+### Fix Bugs Autonomously
+- When given a bug report, just fix it - don't ask for hand-holding
+- Point at logs, errors, failing tests - then resolve them
+- Zero context switching required from the user
+- Go fix failing CI tests without being told how
+
 ## Automated Git Workflow
 
 **Use these skills to automate your feature branch workflow:**
