@@ -1,12 +1,132 @@
 # Changelog
 
-**Last Updated:** 2026-02-25
+**Last Updated:** 2026-02-27
 
 This file tracks work completed across sessions to help maintain context.
 
 ---
 
 ## Session Log
+
+### 2026-02-27 - Agent Skills Spec Compliance Audit
+
+**Summary:** Audited all 64 SkillKit skills against the official Anthropic Agent Skills specification (agentskills.io/specification) and the official Anthropic skills repo (github.com/anthropics/skills). Fixed all compliance issues: name/directory mismatches, duplicate skill names, oversized files, and description quality.
+
+**Completed:**
+- Fixed `update-system` name/directory mismatch (frontmatter said `update-skillkit`, directory was `update-system`)
+- Renamed `tooling/ultracite` to `tooling/ultracite-setup` to resolve duplicate `ultracite` name conflict with `workflow/ultracite`
+- Split 5 oversized SKILL.md files into main files + reference files:
+  - Payload CMS (2091 to 297 lines) + 7 reference files
+  - Supabase (964 to 191 lines) + 5 reference files
+  - Expo (802 to 295 lines) + 2 reference files
+  - Astro (577 to 415 lines) + 1 reference file
+  - TanStack Start (518 to 341 lines) + 1 reference file
+- Updated all 64 SKILL.md description fields from old "Trigger words -" pattern to new "Use this skill when... Activate when the user mentions..." pattern per Anthropic spec
+- Updated README.md Tooling section for ultracite-setup rename
+- Bumped version to 1.2.12
+
+**Key Decisions:**
+- Followed Anthropic's progressive disclosure model: metadata (~100 tokens), instructions (<500 lines), resources (on demand)
+- Reference files kept one level deep from SKILL.md, no nested chains
+- Descriptions now follow Anthropic's recommended format for better skill activation
+
+**Files Changed:**
+- 64 SKILL.md files (description field updates)
+- `.claude/skills/workflow/update-system/SKILL.md` (name field fix)
+- `.claude/skills/tooling/ultracite-setup/SKILL.md` (renamed from tooling/ultracite)
+- `.claude/skills/cms/payload/SKILL.md` + 7 new reference files
+- `.claude/skills/database/supabase/SKILL.md` + 5 new reference files
+- `.claude/skills/platform/expo/SKILL.md` + 2 new reference files
+- `.claude/skills/framework/astro/SKILL.md` + 1 new reference file
+- `.claude/skills/framework/tanstack-start/SKILL.md` + 1 new reference file
+- `README.md` (version, changelog, tooling section)
+- `.claude/version.json` (bumped to 1.2.12)
+
+---
+
+### 2026-02-27 - Official Railway Skill Integration
+
+**Summary:** Replaced the TanStack Start-specific Railway deployment skill with the official comprehensive skill from `railwayapp/railway-skills`. The new skill covers the full Railway platform with a routing table pointing to 5 reference files.
+
+**Completed:**
+- Replaced `.claude/skills/deployment/railway/SKILL.md` with official Railway skill (resource model, preflight checks, routing table, setup decision flow, composition patterns)
+- Created 5 reference files in `.claude/skills/deployment/railway/references/`:
+  - `setup.md` - Projects, services, databases, templates, workspaces
+  - `deploy.md` - Deploy, redeploy, restart, build config, monorepo patterns, Railpack
+  - `configure.md` - Environments, variables, config patches, domains, networking, multi-region
+  - `operate.md` - Health checks, logs (filtered/time-bounded), metrics via GraphQL, failure triage
+  - `request.md` - Railway GraphQL API, Central Station community search, official docs endpoints
+- Created `.claude/skills/deployment/railway/scripts/railway-api.sh` - GraphQL API helper script
+- Updated `.claude/CLAUDE.md` routing table entry from TanStack-specific to generic Railway
+- Updated `README.md` skill description and added Railway entry to v1.2.11 changelog
+
+**Key Decisions:**
+- Replaced rather than kept alongside the old skill - the old one was project-specific (TanStack Start + Nitro SSR), which violates SkillKit's principle that skills should be generic
+- Adapted frontmatter to SkillKit format (removed `allowed-tools` from Railway's plugin system, kept our `name`/`description` with trigger words)
+- No version bump needed - added to existing v1.2.11 (same session as Resend integration)
+
+**Files Changed:**
+- `.claude/skills/deployment/railway/SKILL.md` (rewritten)
+- `.claude/skills/deployment/railway/references/setup.md` (new)
+- `.claude/skills/deployment/railway/references/deploy.md` (new)
+- `.claude/skills/deployment/railway/references/configure.md` (new)
+- `.claude/skills/deployment/railway/references/operate.md` (new)
+- `.claude/skills/deployment/railway/references/request.md` (new)
+- `.claude/skills/deployment/railway/scripts/railway-api.sh` (new)
+- `.claude/CLAUDE.md` (updated routing table)
+- `README.md` (updated skill description, added changelog entry)
+
+---
+
+### 2026-02-27 - Official Resend Skills Integration
+
+**Summary:** Integrated all three official Resend agent skills (resend-skills, email-best-practices, react-email) into SkillKit's existing Resend skill, following the same pattern used for BetterAuth (official- prefix, SKILL.md as router/index).
+
+**Completed:**
+- Downloaded and saved 20 official reference files from three Resend GitHub repos:
+  - resend/resend-skills: send-email, templates, inbound, agent-inbox
+  - resend/email-best-practices: deliverability, compliance, transactional-emails, sending-reliability, webhooks-events, list-management, marketing-emails, email-capture, email-types, transactional-catalog
+  - resend/react-email: react-email overview, react-components, react-patterns, react-i18n, react-sending
+- Rewrote `.claude/skills/email/resend/SKILL.md` as a comprehensive router/index with guide table mapping 21 topics to their files
+- Updated all cross-references in official files (relative paths to `official-*.md` pattern, external refs to GitHub URLs)
+- Added 4 new routing entries to `.claude/CLAUDE.md` (deliverability, compliance, receiving, React Email)
+- Updated README.md skill description and added v1.2.11 changelog entry
+- Bumped version to 1.2.11
+
+**Key Decisions:**
+- Followed BetterAuth pattern: `official-` prefix for downloaded files, SKILL.md as router
+- Cross-references within files updated to match flat file structure (no subdirectories)
+- References to files we didn't download (send-email sub-references) point to GitHub URLs
+- Agent inbox skill condensed with link to full GitHub version for complete implementations
+- Best practices skill serves as router to 10 topic-specific resource files
+
+**Files Changed:**
+- `.claude/skills/email/resend/SKILL.md` (rewritten as router)
+- `.claude/skills/email/resend/official-send-email.md` (new)
+- `.claude/skills/email/resend/official-templates.md` (new)
+- `.claude/skills/email/resend/official-inbound.md` (new)
+- `.claude/skills/email/resend/official-agent-inbox.md` (new)
+- `.claude/skills/email/resend/official-best-practices.md` (new)
+- `.claude/skills/email/resend/official-react-email.md` (new)
+- `.claude/skills/email/resend/official-deliverability.md` (new)
+- `.claude/skills/email/resend/official-compliance.md` (new)
+- `.claude/skills/email/resend/official-transactional-emails.md` (new)
+- `.claude/skills/email/resend/official-sending-reliability.md` (new)
+- `.claude/skills/email/resend/official-webhooks-events.md` (new)
+- `.claude/skills/email/resend/official-list-management.md` (new)
+- `.claude/skills/email/resend/official-marketing-emails.md` (new)
+- `.claude/skills/email/resend/official-email-capture.md` (new)
+- `.claude/skills/email/resend/official-email-types.md` (new)
+- `.claude/skills/email/resend/official-transactional-catalog.md` (new)
+- `.claude/skills/email/resend/official-react-components.md` (new)
+- `.claude/skills/email/resend/official-react-patterns.md` (new)
+- `.claude/skills/email/resend/official-react-i18n.md` (new)
+- `.claude/skills/email/resend/official-react-sending.md` (new)
+- `.claude/CLAUDE.md` (added 4 routing entries)
+- `README.md` (updated skill description, version, changelog)
+- `.claude/version.json` (bumped to 1.2.11)
+
+---
 
 ### 2026-02-25 - Official Ultracite Skill Integration
 

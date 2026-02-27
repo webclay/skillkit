@@ -1,6 +1,6 @@
 ---
 name: migrate-from-memory
-description: Migrate from old claude-memory system to new skills system. Trigger words - migrate, upgrade skills, convert memory, old system, claude-memory
+description: Use this skill when migrating a project from the old claude-memory system to the new SkillKit skills system. Activate when the user mentions migrating from claude-memory, upgrading the skills setup, or converting old memory files to the new format.
 ---
 
 # Migrate from Claude Memory

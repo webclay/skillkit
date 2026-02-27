@@ -1,6 +1,6 @@
 ---
 name: zefix
-description: Zefix Public REST API for Swiss company data lookup. Trigger words - zefix, swiss company, company search, company lookup, handelsregister, uid, CHE, commercial register, SOGC, firmensuch, firmensuche
+description: Use this skill when looking up Swiss company data via the Zefix Public REST API. Activate when the user mentions Zefix, Swiss company search, Handelsregister, UID/CHE numbers, commercial register lookups, or SOGC publications.
 ---
 
 # Zefix Public REST API

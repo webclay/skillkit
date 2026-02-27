@@ -1,6 +1,6 @@
 ---
 name: neon
-description: Neon serverless Postgres with branching and autoscaling. Trigger words - neon, serverless postgres, database branching, branch database, scale to zero, neon db, preview database
+description: Use this skill when configuring or working with Neon serverless Postgres, including database branching, autoscaling, or preview environments. Activate when the user mentions Neon, serverless Postgres, database branches, scale-to-zero, or preview databases.
 ---
 
 # Neon

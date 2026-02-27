@@ -1,6 +1,6 @@
 ---
 name: dev-server
-description: Manage development servers - start, stop, restart, and troubleshoot. Trigger words - kill server, stop server, restart server, port conflict, port in use, start dev, npm run dev, dev server
+description: Use this skill when managing development servers, including starting, stopping, restarting, or troubleshooting port conflicts. Activate when the user mentions dev server issues, port in use errors, killing a server process, or restarting the development environment.
 ---
 
 # Dev Server Manager

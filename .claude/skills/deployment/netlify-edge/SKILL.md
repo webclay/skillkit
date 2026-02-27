@@ -1,6 +1,6 @@
 ---
 name: netlify-edge
-description: Netlify deployment with Edge Functions and Supabase integration. Trigger words - netlify, netlify edge, edge function, deploy netlify, netlify functions
+description: Use this skill when deploying to Netlify with Edge Functions or integrating Supabase on Netlify. Activate when the user mentions Netlify deployment, Netlify Edge Functions, or deploying serverless functions on Netlify.
 ---
 
 # Netlify + Edge Functions

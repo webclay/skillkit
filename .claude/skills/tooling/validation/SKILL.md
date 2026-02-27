@@ -1,6 +1,6 @@
 ---
 name: validation
-description: TypeScript validation libraries (Zod, Valibot, ArkType). Trigger words - zod, valibot, arktype, validation, schema, parse, validate input, form validation, env validation
+description: Use this skill when implementing input validation with TypeScript libraries like Zod, Valibot, or ArkType. Activate when the user mentions schema validation, form validation, environment variable validation, data parsing, or type-safe input checking.
 ---
 
 # TypeScript Validation

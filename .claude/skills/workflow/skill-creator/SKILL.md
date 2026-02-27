@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: Creates new reusable skills from successful work patterns. Trigger words - create skill, new skill, remember this, save approach, make reusable, add skill
+description: Use this skill when creating a new reusable skill from a successful work pattern or technology integration. Activate when the user mentions creating a skill, saving an approach as reusable, adding a new skill to SkillKit, or packaging a workflow into a skill.
 ---
 
 # Skill Creator

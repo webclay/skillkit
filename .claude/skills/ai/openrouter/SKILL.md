@@ -1,6 +1,6 @@
 ---
 name: openrouter
-description: OpenRouter multi-model AI API. Trigger words - openrouter, multi-model, model fallback, llm api, ai gateway, model routing, cost optimization ai
+description: Use this skill when integrating OpenRouter for multi-model AI routing, model fallback strategies, or cost-optimized LLM API calls. Activate when the user mentions OpenRouter, model routing, AI gateway configuration, or switching between LLM providers.
 ---
 
 # OpenRouter

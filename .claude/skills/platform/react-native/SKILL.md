@@ -1,6 +1,6 @@
 ---
 name: react-native
-description: React Native mobile development for iOS and Android. Trigger words - react native, mobile app, ios, android, native module, native performance, react native navigation
+description: Use this skill when building mobile apps with React Native for iOS and Android, including native modules or navigation. Activate when the user mentions React Native, native mobile development, native modules, React Native Navigation, or platform-specific mobile code.
 ---
 
 # React Native

@@ -1,6 +1,6 @@
 ---
 name: session-log
-description: Save session progress to changelog and update task status. Trigger words - save progress, log session, done for now, end session, wrap up, save work, changelog
+description: Use this skill when saving mid-session progress to the changelog and updating task status without pushing. Activate when the user mentions /log, saving progress, logging the session, updating the changelog, or recording work done so far.
 ---
 
 # Session Log

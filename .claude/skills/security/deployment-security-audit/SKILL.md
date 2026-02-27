@@ -1,6 +1,6 @@
 ---
 name: deployment-security-audit
-description: Audits deployment and infrastructure security. Trigger words - deployment security, https, security headers, secrets management, production security, infrastructure audit, deploy audit
+description: Use this skill when auditing deployment and infrastructure security, including HTTPS, security headers, or secrets management. Activate when the user mentions deployment security review, production hardening, security headers audit, secrets rotation, or infrastructure security assessment.
 ---
 
 # Deployment Security Audit

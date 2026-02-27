@@ -1,6 +1,6 @@
 ---
 name: api-security-audit
-description: Audits API endpoints for security vulnerabilities. Trigger words - api security, input validation, rate limiting, cors, injection, endpoint security, api audit
+description: Use this skill when auditing API endpoints for security vulnerabilities like injection, CORS misconfiguration, or missing rate limiting. Activate when the user mentions API security review, input validation audit, endpoint hardening, or API penetration testing concerns.
 ---
 
 # API Security Audit

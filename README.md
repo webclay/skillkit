@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.10
+**Version:** 1.2.12
 **Author:** Manuel Merz
 **License:** MIT
-**Date:** 25/02/2026
+**Date:** 27/02/2026
 
 ---
 
@@ -253,14 +253,14 @@ Next session, Claude picks up exactly where you left off.
 |-------|--------------|
 | `vercel` | Vercel deployment |
 | `netlify-edge` | Netlify Edge Functions |
-| `railway` | Railway deployment for TanStack Start with Nitro SSR |
+| `railway` | Railway deployment platform - projects, services, databases, domains, CLI, GraphQL API (official Railway skill) |
 | `appwrite` | Appwrite BaaS |
 
 ### Email
 | Skill | What It Does |
 |-------|--------------|
 | `autosend` | AutoSend transactional and marketing email (volume-based pricing, Resend drop-in compatible) |
-| `resend` | Resend transactional email |
+| `resend` | Resend email platform - sending, receiving, React Email templates, deliverability, compliance (includes official Resend skills) |
 
 ### Platform
 | Skill | What It Does |
@@ -279,7 +279,7 @@ Next session, Claude picks up exactly where you left off.
 | Skill | What It Does |
 |-------|--------------|
 | `bun` | Bun runtime |
-| `ultracite` | Ultracite linting |
+| `ultracite-setup` | Ultracite linting setup and configuration |
 | `validation` | Zod/Valibot/ArkType validation |
 
 ### Design
@@ -376,6 +376,13 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.12 (2026-02-27)
+- **Agent Skills spec compliance** - Audited all 64 skills against the official Anthropic Agent Skills specification. Fixed name/directory mismatches, resolved duplicate skill names (`tooling/ultracite` renamed to `tooling/ultracite-setup`), split 5 oversized SKILL.md files into main files + 16 reference files (Payload 7, Supabase 5, Expo 2, Astro 1, TanStack Start 1), and updated all 64 description fields to Anthropic's recommended "Use this skill when..." format for better skill activation.
+
+### v1.2.11 (2026-02-27)
+- **Official Railway skill integration** - Replaced the TanStack-specific Railway skill with the official skill from `railwayapp/railway-skills`. Now covers the full Railway platform: project/service/database setup, deploy and release management (monorepo, Dockerfile, Railpack), environment and variable configuration (template syntax, private networking, multi-region), health monitoring and failure triage (logs, metrics, filtered queries), and GraphQL API access (project mutations, service creation, metrics, template search). Includes 5 reference files (setup, deploy, configure, operate, request) and a `railway-api.sh` GraphQL helper script.
+- **Official Resend skills integration** - Rewrote the Resend skill with 20 official skill files from `resend/resend-skills`, `resend/email-best-practices`, and `resend/react-email`. Now covers sending (single/batch, idempotency, retries, webhooks, domain warm-up, suppression lists), receiving (inbound domains, MX setup, attachments, forwarding), React Email (components, Tailwind CSS, patterns, i18n, sending), templates (API lifecycle, variables, aliases), AI agent inbox (5 security levels, prompt injection protection), deliverability (SPF/DKIM/DMARC), compliance (CAN-SPAM, GDPR, CASL), and 10 best-practice resource files.
 
 ### v1.2.10 (2026-02-25)
 - **Official Ultracite skill integration** - Rewrote the Ultracite skill based on the official `haydenbleasel/ultracite` skill from skills.sh. Now covers all three linter backends (Biome, ESLint + Prettier, Oxlint + Oxfmt), full CLI commands (check, fix, doctor, init), non-interactive init flags for CI, framework presets, comprehensive code standards (formatting, style, type safety, async, React, performance, security), troubleshooting with `doctor`, and context-aware rule overrides.

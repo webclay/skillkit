@@ -1,6 +1,6 @@
 ---
 name: task-tracker
-description: Track project tasks, show progress, suggest next steps, and mark work complete. Trigger words - status, progress, what's next, tasks, todo, task done, mark complete, show tasks
+description: Use this skill when tracking project tasks, checking progress, or deciding what to work on next. Activate when the user mentions task status, project progress, what to do next, marking tasks complete, or viewing the current task list.
 ---
 
 # Task Tracker

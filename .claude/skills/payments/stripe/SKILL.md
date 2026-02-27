@@ -1,6 +1,6 @@
 ---
 name: stripe
-description: Stripe payment integration patterns. Trigger words - stripe, payment, checkout, subscription, billing, invoice, webhook, credit card, pay, pricing, plans, customer portal
+description: Use this skill when integrating Stripe for payments, checkout flows, subscriptions, or billing management. Activate when the user mentions Stripe, payment processing, checkout sessions, subscription plans, invoices, Stripe webhooks, or customer portal setup.
 ---
 
 # Stripe

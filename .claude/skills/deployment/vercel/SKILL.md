@@ -1,6 +1,6 @@
 ---
 name: vercel
-description: Vercel deployment platform for Next.js and web applications. Trigger words - vercel, deploy, deployment, preview deployment, serverless function, edge runtime, vercel.json
+description: Use this skill when deploying to Vercel, configuring serverless or edge functions, or setting up preview deployments. Activate when the user mentions Vercel deployment, vercel.json configuration, serverless functions, edge runtime, or Vercel preview environments.
 ---
 
 # Vercel

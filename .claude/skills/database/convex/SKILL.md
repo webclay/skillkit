@@ -1,6 +1,6 @@
 ---
 name: convex
-description: Convex real-time backend platform with database, auth, and file storage. Trigger words - convex, real-time database, realtime, collaborative, live updates, instant sync, convex query, convex mutation
+description: Use this skill when building with Convex for real-time database queries, mutations, auth, or file storage. Activate when the user mentions Convex, real-time data sync, collaborative features, live updates, or Convex queries and mutations.
 ---
 
 # Convex

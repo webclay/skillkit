@@ -1,6 +1,6 @@
 ---
 name: frontend-security-audit
-description: Audits frontend code for security vulnerabilities. Trigger words - frontend security, xss, csp, client security, localStorage security, dependency audit, npm audit
+description: Use this skill when auditing frontend code for security vulnerabilities like XSS, insecure localStorage usage, or outdated dependencies. Activate when the user mentions frontend security review, CSP configuration, client-side security, dependency audit, or npm audit concerns.
 ---
 
 # Frontend Security Audit

@@ -130,10 +130,14 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | UI components, forms, dialogs | `ui/shadcn` |
 | AI features, chat, text generation | `ai/vercel-ai-sdk` |
 | Sending emails, notifications | `email/resend` or `email/autosend` |
+| Email deliverability, SPF/DKIM/DMARC, spam | `email/resend` |
+| Email compliance, GDPR, CAN-SPAM | `email/resend` |
+| Receiving emails, inbound webhooks | `email/resend` |
+| React Email templates | `email/resend` |
 | File uploads, image storage, S3/R2 | `storage/cloudflare-r2` |
 | Framework-specific patterns | `framework/nextjs`, `framework/tanstack-start`, or `framework/astro` |
 | CMS, admin panel, content management, Payload | `cms/payload` |
-| Deploying to Railway (TanStack Start SSR) | `deployment/railway` |
+| Railway deployment, services, databases, domains, troubleshooting | `deployment/railway` |
 | Project setup, new projects | `workflow/project-setup` |
 | Feature planning, "plan feature" | `workflow/feature-planner` |
 | Server issues, port conflicts | `workflow/dev-server` |

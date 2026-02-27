@@ -1,6 +1,6 @@
 ---
 name: prisma
-description: Prisma ORM database patterns and implementation. Trigger words - prisma, database, schema, migration, model, query, relation, findMany, findUnique, create, update, delete, db push, db pull
+description: Use this skill when working with Prisma ORM for database schema design, migrations, queries, or relations. Activate when the user mentions Prisma, database models, schema changes, migration issues, or Prisma Client operations like findMany, create, or update.
 ---
 
 # Prisma

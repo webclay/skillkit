@@ -1,6 +1,6 @@
 ---
 name: workflow-devkit
-description: Vercel AI SDK Workflow DevKit for durable, resumable workflows. Trigger words - workflow devkit, durable workflow, resumable task, ai pipeline, long-running task, workflow step
+description: Use this skill when building durable, resumable workflows with the Vercel AI SDK Workflow DevKit. Activate when the user mentions workflow steps, long-running AI pipelines, resumable tasks, or durable multi-step processing.
 ---
 
 # Workflow DevKit

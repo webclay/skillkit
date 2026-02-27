@@ -1,6 +1,6 @@
 ---
 name: database-security-audit
-description: Audits database security architecture and access patterns. Trigger words - security audit, database security, rls audit, access control, security review, production ready
+description: Use this skill when auditing database security architecture, access control patterns, or RLS policies before production. Activate when the user mentions database security review, row-level security audit, access control hardening, or production readiness checks for the database layer.
 ---
 
 # Database Security Audit

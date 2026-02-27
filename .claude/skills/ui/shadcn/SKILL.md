@@ -1,6 +1,6 @@
 ---
 name: shadcn
-description: Shadcn UI component patterns and usage. Trigger words - shadcn, component, button, form, dialog, modal, dropdown, input, select, table, card, toast, alert, tabs, accordion, tailwind, radix, magic ui, aceternity, chatcn
+description: Use this skill when building UI with shadcn/ui components like buttons, forms, dialogs, tables, or cards. Activate when the user mentions shadcn, Radix UI primitives, Tailwind-based components, Magic UI, Aceternity, or ChatCN component patterns.
 ---
 
 # Shadcn UI & Component Libraries

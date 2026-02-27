@@ -1,6 +1,6 @@
 ---
 name: debugger
-description: Systematic debugging for errors and unexpected behavior. Trigger words - debug, error, bug, not working, broken, fix, crash, exception, failed, issue, problem
+description: Use this skill when systematically debugging errors, crashes, or unexpected behavior in the codebase. Activate when the user mentions a bug, error, crash, exception, something not working, or needing to investigate a failing feature.
 ---
 
 # Debugger

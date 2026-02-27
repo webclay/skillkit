@@ -1,6 +1,6 @@
 ---
 name: durable-streams
-description: Durable Streams protocol for resumable HTTP streaming. Trigger words - durable streams, resumable streaming, reconnect stream, reliable streaming, stream recovery, offset streaming, AI token streaming
+description: Use this skill when implementing resumable HTTP streaming with the Durable Streams protocol. Activate when the user mentions reliable streaming, stream recovery after disconnect, offset-based reconnection, or durable AI token streaming.
 ---
 
 # Durable Streams

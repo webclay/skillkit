@@ -1,6 +1,6 @@
 ---
 name: auth-security-audit
-description: Audits authentication and session security. Trigger words - auth security, session security, token storage, login security, oauth audit, csrf, authentication review
+description: Use this skill when auditing authentication and session security for vulnerabilities like CSRF, insecure token storage, or weak session handling. Activate when the user mentions auth security review, session hardening, OAuth audit, login security, or token storage best practices.
 ---
 
 # Auth Security Audit

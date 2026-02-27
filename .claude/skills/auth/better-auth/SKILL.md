@@ -1,6 +1,6 @@
 ---
 name: better-auth
-description: Better Auth authentication patterns and implementation. Trigger words - login, signup, sign up, sign in, logout, auth, authentication, OAuth, social login, password reset, forgot password, session, protected routes, user account
+description: Use this skill when implementing authentication with Better Auth, including login, signup, OAuth, session management, or protected routes. Activate when the user mentions auth, social login, password reset, user accounts, or securing routes.
 ---
 
 # Better Auth

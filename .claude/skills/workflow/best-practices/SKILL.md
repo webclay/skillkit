@@ -1,6 +1,6 @@
 ---
 name: best-practices
-description: Development best practices for task management, commits, and session workflows. Trigger words - best practices, code quality, commit messages, task tracking, workflow, conventions
+description: Use this skill when following development best practices for task management, commit conventions, or session workflows. Activate when the user mentions best practices, code quality guidelines, commit message standards, or workflow conventions.
 ---
 
 # Best Practices
