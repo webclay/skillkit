@@ -1,6 +1,6 @@
 ---
 name: autosend
-description: AutoSend email service for transactional and marketing emails. Trigger words - autosend, auto send, email, send email, transactional email, notification email, email template, password reset email, marketing email, email campaign, bulk email
+description: Use this skill when sending transactional or marketing emails with AutoSend. Activate when the user mentions AutoSend, email campaigns, notification emails, password reset emails, bulk email sending, or email template design.
 ---
 
 # AutoSend

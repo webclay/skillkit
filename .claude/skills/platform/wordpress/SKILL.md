@@ -1,6 +1,6 @@
 ---
 name: wordpress
-description: WordPress plugin development with PHP. Trigger words - wordpress, wp plugin, custom post type, wordpress rest api, wordpress admin, php plugin
+description: Use this skill when developing WordPress plugins with PHP, including custom post types, REST API endpoints, or admin panel features. Activate when the user mentions WordPress, WP plugin development, custom post types, WordPress REST API, or WordPress admin customization.
 ---
 
 # WordPress Plugin Development

@@ -1,6 +1,6 @@
 ---
 name: create-branch
-description: Auto-create a feature branch from the current task. Trigger words - branch, create branch, new branch, start task
+description: Use this skill when starting a new task by creating a feature branch from the current task list. Activate when the user mentions /branch, creating a branch, starting a new task, or beginning work on a feature.
 ---
 
 # Create Branch

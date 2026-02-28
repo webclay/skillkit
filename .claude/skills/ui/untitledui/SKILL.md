@@ -1,6 +1,6 @@
 ---
 name: untitledui
-description: Untitled UI React component library with Tailwind CSS. Trigger words - untitled ui, dashboard, admin panel, saas ui, data table, sidebar, navigation, metrics, charts
+description: Use this skill when building dashboards or admin interfaces with the Untitled UI React component library. Activate when the user mentions Untitled UI, SaaS dashboard components, data tables, sidebar navigation, metrics displays, or chart components with Tailwind CSS.
 ---
 
 # Untitled UI React

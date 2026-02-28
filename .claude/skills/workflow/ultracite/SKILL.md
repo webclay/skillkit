@@ -1,6 +1,6 @@
 ---
 name: ultracite
-description: Linting and formatting with Ultracite. Trigger words - lint, linting, format, type check, typescript error, eslint, biome, oxlint, fix lint, ultracite, code quality
+description: Use this skill when running linting, formatting, or type checking with Ultracite before commits or to fix code quality issues. Activate when the user mentions linting, formatting, TypeScript errors, ESLint/Biome issues, or running Ultracite to clean up code.
 ---
 
 # Ultracite

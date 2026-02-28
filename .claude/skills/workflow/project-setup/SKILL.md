@@ -1,6 +1,6 @@
 ---
 name: project-setup
-description: Initialize new projects or configure existing ones. Trigger words - setup, new project, initialize, init project, configure project, start new app, create app
+description: Use this skill when initializing a new project or configuring an existing codebase with SkillKit. Activate when the user mentions project setup, new project, initializing a project, configuring an existing app, or starting a new application from scratch.
 ---
 
 # Project Setup

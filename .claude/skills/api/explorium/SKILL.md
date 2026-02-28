@@ -1,6 +1,6 @@
 ---
 name: explorium
-description: Explorium API for B2B data enrichment, business intelligence, and prospect discovery. Trigger words - explorium, business enrichment, prospect enrichment, firmographics, b2b intelligence, company data, lead discovery, contact enrichment
+description: Use this skill when integrating the Explorium API for B2B data enrichment, firmographic intelligence, or prospect discovery. Activate when the user mentions Explorium, business enrichment, B2B intelligence, lead discovery, or company firmographics.
 ---
 
 # Explorium API

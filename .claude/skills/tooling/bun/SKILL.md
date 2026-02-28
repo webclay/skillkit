@@ -1,6 +1,6 @@
 ---
 name: bun
-description: Bun JavaScript runtime and package manager. Trigger words - bun, bun install, bun run, bunx, bun test, bun build
+description: Use this skill when working with the Bun JavaScript runtime and package manager for installing packages, running scripts, testing, or building. Activate when the user mentions Bun, bun install, bun run, bunx, bun test, or bun build commands.
 ---
 
 # Bun

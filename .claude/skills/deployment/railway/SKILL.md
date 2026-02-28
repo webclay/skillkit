@@ -1,330 +1,117 @@
 ---
 name: railway
-description: Railway deployment platform for TanStack Start with Nitro SSR. Trigger words - railway, deploy to railway, railway deployment, ssr deployment, nitro deployment, railway.app
+description: Use this skill when deploying to Railway, provisioning services or databases, configuring domains, or troubleshooting Railway deployments. Activate when the user mentions Railway, Railway services, Railway databases, deployment logs, environment variables on Railway, or Railway domain configuration.
 ---
 
-# Railway
+# Use Railway
 
-Modern deployment platform with one-click database provisioning, automatic SSL, and preview environments for every PR.
+## Railway resource model
 
-## When to Use This Skill
+Railway organizes infrastructure in a hierarchy:
 
-- Deploying TanStack Start applications with Nitro SSR
-- Need PostgreSQL, MySQL, Redis, or MongoDB alongside your app
-- Want automatic preview deployments for PRs
-- Building full-stack SSR applications
-- Need WebSocket support or long-running connections
-- Require background jobs and persistent processes
+- **Workspace** is the billing and team scope. A user belongs to one or more workspaces.
+- **Project** is a collection of services under one workspace. It maps to one deployable unit of work.
+- **Environment** is an isolated configuration plane inside a project (for example, `production`, `staging`). Each environment has its own variables, config, and deployment history.
+- **Service** is a single deployable unit inside a project. It can be an app from a repo, a Docker image, or a managed database.
+- **Deployment** is a point-in-time release of a service in an environment. It has build logs, runtime logs, and a status lifecycle.
 
-## When NOT to Use
+Most CLI commands operate on the linked project/environment/service context. Use `railway status --json` to see the context, and `--project`, `--environment`, `--service` flags to override.
 
-- Building static sites (use Vercel or Netlify instead)
-- Need specific cloud provider (AWS/GCP/Azure)
-- Require Kubernetes or complex container orchestration
+## Preflight
 
-## Prerequisites
-
-- TanStack Start application with Nitro configured
-- GitHub repository
-- Railway account ([railway.com](https://railway.com))
-
-## 1. Initial Setup
-
-### Install Nitro (Nightly)
-
-Add to `package.json`:
-
-```json
-{
-  "dependencies": {
-    "nitro": "npm:nitro-nightly@latest"
-  }
-}
-```
-
-Or pin to a specific nightly version:
-```json
-{
-  "dependencies": {
-    "nitro": "npm:nitro-nightly@^3.0.1-20260209-102041-99f7fe3d"
-  }
-}
-```
-
-### Configure Vite
-
-In `vite.config.ts`, ensure plugins are in the correct order:
-
-```typescript
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import { nitro } from 'nitro/vite'
-import viteReact from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
-
-export default defineConfig({
-  plugins: [
-    tanstackStart(),  // MUST be first
-    nitro(),          // Nitro for server deployment
-    viteReact(),
-  ],
-})
-```
-
-### Configure Package Scripts
-
-```json
-{
-  "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "start": "node .output/server/index.mjs"
-  }
-}
-```
-
-## 2. Railway Configuration
-
-### Critical Environment Variable
-
-Railway's Railpack builder auto-detects projects. For SSR apps (not SPAs), you MUST add:
-
-**`RAILPACK_NO_SPA=1`**
-
-This tells Railway to use your Node.js server instead of serving static files through Caddy.
-
-### Service Settings
-
-Railway will auto-detect these from your `package.json`:
-
-- **Build Command**: `bun run build` (or `npm run build`)
-- **Start Command**: `bun run start` (runs `node .output/server/index.mjs`)
-- **Port**: Railway automatically sets `PORT` env var (typically 8080)
-
-**Do NOT** set a custom start command unless necessary. Let Railway use your `package.json` scripts.
-
-### Environment Variables
-
-Set these in Railway > Service > Variables:
-
-#### Required for SSR
-```
-RAILPACK_NO_SPA=1
-```
-
-#### Your Application Variables
-```
-# Database (Supabase/Postgres)
-DATABASE_URL=postgresql://...
-SUPABASE_SERVICE_ROLE_KEY=...
-
-# Application URLs (use your Railway domain)
-VITE_APP_URL=https://your-app.up.railway.app
-BETTER_AUTH_URL=https://your-app.up.railway.app
-
-# API Keys
-OPENROUTER_API_KEY=...
-RESEND_API_KEY=...
-# ... etc
-```
-
-**Important**: `VITE_*` prefixed variables are baked into the client bundle at build time. Make sure they're set before building.
-
-## 3. Deployment Steps
-
-1. **Push to GitHub**
-   ```bash
-   git push origin main
-   ```
-
-2. **Connect to Railway**
-   - Go to [railway.com](https://railway.com)
-   - Click "New Project"
-   - Select "Deploy from GitHub repo"
-   - Choose your repository
-
-3. **Configure Environment Variables**
-   - Go to your service > Variables tab
-   - Add `RAILPACK_NO_SPA=1`
-   - Add all your application environment variables
-
-4. **Trigger Deployment**
-   - Railway will automatically deploy on push to your main branch
-   - Or manually redeploy from the Railway dashboard
-
-## 4. Common Issues & Solutions
-
-### 502 Bad Gateway
-
-**Symptom**: Server logs show "Listening on port 8080" but browser shows 502
-
-**Cause**: Railway's Railpack detected your app as an SPA and is serving it through Caddy instead of your Node.js server
-
-**Solution**: Add `RAILPACK_NO_SPA=1` environment variable and redeploy
-
-### Port Configuration
-
-The Nitro server automatically reads Railway's `PORT` environment variable. No configuration needed.
-
-```typescript
-// Nitro automatically uses process.env.PORT or process.env.NITRO_PORT
-// Defaults to 3000 if neither is set
-```
-
-### Database Connection Issues
-
-**Symptom**: Server crashes immediately after "Listening on port..."
-
-**Cause**: `pg` Pool emits unhandled errors if database connection fails
-
-**Solution**: Add error handler to your Pool:
-
-```typescript
-import { Pool } from 'pg'
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-})
-
-// Prevent unhandled pool errors from crashing the process
-pool.on('error', (err) => {
-  console.error('Unexpected pg pool error:', err.message)
-})
-```
-
-### Build Failures
-
-**Module not found errors**: Check that paths use correct aliases:
-- `@/*` for shared code in project root
-- `~/*` for TanStack Start-specific code in `src/`
-
-**Server-only modules leaking to client**: Create a Vite plugin to stub them:
-
-```typescript
-function serverOnlyModules(): Plugin {
-  const serverOnlyPackages = new Set(['pg', 'node:async_hooks'])
-
-  return {
-    name: 'server-only-modules',
-    enforce: 'pre',
-    applyToEnvironment(env) {
-      return env.name === 'client'
-    },
-    resolveId(id) {
-      const pkgName = id.split('/')[0]
-      if (serverOnlyPackages.has(pkgName)) {
-        return { id: `\0server-only:${id}` }
-      }
-    },
-    load(id) {
-      if (id.startsWith('\0server-only:')) {
-        return 'export default {}'  // Empty stub
-      }
-    }
-  }
-}
-```
-
-## 5. Performance Optimization
-
-### FastResponse (Node.js Only)
-
-For ~5% throughput improvement, use srvx's optimized Response:
+Before any mutation, verify context:
 
 ```bash
-npm install srvx
+command -v railway                # CLI installed
+railway whoami --json             # authenticated
+railway --version                 # check CLI version
+railway status --json             # linked project/environment/service
 ```
 
-In your server entry (`src/server.ts`):
+If the CLI is missing, guide the user to install it.
 
-```typescript
-import { FastResponse } from 'srvx'
-globalThis.Response = FastResponse
+```bash
+bash <(curl -fsSL cli.new) # Shell script (macOS, Linux, Windows via WSL)
+brew install railway # Homebrew (macOS)
+npm i -g @railway/cli # npm (macOS, Linux, Windows). Requires Node.js version 16 or higher.
 ```
 
-This only works with Node.js deployments using Nitro/srvx.
+If not authenticated, run `railway login`. If not linked, run `railway link --project <id-or-name>`.
 
-## 6. Railway Features
+If a command is not recognized (for example, `railway environment edit`), the CLI may be outdated. Upgrade with:
 
-### Automatic Deployments
-- Every push to `main` triggers a new deployment
-- Pull requests get preview environments
-
-### Built-in Services
-- PostgreSQL, MySQL, Redis, MongoDB available
-- One-click provisioning
-- Connection strings auto-injected as env vars
-
-### Monitoring
-- **Deploy Logs**: Build output
-- **HTTP Logs**: Request/response logs
-- **Metrics**: CPU, memory, network usage
-
-### Custom Domains
-- Add your own domain in Railway > Settings > Domains
-- SSL automatically provisioned
-
-## 7. Project Structure
-
-```
-project/
-├── src/
-│   ├── routes/          # TanStack Router routes
-│   ├── client.tsx       # Client entry
-│   ├── ssr.tsx          # Server entry
-│   └── router.tsx       # Router config
-├── lib/                 # Shared utilities
-├── components/          # React components
-├── vite.config.ts       # Vite + Nitro config
-├── nitro.config.ts      # Nitro runtime config (optional)
-├── package.json         # Scripts and dependencies
-└── .output/             # Built output (gitignored)
-    └── server/
-        └── index.mjs    # Production server
+```bash
+railway upgrade
 ```
 
-## 8. Troubleshooting Checklist
+## Common quick operations
 
-Before opening a support ticket:
+These are frequent enough to handle without loading a reference:
 
-- [ ] `RAILPACK_NO_SPA=1` is set
-- [ ] All `VITE_*` variables are set in Railway
-- [ ] Build command is `bun run build` or `npm run build`
-- [ ] Start command is `bun run start` or `npm run start`
-- [ ] Database connection string is correct
-- [ ] Server-only modules don't leak to client bundle
-- [ ] Pool error handler is added (if using `pg`)
-- [ ] Railway domain is in auth trustedOrigins
+```bash
+railway status --json                                    # current context
+railway whoami --json                                    # auth and workspace info
+railway project list --json                              # list projects
+railway service status --all --json                      # all services in current context
+railway variable list --service <svc> --json             # list variables
+railway variable set KEY=value --service <svc>           # set a variable
+railway logs --service <svc> --lines 200 --json          # recent logs
+railway up --detach -m "<summary>"                       # deploy current directory
+```
 
-## Tips
+## Routing
 
-- Always set `RAILPACK_NO_SPA=1` for SSR applications
-- Use Railway's built-in database services for zero-config setup
-- Preview environments automatically created for PRs
-- Environment variable changes require redeploy
-- Check Deploy Logs for build errors, HTTP Logs for runtime issues
-- Railway automatically handles SSL certificates
+For anything beyond quick operations, load the reference that matches the user's intent. Load only what you need, one reference is usually enough, two at most.
 
-## How to Verify
+| Intent | Reference | Use for |
+|---|---|---|
+| Create or connect resources | [setup.md](references/setup.md) | Projects, services, databases, templates, workspaces |
+| Ship code or manage releases | [deploy.md](references/deploy.md) | Deploy, redeploy, restart, build config, monorepo, Dockerfile |
+| Change configuration | [configure.md](references/configure.md) | Environments, variables, config patches, domains, networking |
+| Check health or debug failures | [operate.md](references/operate.md) | Status, logs, metrics, build/runtime triage, recovery |
+| Request from API, docs, or community | [request.md](references/request.md) | Railway GraphQL API queries/mutations, metrics queries, Central Station, official docs |
 
-### Quick Checks
-- Railway deployment shows "Success" status
-- Application accessible at `*.up.railway.app` URL
-- Server logs show "Listening on port 8080"
-- No 502 Bad Gateway errors
+If the request spans two areas (for example, "deploy and then check if it's healthy"), load both references and compose one response.
 
-### Common Issues
-- "502 Bad Gateway": Missing `RAILPACK_NO_SPA=1`
-- "Application failed to respond": Check port configuration
-- "Build failed": Review Deploy Logs for errors
-- "Database connection refused": Verify `DATABASE_URL` is set
-- "Server crashes on start": Add error handler to database pool
+## Execution rules
 
-## Resources
+1. Prefer Railway CLI. Fall back to `scripts/railway-api.sh` for operations the CLI doesn't expose.
+2. Use `--json` output where available for reliable parsing.
+3. Resolve context before mutation. Know which project, environment, and service you're acting on.
+4. For destructive actions (delete service, remove deployment, drop database), confirm intent and state impact before executing.
+5. After mutations, verify the result with a read-back command.
 
-- [TanStack Start Hosting Docs](https://tanstack.com/start/latest/docs/framework/react/guide/hosting)
-- [Railway TanStack Start Help Thread](https://station.railway.com/questions/502-tan-stack-start-project-e00eb065)
-- [Railway Error Reference](https://docs.railway.com/reference/errors/application-failed-to-respond)
-- [Railway Deploy Templates](https://railway.com/deploy/trustworthy-smile)
-- [Railway Help Station](https://station.railway.com)
-- [TanStack Discord](https://discord.gg/tanstack)
+## Composition patterns
+
+Multi-step workflows follow natural chains:
+
+- **First deploy**: setup (create project + service), configure (set variables and source), deploy, operate (verify healthy)
+- **Fix a failure**: operate (triage logs), configure (fix config/variables), deploy (redeploy), operate (verify recovery)
+- **Add a domain**: configure (add domain + set port), operate (verify DNS and service health)
+- **Docs to action**: request (fetch docs answer), route to the relevant operational reference
+
+When composing, return one unified response covering all steps. Don't ask the user to invoke each step separately.
+
+## Setup decision flow
+
+When the user wants to create or deploy something, determine the right action from current context:
+
+1. Run `railway status --json` in the current directory.
+2. **If linked**: add a service to the existing project (`railway add --service <name>`). Do not create a new project unless the user explicitly says "new project" or "separate project".
+3. **If not linked**: check the parent directory (`cd .. && railway status --json`).
+   - **Parent linked**: this is likely a monorepo sub-app. Add a service and set `rootDirectory` to the sub-app path.
+   - **Parent not linked**: run `railway list --json` and look for a project matching the directory name.
+     - **Match found**: link to it (`railway link --project <name>`).
+     - **No match**: create a new project (`railway init --name <name>`).
+4. When multiple workspaces exist, match by name from `railway whoami --json`.
+
+**Naming heuristic**: app names like "flappy-bird" or "my-api" are service names, not project names. Use the directory or repo name for the project.
+
+## Response format
+
+For all operational responses, return:
+1. What was done (action and scope).
+2. The result (IDs, status, key output).
+3. What to do next (or confirmation that the task is complete).
+
+Keep output concise. Include command evidence only when it helps the user understand what happened.

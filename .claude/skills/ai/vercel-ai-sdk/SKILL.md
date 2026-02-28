@@ -1,6 +1,6 @@
 ---
 name: vercel-ai-sdk
-description: Vercel AI SDK for streaming AI responses, chat interfaces, and tool calling. Trigger words - ai sdk, chat, chatbot, streaming, llm, gpt, claude, openai, anthropic, text generation, ai assistant, useChat, streamText, generateText, tool calling
+description: Use this skill when building AI-powered features with the Vercel AI SDK, including streaming chat interfaces, text generation, and tool calling. Activate when the user mentions useChat, streamText, generateText, AI assistants, chatbots, or integrating LLM providers like OpenAI or Anthropic.
 ---
 
 # Vercel AI SDK

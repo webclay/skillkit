@@ -1,6 +1,6 @@
 ---
 name: nextjs
-description: Next.js App Router patterns and best practices. Trigger words - nextjs, next.js, app router, page, layout, server component, client component, server action, api route, middleware, loading, error boundary, use server, use client
+description: Use this skill when building with Next.js App Router, including pages, layouts, server/client components, or middleware. Activate when the user mentions Next.js, App Router, server components, client components, loading states, error boundaries, or Next.js middleware.
 ---
 
 # Next.js

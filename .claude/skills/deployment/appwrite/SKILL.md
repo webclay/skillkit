@@ -1,6 +1,6 @@
 ---
 name: appwrite
-description: Appwrite Backend-as-a-Service platform. Trigger words - appwrite, baas, backend as a service, appwrite auth, appwrite database, appwrite storage, appwrite functions
+description: Use this skill when building with Appwrite for backend-as-a-service features including auth, database, storage, or serverless functions. Activate when the user mentions Appwrite, Appwrite Auth, Appwrite Database, Appwrite Storage, or Appwrite Functions.
 ---
 
 # Appwrite

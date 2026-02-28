@@ -1,6 +1,6 @@
 ---
 name: update-stack
-description: Update all project dependencies safely. Trigger words - update stack, update dependencies, upgrade packages, update frameworks, update all, upgrade stack, npm update, bun update
+description: Use this skill when safely updating all project dependencies, frameworks, or packages to their latest versions. Activate when the user mentions updating dependencies, upgrading packages, updating the tech stack, or running dependency updates with npm or bun.
 ---
 
 # Update Stack

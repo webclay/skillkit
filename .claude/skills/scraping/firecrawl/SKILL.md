@@ -1,6 +1,6 @@
 ---
 name: firecrawl
-description: Firecrawl web scraping API for AI applications. Trigger words - firecrawl, scrape, scraping, crawl, extract data, web content, parse website, crawl docs
+description: Use this skill when scraping or crawling web content with the Firecrawl API for AI applications. Activate when the user mentions Firecrawl, web scraping, crawling websites, extracting web data, parsing website content, or crawling documentation sites.
 ---
 
 # Firecrawl Web Scraping

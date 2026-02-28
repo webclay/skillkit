@@ -1,6 +1,6 @@
 ---
 name: polar
-description: Polar monetization platform for open source and digital products. Trigger words - polar, open source monetization, digital products, github sponsors, tax handling, merchant of record
+description: Use this skill when integrating Polar for monetizing open source projects or selling digital products. Activate when the user mentions Polar, open source monetization, digital product sales, GitHub Sponsors alternatives, tax handling, or merchant of record services.
 ---
 
 # Polar

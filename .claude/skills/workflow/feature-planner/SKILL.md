@@ -1,6 +1,6 @@
 ---
 name: feature-planner
-description: Create detailed implementation plans for new features. Trigger words - plan feature, plan, design feature, scope, implementation plan, architect, spec out
+description: Use this skill when creating detailed implementation plans for new features before building. Activate when the user mentions planning a feature, scoping work, writing an implementation spec, architecting a solution, or designing a feature before coding.
 ---
 
 # Feature Planner

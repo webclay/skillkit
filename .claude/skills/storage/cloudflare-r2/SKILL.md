@@ -1,6 +1,6 @@
 ---
 name: cloudflare-r2
-description: Cloudflare R2 object storage for file uploads. Trigger words - r2, cloudflare r2, file upload, image upload, object storage, s3, presigned url, upload file, store files, bucket
+description: Use this skill when implementing file uploads, image storage, or object storage with Cloudflare R2 or S3-compatible APIs. Activate when the user mentions R2, Cloudflare R2, file uploads, presigned URLs, bucket configuration, or image storage with object storage.
 ---
 
 # Cloudflare R2

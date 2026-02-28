@@ -1,6 +1,6 @@
 ---
-name: ultracite
-description: Ultracite zero-config linting and formatting for TypeScript. Trigger words - ultracite, lint setup, format code, code quality, eslint config, prettier config
+name: ultracite-setup
+description: Use this skill when setting up Ultracite linting for a TypeScript project, migrating from ESLint/Prettier, or configuring CI/CD linting pipelines. Activate when the user mentions Ultracite setup, lint configuration, ESLint migration, Prettier replacement, or initial code quality tooling setup.
 ---
 
 # Ultracite

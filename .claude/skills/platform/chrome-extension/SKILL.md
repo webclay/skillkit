@@ -1,6 +1,6 @@
 ---
 name: chrome-extension
-description: Chrome extension development with Manifest V3. Trigger words - chrome extension, browser extension, manifest v3, content script, popup, background script, service worker extension
+description: Use this skill when developing Chrome extensions with Manifest V3, including content scripts, popups, or background service workers. Activate when the user mentions Chrome extension, browser extension, Manifest V3, content scripts, or extension popup development.
 ---
 
 # Chrome Extension Development

@@ -1,6 +1,6 @@
 ---
 name: drizzle
-description: Drizzle ORM database patterns and implementation. Trigger words - drizzle, database, schema, migration, table, query, select, insert, update, delete, edge database, serverless db
+description: Use this skill when working with Drizzle ORM for database schema design, migrations, queries, or relations. Activate when the user mentions Drizzle, database tables, schema changes, SQL queries, or serverless/edge database patterns.
 ---
 
 # Drizzle ORM

@@ -1,6 +1,6 @@
 ---
 name: wrap-up
-description: End-of-session command that logs progress, lints, commits, pushes, creates a PR with auto-merge, and cleans up branches. Trigger words - wrap up, wrap-up, done for today, ship it, end session and push
+description: Use this skill when ending a session to log progress, lint, commit, push, create a PR, and clean up branches. Activate when the user mentions /wrap-up, wrapping up, shipping work, ending the session, or pushing and merging completed work.
 ---
 
 # Wrap Up

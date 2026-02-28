@@ -1,6 +1,6 @@
 ---
 name: electric-sql
-description: Electric SQL for real-time Postgres sync to local apps. Trigger words - electric, electricsql, local-first, offline support, offline-first, sync, continuous sync, local database
+description: Use this skill when implementing local-first data sync with Electric SQL for real-time Postgres replication. Activate when the user mentions Electric SQL, offline-first architecture, local database sync, or continuous Postgres-to-client synchronization.
 ---
 
 # Electric SQL

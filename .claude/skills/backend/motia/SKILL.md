@@ -1,6 +1,6 @@
 ---
 name: motia
-description: Motia event-driven workflow runtime with Steps. Trigger words - motia, workflow, background job, event-driven, steps, ai agent, orchestration, streaming
+description: Use this skill when building event-driven workflows, background jobs, or AI agent orchestration with Motia. Activate when the user mentions Motia, workflow steps, event-driven pipelines, background processing, or task orchestration.
 ---
 
 # Motia

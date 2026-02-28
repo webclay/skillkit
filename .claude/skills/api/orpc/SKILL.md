@@ -1,6 +1,6 @@
 ---
 name: orpc
-description: oRPC type-safe API framework with OpenAPI generation. Trigger words - orpc, openapi, api documentation, swagger, type-safe api, contract-first, api spec
+description: Use this skill when building type-safe APIs with oRPC, generating OpenAPI specs, or setting up contract-first API design. Activate when the user mentions oRPC, OpenAPI generation, Swagger docs, or type-safe API contracts.
 ---
 
 # oRPC

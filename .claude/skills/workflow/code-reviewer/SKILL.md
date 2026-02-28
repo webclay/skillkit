@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Code review for quality, security, and maintainability. Trigger words - code review, review code, check code, security review, pr review, pull request review
+description: Use this skill when performing code reviews for quality, security, or maintainability. Activate when the user mentions code review, PR review, checking code quality, security review of changes, or pull request feedback.
 ---
 
 # Code Reviewer

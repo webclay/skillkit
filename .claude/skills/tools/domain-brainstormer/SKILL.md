@@ -1,6 +1,6 @@
 ---
 name: domain-brainstormer
-description: Domain name generator and availability checker. Trigger words - domain, domain name, find domain, check domain, domain available, domain ideas
+description: Use this skill when brainstorming domain name ideas or checking domain availability. Activate when the user mentions finding a domain name, checking domain availability, generating domain ideas, or picking a domain for a new project.
 ---
 
 # Domain Name Brainstormer

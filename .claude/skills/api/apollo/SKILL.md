@@ -1,6 +1,6 @@
 ---
 name: apollo
-description: Apollo.io API for people and company data enrichment, search, and CRM operations. Trigger words - apollo, company enrichment, people enrichment, company data, people search, organization search, lead enrichment, sales intelligence, prospect, contact enrichment, company lookup, person lookup
+description: Use this skill when integrating the Apollo.io API for people or company data enrichment, lead search, or CRM operations. Activate when the user mentions Apollo, prospect enrichment, contact lookup, sales intelligence, or company data search.
 ---
 
 # Apollo.io API

@@ -1,6 +1,6 @@
 ---
 name: server-actions
-description: Next.js Server Actions and API route patterns. Trigger words - server action, use server, form action, api route, mutation, server function
+description: Use this skill when implementing Next.js Server Actions, API routes, or server-side mutations. Activate when the user mentions "use server", form actions, API route handlers, or server-side data mutations.
 ---
 
 # Next.js Server Actions

@@ -1,6 +1,6 @@
 ---
 name: typography
-description: Web typography rules and best practices based on Butterick's Practical Typography. Trigger words - typography, font size, line height, line spacing, line length, font pairing, heading size, body text, letter spacing, kerning, paragraph spacing, readable, readability, typographic scale, text styling
+description: Use this skill when making typography decisions for font sizes, line heights, spacing, or font pairings. Activate when the user mentions typography, readability, typographic scale, heading sizes, body text styling, line length, letter spacing, or paragraph spacing.
 ---
 
 # Typography

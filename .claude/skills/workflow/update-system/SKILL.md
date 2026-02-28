@@ -1,6 +1,6 @@
 ---
-name: update-skillkit
-description: Check for and apply updates to SkillKit. Trigger words - skillkit update, update skillkit, skillkit version, skillkit restore, skillkit rollback
+name: update-system
+description: Use this skill when checking for or applying updates to SkillKit itself. Activate when the user mentions "skillkit update", checking the SkillKit version, restoring a previous SkillKit version, or rolling back a SkillKit update.
 ---
 
 # Update SkillKit

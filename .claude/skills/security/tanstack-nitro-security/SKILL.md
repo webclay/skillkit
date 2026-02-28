@@ -1,6 +1,6 @@
 ---
 name: tanstack-nitro-security
-description: Implements Nitro middleware security headers for TanStack Start projects. Trigger words - tanstack start security, nitro security headers, tanstack security middleware, secure tanstack start, production tanstack
+description: Use this skill when configuring Nitro middleware security headers for TanStack Start projects. Activate when the user mentions TanStack Start security headers, Nitro security middleware, securing TanStack Start for production, or adding CSP/HSTS headers to a Vinxi-based app.
 ---
 
 # TanStack Start - Nitro Security Headers

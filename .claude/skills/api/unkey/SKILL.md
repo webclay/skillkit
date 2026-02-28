@@ -1,6 +1,6 @@
 ---
 name: unkey
-description: Unkey API key management and rate limiting. Trigger words - unkey, api key, rate limit, rate limiting, api authentication, usage tracking, api quota
+description: Use this skill when implementing API key management, rate limiting, or usage tracking with Unkey. Activate when the user mentions Unkey, API key creation, rate limits, API authentication tokens, or API quota enforcement.
 ---
 
 # Unkey
