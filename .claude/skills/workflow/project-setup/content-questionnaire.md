@@ -119,6 +119,8 @@ C. Vercel
 
 **Why Cloudflare Pages is recommended:** Free tier with unlimited bandwidth, global CDN, fast builds. If the backend is also on Cloudflare, everything is managed from one dashboard.
 
+**If Cloudflare Pages is selected:** Read [cloudflare-pages-deploy.md](cloudflare-pages-deploy.md) for the complete step-by-step deployment flow (GitHub connection, build settings, environment variables, verification, and troubleshooting).
+
 ---
 
 #### Question 4: Project Description
@@ -353,18 +355,21 @@ Generate these initial tasks in `project/tasks.md`. Since the template is alread
 
 ### Getting Started
 - [ ] Set up environment files (.env in both backend and frontend)
-- [ ] Install dependencies in both backend and frontend
-- [ ] Start both dev servers (backend on :3000, frontend on :4321)
+- [ ] Install dependencies (`bun install` in both backend and frontend)
+- [ ] Start both dev servers (backend: `pnpm run dev` on :3000, frontend: `bun run dev` on :4321)
 - [ ] Log into admin panel at localhost:3000/admin
 
 ### Configuration
 - [ ] Customize Payload collections for this project's content needs
 - [ ] Update Astro pages to match the website's design
 
-### Deployment
-- [ ] Deploy Payload to [selected platform]
-- [ ] Deploy Astro to [selected platform]
-- [ ] Verify CMS-to-frontend connection in production
+### Deployment (in this order)
+- [ ] First commit and push to GitHub (needed before connecting Cloudflare Pages)
+- [ ] Set up database (Railway Postgres, Supabase, Neon, or D1)
+- [ ] Deploy Payload backend to [selected platform]
+- [ ] Connect Cloudflare Pages to GitHub repo (see cloudflare-pages-deploy.md)
+- [ ] Configure build settings and environment variables
+- [ ] Verify frontend can fetch content from deployed backend
 
 ### Content
 - [ ] Create initial content in Payload admin panel
@@ -412,11 +417,13 @@ Or if the root has a workspace setup, just `[pm] install` from the root.
 Two terminal windows needed:
 
 ```
-Terminal 1 (backend):  cd backend && [pm] run dev    -> Payload admin on localhost:3000
-Terminal 2 (frontend): cd frontend && [pm] run dev   -> Astro on localhost:4321
+Terminal 1 (backend):  cd backend && pnpm run dev    -> Payload admin on localhost:3000
+Terminal 2 (frontend): cd frontend && bun run dev    -> Astro on localhost:4321
 ```
 
-Or from the root folder using convenience scripts: `[pm] run dev:backend` and `[pm] run dev:frontend`.
+**Important:** The backend uses `pnpm run dev` (not bun) because Payload requires Node.js as its runtime. Bun works as a package manager for installing dependencies, but the dev server must run through pnpm/Node.js. The frontend (Astro) has full Bun support.
+
+Or from the root folder using convenience scripts: `bun run dev:backend` and `bun run dev:frontend` (these delegate to the correct package managers).
 
 #### Step 4: Log Into Admin Panel
 
