@@ -2,7 +2,7 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.14
+**Version:** 1.2.15
 **Author:** Manuel Merz
 **License:** MIT
 **Date:** 02/03/2026
@@ -376,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.15 (2026-03-02)
+- **Cloudflare Pages deployment guide** - Added step-by-step guide for deploying Astro frontend to Cloudflare Pages. Covers GitHub connection, exact build settings (build command `bun install && bun run build`, output `dist`, root directory `frontend`), environment variables (`PAYLOAD_URL`), post-deploy verification (Build system v3, `nodejs_compat` flag, branch control), custom domains, rebuild triggers, and troubleshooting. Also clarified dev server commands in the content website questionnaire: frontend uses `bun run dev`, backend uses `pnpm run dev` (Payload requires Node.js runtime). Updated deployment task ordering to include GitHub push before Cloudflare Pages connection.
 
 ### v1.2.14 (2026-03-02)
 - **Payload auto-seeding admin users** - Added `onInit` hook pattern to Payload CMS skill and headless-cms reference for automatic admin account creation on first startup. Uses `PAYLOAD_ADMIN_EMAILS` (comma-separated) and `PAYLOAD_ADMIN_PASSWORD` environment variables. Updated content website setup questionnaire to read user-specific seeding config from auto-memory, resolve `{project}` placeholders, write values to `.env`, and document in `dev-context.md`. Generic and safe for public use - user-specific email templates stay in auto-memory, never in skill files.
