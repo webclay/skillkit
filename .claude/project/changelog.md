@@ -1,12 +1,35 @@
 # Changelog
 
-**Last Updated:** 2026-02-27
+**Last Updated:** 2026-03-02
 
 This file tracks work completed across sessions to help maintain context.
 
 ---
 
 ## Session Log
+
+### 2026-03-02 - Railway Payload Deployment Guide
+
+**Summary:** Added a step-by-step Railway deployment guide for content websites (Astro + Payload CMS monorepo). Fixed incorrect `DATABASE_URL` variable name to `DATABASE_URI` in the content website setup questionnaire.
+
+**Completed:**
+- Created `.claude/skills/workflow/project-setup/railway-payload-deploy.md` - Complete Railway deployment flow (project creation, Postgres, GitHub connection, monorepo paths, 3 required environment variables, domain setup, troubleshooting)
+- Fixed `DATABASE_URL` to `DATABASE_URI` in content-questionnaire.md (Payload CMS uses `DATABASE_URI`, not `DATABASE_URL`)
+- Added Railway deployment reference link to content-questionnaire.md (triggers when user selects Railway)
+- Added Railway section to `cms/payload/deployment.md` with the 3 required variables and link to full guide
+
+**Key Decisions:**
+- Railway Payload deployment requires exactly 3 env vars: `DATABASE_URI`, `PAYLOAD_PUBLIC_SERVER_URL`, `PAYLOAD_SECRET`
+- Used Railway template syntax for dynamic values: `${{Postgres.DATABASE_URL}}` and `https://${{RAILWAY_PUBLIC_DOMAIN}}`
+- Reference file lives in project-setup (not Payload skill) since it's part of the setup wizard flow
+- Payload deployment.md links to the reference file rather than duplicating content
+
+**Files Changed:**
+- `.claude/skills/workflow/project-setup/railway-payload-deploy.md` (new)
+- `.claude/skills/workflow/project-setup/content-questionnaire.md` (fixed DATABASE_URI, added Railway reference)
+- `.claude/skills/cms/payload/deployment.md` (added Railway section)
+
+---
 
 ### 2026-02-27 - Agent Skills Spec Compliance Audit
 

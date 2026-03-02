@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.12
+**Version:** 1.2.13
 **Author:** Manuel Merz
 **License:** MIT
-**Date:** 27/02/2026
+**Date:** 02/03/2026
 
 ---
 
@@ -376,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.13 (2026-03-02)
+- **Railway Payload deployment guide** - Added step-by-step Railway deployment guide for content websites (Astro + Payload CMS monorepo). Covers project creation, Postgres provisioning, GitHub connection, monorepo root directory setup (`/backend`), Dockerfile builder config, the 3 required environment variables (`DATABASE_URI`, `PAYLOAD_PUBLIC_SERVER_URL`, `PAYLOAD_SECRET`) using Railway template syntax, domain generation, and troubleshooting. Also fixed `DATABASE_URL` to `DATABASE_URI` throughout the content website setup questionnaire.
 
 ### v1.2.12 (2026-02-27)
 - **Agent Skills spec compliance** - Audited all 64 skills against the official Anthropic Agent Skills specification. Fixed name/directory mismatches, resolved duplicate skill names (`tooling/ultracite` renamed to `tooling/ultracite-setup`), split 5 oversized SKILL.md files into main files + 16 reference files (Payload 7, Supabase 5, Expo 2, Astro 1, TanStack Start 1), and updated all 64 description fields to Anthropic's recommended "Use this skill when..." format for better skill activation.

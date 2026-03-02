@@ -70,6 +70,8 @@ E. VPS (own server)
 
 **Why Cloudflare Workers is recommended:** Everything under one roof with Cloudflare Pages for the frontend. $5/month Workers paid plan (Payload exceeds the free tier's 10MB limit), but D1 database and R2 media storage are included. If the user also deploys the frontend on Cloudflare Pages, they manage everything from one dashboard.
 
+**If Railway is selected:** Read [railway-payload-deploy.md](railway-payload-deploy.md) for the complete step-by-step deployment flow (project creation, Postgres setup, GitHub connection, monorepo paths, environment variables).
+
 ---
 
 #### Question 2: Database
@@ -259,12 +261,12 @@ APP_URL=http://localhost:4321
 # Payload CMS
 PAYLOAD_URL=http://localhost:3000
 PAYLOAD_SECRET=  # Generate: openssl rand -base64 32
-DATABASE_URL=  # From your database provider (see table below)
+DATABASE_URI=  # From your database provider (see table below)
 ```
 
-**Where to get DATABASE_URL:**
+**Where to get DATABASE_URI:**
 
-| Backend + DB Provider | DATABASE_URL source |
+| Backend + DB Provider | DATABASE_URI source |
 |----------------------|---------------------|
 | Railway + Railway Postgres | Auto-provided by Railway |
 | Cloudflare Workers + Supabase | From Supabase dashboard -> Settings -> Database |
@@ -284,7 +286,7 @@ PAYLOAD_URL=http://localhost:3000
 PAYLOAD_SECRET=  # Generate: openssl rand -base64 32
 ```
 
-Locally, Payload uses a SQLite file - no DATABASE_URL needed. D1 is configured via `wrangler.toml` bindings for production.
+Locally, Payload uses a SQLite file - no DATABASE_URI needed. D1 is configured via `wrangler.toml` bindings for production.
 
 #### MongoDB Setup
 
@@ -352,8 +354,8 @@ Create a `.env` file in both backend and frontend based on the user's database a
 Backend:
 - Create backend/.env with the appropriate variables for the chosen database
 - Generate a random PAYLOAD_SECRET (this secures the admin panel)
-- DATABASE_URL left empty for user to fill in from their provider (PostgreSQL)
-- Or no DATABASE_URL needed (SQLite/D1 - uses local file)
+- DATABASE_URI left empty for user to fill in from their provider (PostgreSQL)
+- Or no DATABASE_URI needed (SQLite/D1 - uses local file)
 
 Frontend:
 - Create frontend/.env with APP_URL=http://localhost:4321

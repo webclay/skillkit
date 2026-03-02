@@ -1,6 +1,22 @@
-# Deploying Payload on Cloudflare Workers and Runtime Compatibility
+# Payload CMS Deployment and Runtime Compatibility
 
-Reference for deploying Payload CMS on Cloudflare Workers (D1 + R2) and runtime compatibility notes for Bun/Node.js.
+Reference for deploying Payload CMS and runtime compatibility notes for Bun/Node.js.
+
+## Deploying Payload on Railway
+
+Railway is the simplest option for Payload with PostgreSQL. It provides managed Postgres with a persistent volume and auto-deploys from GitHub.
+
+**Required environment variables (3 total):**
+
+| Variable | Value | Purpose |
+|----------|-------|---------|
+| `DATABASE_URI` | `${{Postgres.DATABASE_URL}}` | Wires to Railway's managed Postgres via template syntax |
+| `PAYLOAD_PUBLIC_SERVER_URL` | `https://${{RAILWAY_PUBLIC_DOMAIN}}` | Auto-resolves to the service's public domain |
+| `PAYLOAD_SECRET` | `openssl rand -hex 32` | Unique per project - auth and encryption key |
+
+**Monorepo setup:** Set root directory to `/backend` and configure Dockerfile builder pointing to `backend/Dockerfile`.
+
+For the complete step-by-step Railway deployment guide (project creation, Postgres, GitHub connection, monorepo paths, domain setup), see the [Railway Payload deployment guide](../../workflow/project-setup/railway-payload-deploy.md).
 
 ## Deploying Payload on Cloudflare Workers
 
