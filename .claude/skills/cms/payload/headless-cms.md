@@ -52,6 +52,74 @@ my-astro-site/
 └── package.json
 ```
 
+## Standard payload.config.ts (with Auto-Seeding)
+
+Content website templates can include an `onInit` hook for automatic admin user seeding. This creates admin accounts on first startup so the CMS is immediately usable without manual registration.
+
+The admin seeding config (email addresses, default password) is user-specific and defined in each project's `dev-context.md` under `## Admin Seeding`. The `onInit` hook reads email addresses and password from environment variables.
+
+```typescript
+import { buildConfig } from 'payload'
+import { postgresAdapter } from '@payloadcms/db-postgres'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import path from 'path'
+import { fileURLToPath } from 'url'
+// ... import collections
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
+export default buildConfig({
+  editor: lexicalEditor(),
+  collections: [
+    // ... your collections
+  ],
+  secret: process.env.PAYLOAD_SECRET || '',
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URI || '',
+    },
+  }),
+  // Auto-seed admin users on first start
+  onInit: async (payload) => {
+    const existingUsers = await payload.find({
+      collection: 'users',
+      limit: 1,
+    })
+
+    if (existingUsers.totalDocs === 0) {
+      const adminEmails = (process.env.PAYLOAD_ADMIN_EMAILS || '').split(',').filter(Boolean)
+      const password = process.env.PAYLOAD_ADMIN_PASSWORD || 'changeme123'
+
+      for (const email of adminEmails) {
+        await payload.create({
+          collection: 'users',
+          data: { email: email.trim(), password },
+        })
+      }
+
+      if (adminEmails.length > 0) {
+        payload.logger.info(`Seeded ${adminEmails.length} admin user(s)`)
+      }
+    }
+  },
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+})
+```
+
+**Environment variables controlling auto-seeding:**
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `PAYLOAD_ADMIN_EMAILS` | Comma-separated list of admin emails to create | (empty - no seeding) |
+| `PAYLOAD_ADMIN_PASSWORD` | Password for all seeded admin accounts | `changeme123` |
+
+**When it runs:** Only on first startup when the `users` collection is empty. Subsequent startups skip seeding entirely. See the auto-seeding section in [SKILL.md](SKILL.md) for full details.
+
+**Where the values come from:** The setup wizard reads admin seeding preferences from `dev-context.md` and writes the appropriate values into the project's `.env` file. See [content-questionnaire.md](../../workflow/project-setup/content-questionnaire.md) for the wizard flow.
+
 ## Monorepo Development Workflow
 
 **Local development with separate package.json files (simpler):**

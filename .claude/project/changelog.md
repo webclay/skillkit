@@ -8,6 +8,36 @@ This file tracks work completed across sessions to help maintain context.
 
 ## Session Log
 
+### 2026-03-02 - Payload Auto-Seeding Admin Users
+
+**Summary:** Added auto-seeding admin user pattern to Payload CMS skill, headless-cms reference, and content website setup questionnaire. User-specific email config stored in auto-memory, resolved per-project into `.env` and `dev-context.md`.
+
+**Completed:**
+- Added `onInit` hook pattern to `.claude/skills/cms/payload/headless-cms.md` (Standard payload.config.ts section)
+- Added Auto-Seeding Admin Users section to `.claude/skills/cms/payload/SKILL.md`
+- Updated `.claude/skills/workflow/project-setup/content-questionnaire.md`:
+  - Added Admin Seeding Variables section (reads from MEMORY.md, resolves `{project}` placeholder)
+  - Added `PAYLOAD_ADMIN_EMAILS` and `PAYLOAD_ADMIN_PASSWORD` to all three .env templates (PostgreSQL, SQLite/D1, MongoDB)
+  - Updated Step 4 from "Create Admin Account" to "Log Into Admin Panel" with conditional seeding/manual flow
+  - Updated initial tasks checklist
+- Bumped version to 1.2.14
+
+**Key Decisions:**
+- Skill files stay generic (no user-specific emails) - safe for public GitHub
+- User-specific seeding config (email templates, password) stored in auto-memory (`## Payload Admin Seeding`)
+- Setup wizard reads memory, resolves `{project}` to lowercase folder name, writes to `.env` and `dev-context.md`
+- Uses `PAYLOAD_ADMIN_EMAILS` (comma-separated) instead of single `PAYLOAD_PROJECT_NAME` - more flexible
+- If no memory config exists, wizard skips seeding entirely (manual registration fallback)
+
+**Files Changed:**
+- `.claude/skills/cms/payload/SKILL.md` (added Auto-Seeding section)
+- `.claude/skills/cms/payload/headless-cms.md` (added Standard payload.config.ts section)
+- `.claude/skills/workflow/project-setup/content-questionnaire.md` (admin seeding flow, env templates, getting started guide)
+- `README.md` (version bump, changelog entry)
+- `.claude/version.json` (bumped to 1.2.14)
+
+---
+
 ### 2026-03-02 - Railway Payload Deployment Guide
 
 **Summary:** Added a step-by-step Railway deployment guide for content websites (Astro + Payload CMS monorepo). Fixed incorrect `DATABASE_URL` variable name to `DATABASE_URI` in the content website setup questionnaire.

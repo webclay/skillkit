@@ -2,7 +2,7 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.13
+**Version:** 1.2.14
 **Author:** Manuel Merz
 **License:** MIT
 **Date:** 02/03/2026
@@ -376,6 +376,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.14 (2026-03-02)
+- **Payload auto-seeding admin users** - Added `onInit` hook pattern to Payload CMS skill and headless-cms reference for automatic admin account creation on first startup. Uses `PAYLOAD_ADMIN_EMAILS` (comma-separated) and `PAYLOAD_ADMIN_PASSWORD` environment variables. Updated content website setup questionnaire to read user-specific seeding config from auto-memory, resolve `{project}` placeholders, write values to `.env`, and document in `dev-context.md`. Generic and safe for public use - user-specific email templates stay in auto-memory, never in skill files.
 
 ### v1.2.13 (2026-03-02)
 - **Railway Payload deployment guide** - Added step-by-step Railway deployment guide for content websites (Astro + Payload CMS monorepo). Covers project creation, Postgres provisioning, GitHub connection, monorepo root directory setup (`/backend`), Dockerfile builder config, the 3 required environment variables (`DATABASE_URI`, `PAYLOAD_PUBLIC_SERVER_URL`, `PAYLOAD_SECRET`) using Railway template syntax, domain generation, and troubleshooting. Also fixed `DATABASE_URL` to `DATABASE_URI` throughout the content website setup questionnaire.

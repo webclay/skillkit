@@ -251,6 +251,30 @@ Content websites only need a `.env` file - there is no `.env.production`. All da
 
 The wizard creates `.env` files directly based on the user's database and deployment choices. There are no `.env.example` files to copy from.
 
+#### Admin Seeding Variables
+
+Before writing `.env` files, check if the user's auto-memory (`MEMORY.md`) has a `## Payload Admin Seeding` section. If it does:
+
+1. Read the email templates and default password from memory
+2. Replace `{project}` in each email template with the lowercase project folder name (no spaces, e.g., folder `TopElektro` becomes `topelektro`)
+3. Write the resolved values into the project's `.env` as `PAYLOAD_ADMIN_EMAILS` (comma-separated) and `PAYLOAD_ADMIN_PASSWORD`
+4. Add an `## Admin Seeding` section to `dev-context.md` documenting what was configured:
+
+```markdown
+## Admin Seeding
+
+Admin accounts are auto-created on first Payload startup via the `onInit` hook.
+
+| Variable | Value |
+|----------|-------|
+| `PAYLOAD_ADMIN_EMAILS` | resolved-email1@example.com,resolved-email2@example.com |
+| `PAYLOAD_ADMIN_PASSWORD` | (set in .env) |
+
+To change, update `.env` and clear the database users collection.
+```
+
+If no admin seeding config exists in memory, skip these variables entirely. The user will create admin accounts manually via the Payload registration UI on first visit to `/admin`.
+
 #### PostgreSQL Setup
 
 **`.env`:**
@@ -262,7 +286,11 @@ APP_URL=http://localhost:4321
 PAYLOAD_URL=http://localhost:3000
 PAYLOAD_SECRET=  # Generate: openssl rand -base64 32
 DATABASE_URI=  # From your database provider (see table below)
+PAYLOAD_ADMIN_EMAILS=  # Comma-separated admin emails (from dev-context.md admin seeding config)
+PAYLOAD_ADMIN_PASSWORD=changeme123  # Password for auto-seeded admin accounts
 ```
+
+**Auto-seeded admin accounts:** On first startup, Payload automatically creates admin users for each email in `PAYLOAD_ADMIN_EMAILS`. All accounts use `PAYLOAD_ADMIN_PASSWORD` as the password. Seeding only runs when the users collection is empty.
 
 **Where to get DATABASE_URI:**
 
@@ -284,6 +312,8 @@ APP_URL=http://localhost:4321
 # Payload CMS
 PAYLOAD_URL=http://localhost:3000
 PAYLOAD_SECRET=  # Generate: openssl rand -base64 32
+PAYLOAD_ADMIN_EMAILS=  # Comma-separated admin emails (from dev-context.md admin seeding config)
+PAYLOAD_ADMIN_PASSWORD=changeme123  # Password for auto-seeded admin accounts
 ```
 
 Locally, Payload uses a SQLite file - no DATABASE_URI needed. D1 is configured via `wrangler.toml` bindings for production.
@@ -299,6 +329,8 @@ APP_URL=http://localhost:4321
 PAYLOAD_URL=http://localhost:3000
 PAYLOAD_SECRET=  # Generate: openssl rand -base64 32
 MONGODB_URI=  # From MongoDB Atlas (connection string)
+PAYLOAD_ADMIN_EMAILS=  # Comma-separated admin emails (from dev-context.md admin seeding config)
+PAYLOAD_ADMIN_PASSWORD=changeme123  # Password for auto-seeded admin accounts
 ```
 
 #### Platform-Specific Additions
@@ -323,7 +355,7 @@ Generate these initial tasks in `project/tasks.md`. Since the template is alread
 - [ ] Set up environment files (.env in both backend and frontend)
 - [ ] Install dependencies in both backend and frontend
 - [ ] Start both dev servers (backend on :3000, frontend on :4321)
-- [ ] Create first admin account at localhost:3000/admin
+- [ ] Log into admin panel at localhost:3000/admin
 
 ### Configuration
 - [ ] Customize Payload collections for this project's content needs
@@ -386,9 +418,13 @@ Terminal 2 (frontend): cd frontend && [pm] run dev   -> Astro on localhost:4321
 
 Or from the root folder using convenience scripts: `[pm] run dev:backend` and `[pm] run dev:frontend`.
 
-#### Step 4: Create Admin Account
+#### Step 4: Log Into Admin Panel
 
-Open `localhost:3000/admin` in the browser. Payload will ask to create the first admin user (email + password). This is the login for the content management panel.
+Open `localhost:3000/admin` in the browser.
+
+**If admin seeding is configured** (dev-context.md has `## Admin Seeding`): Admin accounts were automatically created on first startup using the emails from `PAYLOAD_ADMIN_EMAILS`. Log in with any of those emails and the password from `PAYLOAD_ADMIN_PASSWORD` (default: `changeme123`).
+
+**If no admin seeding:** Payload will show a registration form to create the first admin user.
 
 #### Step 5: Start Adding Content
 

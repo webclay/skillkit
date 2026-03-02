@@ -253,6 +253,32 @@ Payload does NOT officially support Bun as a runtime. Use Bun as package manager
 9. **Custom React components** for better UX - Make admin friendly for editors
 10. **Image sizes in media collection** - Define all sizes upfront
 
+## Auto-Seeding Admin Users
+
+Content website templates can include an `onInit` hook in `payload.config.ts` that automatically creates admin accounts on first startup. This removes the manual "create first admin" step.
+
+**How it works:**
+1. On every Payload startup, the `onInit` hook checks if the `users` collection is empty
+2. If no users exist (first run), it reads `PAYLOAD_ADMIN_EMAILS` (comma-separated) and creates an admin account for each email
+3. All accounts use the password from `PAYLOAD_ADMIN_PASSWORD`
+4. On subsequent startups, the hook finds existing users and skips seeding entirely
+
+**Environment variables:**
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `PAYLOAD_ADMIN_EMAILS` | Comma-separated list of admin emails to create | (empty - no seeding) |
+| `PAYLOAD_ADMIN_PASSWORD` | Password for all seeded accounts | `changeme123` |
+
+**Where values come from:** The admin seeding config (email templates, default password) is user-specific and stored in each project's `dev-context.md` under `## Admin Seeding`. The setup wizard reads this config and writes the resolved emails into `.env`. Email templates can use `{project}` as a placeholder for the lowercase project folder name.
+
+**Important notes:**
+- Seeding only happens when the users collection is completely empty - it's safe to restart Payload
+- If `PAYLOAD_ADMIN_EMAILS` is empty, no seeding occurs and Payload shows the manual registration form
+- In production, change `PAYLOAD_ADMIN_PASSWORD` to a strong password via the deployment platform's environment variables
+- The seeded accounts have full admin access to all collections
+- See [headless-cms.md](headless-cms.md) for the full `payload.config.ts` template with the `onInit` hook
+
 ## How to Verify
 
 ### Quick Checks
