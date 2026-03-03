@@ -3,7 +3,7 @@
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
 **Version:** 1.2.16
-**Author:** Manuel Merz
+**Author:** Manu
 **License:** MIT
 **Date:** 03/03/2026
 
