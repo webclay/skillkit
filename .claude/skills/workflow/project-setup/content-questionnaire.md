@@ -359,30 +359,31 @@ Follow these steps in order. Each step depends on the previous ones.
 
 ### Phase 1: Local Setup
 - [ ] 1. Update project name in package.json files (root, backend/, frontend/) - change the `name` field to match the folder name
-- [ ] 2. Install dependencies (`bun install` in both backend/ and frontend/)
-- [ ] 3. Start dev servers (backend: `pnpm run dev` on :3000, frontend: `bun run dev` on :4321)
-- [ ] 4. Verify admin panel at localhost:3000/admin (auto-seeded admin accounts should work)
-- [ ] 5. Verify frontend at localhost:4321
+- [ ] 2. **Update DATABASE_URI** in backend/.env - the template's value points to the template's own database, change it to the new project's Postgres URL
+- [ ] 3. Delete stale node_modules and reinstall dependencies (`rm -rf node_modules && bun install` in both backend/ and frontend/)
+- [ ] 4. Start dev servers (backend: `pnpm run dev` on :3000, frontend: `bun run dev` on :4321)
+- [ ] 5. Verify admin panel at localhost:3000/admin (auto-seeded admin accounts should work)
+- [ ] 6. Verify frontend at localhost:4321
 
 ### Phase 2: GitHub
-- [ ] 6. Create GitHub repository
-- [ ] 7. First commit and push to main
+- [ ] 7. Create GitHub repository
+- [ ] 8. First commit and push to main
 
 ### Phase 3: Backend Deployment ([selected platform])
-- [ ] 8. Create [selected platform] project and provision PostgreSQL database
-- [ ] 9. Create backend service, connect to GitHub repo, set root directory to /backend
-- [ ] 10. Set environment variables (DATABASE_URI, PAYLOAD_PUBLIC_SERVER_URL, PAYLOAD_SECRET)
-- [ ] 11. Generate domain, deploy, and verify admin panel works at production URL
+- [ ] 9. Create [selected platform] project and provision PostgreSQL database
+- [ ] 10. Create backend service, connect to GitHub repo, set root directory to /backend
+- [ ] 11. Set environment variables (DATABASE_URI, PAYLOAD_PUBLIC_SERVER_URL, PAYLOAD_SECRET)
+- [ ] 12. Generate domain, deploy, and verify admin panel works at production URL
 
 ### Phase 4: Frontend Deployment (Cloudflare Pages)
-- [ ] 12. Connect Cloudflare Pages to GitHub repo
-- [ ] 13. Configure build settings: command `bun install && bun run build`, output `dist`, root `frontend`
-- [ ] 14. Set PAYLOAD_URL environment variable (production backend URL from step 11)
-- [ ] 15. Save and Deploy, verify site loads at pages.dev URL
+- [ ] 13. Connect Cloudflare Pages to GitHub repo
+- [ ] 14. Configure build settings: command `bun install && bun run build`, output `dist`, root `frontend`
+- [ ] 15. Set PAYLOAD_URL environment variable (production backend URL from step 12)
+- [ ] 16. Save and Deploy, verify site loads at pages.dev URL
 
 ### Phase 5: Final Verification
-- [ ] 16. Admin panel works at production URL with seeded credentials
-- [ ] 17. Frontend fetches and displays content from production backend
+- [ ] 17. Admin panel works at production URL with seeded credentials
+- [ ] 18. Frontend fetches and displays content from production backend
 ```
 
 **Notes:**
@@ -417,12 +418,14 @@ Frontend:
 
 #### Step 2: Install Dependencies
 
+The template's `node_modules` are stale from the copy - always remove them before installing fresh.
+
 ```
-cd backend && [pm] install
-cd frontend && [pm] install
+cd backend && rm -rf node_modules && [pm] install
+cd frontend && rm -rf node_modules && [pm] install
 ```
 
-Or if the root has a workspace setup, just `[pm] install` from the root.
+Or if the root has a workspace setup, `rm -rf node_modules && [pm] install` from the root.
 
 #### Step 3: Start Both Dev Servers
 

@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.15
+**Version:** 1.2.16
 **Author:** Manuel Merz
 **License:** MIT
-**Date:** 02/03/2026
+**Date:** 03/03/2026
 
 ---
 
@@ -254,6 +254,7 @@ Next session, Claude picks up exactly where you left off.
 | `vercel` | Vercel deployment |
 | `netlify-edge` | Netlify Edge Functions |
 | `railway` | Railway deployment platform - projects, services, databases, domains, CLI, GraphQL API (official Railway skill) |
+| `cloudflare-pages` | Astro + Payload CMS monorepo deployment to Railway (backend) + Cloudflare Pages (frontend), deploy hooks, R2 storage |
 | `appwrite` | Appwrite BaaS |
 
 ### Email
@@ -376,6 +377,10 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.16 (2026-03-03)
+- **Cloudflare Pages deployment skill** - Created standalone `deployment/cloudflare-pages` skill for Astro + Payload CMS monorepo deployment to Railway (backend) + Cloudflare Pages (frontend). Covers full deployment flow: Railway project setup with Dockerfile multi-stage build, PostgreSQL, environment variables; Cloudflare Pages build settings, wrangler.jsonc, security headers; deploy hooks for CMS-triggered rebuilds; R2 storage integration; environment variable flow diagram; troubleshooting guide. Previously this knowledge was locked inside the project-setup wizard reference files.
+- **Content website wizard improvements** - Added DATABASE_URI warning (template ships with wrong database URL) and stale node_modules cleanup step to setup checklist. Now 18 steps across 5 phases.
 
 ### v1.2.15 (2026-03-02)
 - **Cloudflare Pages deployment guide** - Added step-by-step guide for deploying Astro frontend to Cloudflare Pages. Covers GitHub connection, exact build settings (build command `bun install && bun run build`, output `dist`, root directory `frontend`), environment variables (`PAYLOAD_URL`), post-deploy verification (Build system v3, `nodejs_compat` flag, branch control), custom domains, rebuild triggers, and troubleshooting. Also clarified dev server commands in the content website questionnaire: frontend uses `bun run dev`, backend uses `pnpm run dev` (Payload requires Node.js runtime). Replaced loose task groups with a numbered 17-step setup checklist across 5 phases (local setup, GitHub, backend deployment, frontend deployment, verification).

@@ -138,6 +138,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Framework-specific patterns | `framework/nextjs`, `framework/tanstack-start`, or `framework/astro` |
 | CMS, admin panel, content management, Payload | `cms/payload` |
 | Railway deployment, services, databases, domains, troubleshooting | `deployment/railway` |
+| Cloudflare Pages, Astro + Payload monorepo deploy, deploy hooks | `deployment/cloudflare-pages` |
 | Project setup, new projects | `workflow/project-setup` |
 | Feature planning, "plan feature" | `workflow/feature-planner` |
 | Server issues, port conflicts | `workflow/dev-server` |

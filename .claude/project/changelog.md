@@ -8,6 +8,22 @@ This file tracks work completed across sessions to help maintain context.
 
 ## Session Log
 
+### 2026-03-02 - Content Website Checklist: Database URL Warning
+
+**Summary:** Added critical Step 3 to the personal content website checklist emphasizing that the template's `DATABASE_URI` must be changed to the new project's Postgres database URL before running anything. The template ships with a connection string pointing to the template's own database.
+
+**Completed:**
+- Added **Step 3: Update the database connection URL** (marked CRITICAL) to `content-website-checklist.md`
+- Added double-check reminder in Step 4 (SkillKit setup) since setup may overwrite `.env`
+- Renumbered all subsequent steps (now 18 steps total, up from 17)
+- Updated MEMORY.md reference with new step count and key gotcha note
+
+**Files Changed (auto-memory only, no repo changes):**
+- `~/.claude/projects/.../memory/content-website-checklist.md`
+- `~/.claude/projects/.../memory/MEMORY.md`
+
+---
+
 ### 2026-03-02 - Payload Auto-Seeding Admin Users
 
 **Summary:** Added auto-seeding admin user pattern to Payload CMS skill, headless-cms reference, and content website setup questionnaire. User-specific email config stored in auto-memory, resolved per-project into `.env` and `dev-context.md`.
