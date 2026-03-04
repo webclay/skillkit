@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.16
+**Version:** 1.2.17
 **Author:** Manu
 **License:** MIT
-**Date:** 03/03/2026
+**Date:** 04/03/2026
 
 ---
 
@@ -377,6 +377,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.17 (2026-03-04)
+- **Cloudflare Pages skill - complete R2 and env var coverage** - Restructured the deployment skill from 3 steps to 4 steps: Railway, Cloudflare R2 Storage (new), Cloudflare Pages, Connect Services (new). All 10 Railway environment variables now documented in a single table with "When to set" column. Added full R2 bucket creation walkthrough (bucket creation, public access, API token generation, Railway variable setup). Added "Connect Services" step for CLIENT_URI and deploy hook setup after Cloudflare Pages is created. Added import map regeneration troubleshooting (S3 plugin client component not in import map). Updated checklist and environment variable flow diagram.
 
 ### v1.2.16 (2026-03-03)
 - **Cloudflare Pages deployment skill** - Created standalone `deployment/cloudflare-pages` skill for Astro + Payload CMS monorepo deployment to Railway (backend) + Cloudflare Pages (frontend). Covers full deployment flow: Railway project setup with Dockerfile multi-stage build, PostgreSQL, environment variables; Cloudflare Pages build settings, wrangler.jsonc, security headers; deploy hooks for CMS-triggered rebuilds; R2 storage integration; environment variable flow diagram; troubleshooting guide. Previously this knowledge was locked inside the project-setup wizard reference files.
