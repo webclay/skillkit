@@ -127,7 +127,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Database, schema, migrations, queries | `database/prisma`, `database/drizzle`, or `database/supabase` |
 | User login, signup, sessions, OAuth | `auth/better-auth` |
 | Payments, checkout, subscriptions | `payments/stripe` |
-| UI components, forms, dialogs | `ui/shadcn` |
+| UI components, forms, dialogs, shadcn presets, monorepo UI | `ui/shadcn` |
 | AI features, chat, text generation | `ai/vercel-ai-sdk` |
 | Sending emails, notifications | `email/resend` or `email/autosend` |
 | Email deliverability, SPF/DKIM/DMARC, spam | `email/resend` |

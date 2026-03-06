@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.17
+**Version:** 1.2.18
 **Author:** Manu
 **License:** MIT
-**Date:** 04/03/2026
+**Date:** 06/03/2026
 
 ---
 
@@ -218,7 +218,7 @@ Next session, Claude picks up exactly where you left off.
 ### UI
 | Skill | What It Does |
 |-------|--------------|
-| `shadcn` | Shadcn UI component patterns |
+| `shadcn` | Shadcn UI component patterns (CLI v4: skills, presets, monorepo, dry-run, Base UI) |
 | `untitledui` | Untitled UI React components |
 
 ### AI
@@ -377,6 +377,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.18 (2026-03-06)
+- **Shadcn UI skill - CLI v4 update** - Rewrote the shadcn skill for CLI v4. Now covers: shadcn/skills (official AI skills via skills.sh with `shadcn info --json` for project context), presets (design config codes for scaffolding and switching themes/fonts/radius/base library in one command), monorepo support (`--monorepo` flag with Turborepo, `@workspace/ui` imports), Base UI primitives (`--base radix` or `--base base`), dry-run/diff/view flags for previewing and security-inspecting changes before writing, project templates (Next.js, Vite, TanStack Start, React Router, Astro, Laravel), new CLI commands (`search`, `view`, `docs`, `info`, `build`, `migrate`), demo component for design system preview (`shadcn add demo`), first-class font management (`shadcn add font <name>`), trusted registries (react-bits, tailark, etc.), registry types (`registry:base`, `registry:font`), and `shadcn migrate radix` for unified radix-ui package migration. Removed project-specific VoltrixCRM references.
 
 ### v1.2.17 (2026-03-04)
 - **Cloudflare Pages skill - complete R2 and env var coverage** - Restructured the deployment skill from 3 steps to 4 steps: Railway, Cloudflare R2 Storage (new), Cloudflare Pages, Connect Services (new). All 10 Railway environment variables now documented in a single table with "When to set" column. Added full R2 bucket creation walkthrough (bucket creation, public access, API token generation, Railway variable setup). Added "Connect Services" step for CLIENT_URI and deploy hook setup after Cloudflare Pages is created. Added import map regeneration troubleshooting (S3 plugin client component not in import map). Updated checklist and environment variable flow diagram.

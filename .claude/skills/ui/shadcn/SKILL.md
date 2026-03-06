@@ -1,134 +1,231 @@
 ---
 name: shadcn
-description: Use this skill when building UI with shadcn/ui components like buttons, forms, dialogs, tables, or cards. Activate when the user mentions shadcn, Radix UI primitives, Tailwind-based components, Magic UI, Aceternity, or ChatCN component patterns.
+description: Use this skill when building UI with shadcn/ui components like buttons, forms, dialogs, tables, or cards. Activate when the user mentions shadcn, Radix UI, Base UI primitives, Tailwind-based components, presets, monorepo UI setup, Magic UI, Aceternity, or ChatCN component patterns.
 ---
 
-# Shadcn UI & Component Libraries
+# Shadcn UI (CLI v4)
 
-Copy-paste component libraries built on Radix UI primitives and Tailwind CSS. Full control over component code.
+Copy-paste component library built on Radix UI or Base UI primitives and Tailwind CSS. Full control over component code. CLI v4 adds skills, presets, monorepo support, dry-run, and more.
 
 ## When to Use This Skill
 
 - User asks to add UI components
-- components.json exists in project root
-- User mentions Shadcn, Radix UI, or component library
+- `components.json` exists in project root
+- User mentions Shadcn, Radix UI, Base UI, or component library
 - User needs forms, dialogs, tables, or common UI patterns
 - Working with Tailwind CSS components
+- User wants to scaffold a project with shadcn templates
+- User mentions presets, monorepo setup, or switching design systems
 - User wants to add components from other libraries (Magic UI, Aceternity, ChatCN Studio, etc.)
+
+## CLI v4 Overview
+
+### Installing the Official shadcn/skills
+
+shadcn now has official AI skills that give coding agents project-aware context. Install them in any project:
+
+```bash
+[runner] skills add shadcn/ui
+```
+
+Once installed, agents can use `shadcn info --json` for project configuration, `shadcn docs [component]` for component docs, and `shadcn search` to find registry components.
+
+### Project Scaffolding with Templates
+
+`shadcn init` can scaffold full project templates with dark mode included:
+
+```bash
+# Basic init
+[runner] shadcn@latest init
+
+# With a specific template
+[runner] shadcn@latest init -t next        # Next.js
+[runner] shadcn@latest init -t vite        # Vite
+[runner] shadcn@latest init -t start       # TanStack Start
+[runner] shadcn@latest init -t react-router # React Router
+[runner] shadcn@latest init -t astro       # Astro
+[runner] shadcn@latest init -t laravel     # Laravel
+
+# Monorepo (Turborepo)
+[runner] shadcn@latest init --monorepo
+
+# Choose primitive library
+[runner] shadcn@latest init --base radix   # Radix UI (default)
+[runner] shadcn@latest init --base base    # Base UI
+```
+
+### Presets
+
+Presets pack a design config (colors, fonts, radius) into a short code. Use them to scaffold or switch designs:
+
+```bash
+# Scaffold with a preset
+[runner] shadcn@latest init --preset adtk27v
+
+# Switch preset on existing project (reconfigures components, theme, deps)
+[runner] shadcn@latest init --preset aKqgMa9
+
+# Works with templates
+[runner] shadcn@latest init -t next --preset adtk27v
+```
+
+Build custom presets at https://ui.shadcn.com/create - preview how colors, fonts, and radius apply to real components.
+
+### Adding Components
+
+```bash
+# Add single component
+[runner] shadcn@latest add button
+
+# Add multiple
+[runner] shadcn@latest add button card dialog form input
+
+# Add all components
+[runner] shadcn@latest add --all
+
+# Add the demo component (previews your entire design system)
+[runner] shadcn@latest add demo
+
+# Add/change fonts as first-class registry items
+[runner] shadcn@latest add font merriweather
+[runner] shadcn@latest add font jetbrains-mono
+
+# From namespaced registries (trusted registries like react-bits, tailark, etc.)
+[runner] shadcn@latest add @acme/auth @v0/dashboard
+```
+
+### Preview Before Installing (Dry-Run, Diff, View)
+
+These flags are essential for security when adding components from third-party registries. Always use `--view` to inspect code before it enters your project.
+
+```bash
+# Preview what will be added without writing files (shows which files are new vs identical vs overwritten)
+[runner] shadcn@latest add login-01 --dry-run
+
+# Check for updates and see exact diff against local changes (e.g., spot unwanted "use client" additions)
+[runner] shadcn@latest add login-01 --diff
+
+# View full file contents from registry before installing (security: inspect third-party code)
+[runner] shadcn@latest add login-01 --view
+
+# View items without installing
+[runner] shadcn@latest view button card dialog
+```
+
+### Search Registries
+
+```bash
+# Search a registry
+[runner] shadcn@latest search @shadcn -q "button"
+
+# Search multiple registries
+[runner] shadcn@latest search @shadcn @v0 @acme
+
+# List all items in a registry
+[runner] shadcn@latest list @acme
+```
+
+### Project Info and Docs
+
+```bash
+# Full project info (framework, version, CSS vars, installed components)
+[runner] shadcn@latest info
+[runner] shadcn@latest info --json    # Machine-readable for agents
+
+# Component documentation
+[runner] shadcn@latest docs button
+[runner] shadcn@latest docs dialog --base radix
+```
+
+### Migrations
+
+```bash
+# Migrate to unified radix-ui package
+[runner] shadcn@latest migrate radix
+
+# Add RTL support
+[runner] shadcn@latest migrate rtl
+
+# Migrate icon library
+[runner] shadcn@latest migrate icons
+```
+
+### Registry Building
+
+```bash
+# Build registry from registry.json
+[runner] shadcn@latest build
+[runner] shadcn@latest build --output ./public/registry
+```
+
+New registry types: `registry:base` distributes an entire design system as a single payload (components, deps, CSS vars). `registry:font` makes fonts a first-class registry type.
+
+## Monorepo Structure
+
+When using `--monorepo`, shadcn creates a Turborepo workspace:
+
+```
+apps/
+  web/                    # Your app
+    components/           # App-specific components (blocks, pages)
+    components.json       # App config (aliases point to @workspace/ui)
+packages/
+  ui/                     # Shared UI components
+    src/
+      components/         # shadcn base components (button, card, etc.)
+      hooks/
+      lib/utils.ts
+      styles/globals.css
+    components.json       # UI package config
+turbo.json
+```
+
+Import from the shared package:
+```tsx
+import { Button } from "@workspace/ui/components/button"
+import { cn } from "@workspace/ui/lib/utils"
+```
+
+Both `components.json` files must have matching `style`, `iconLibrary`, and `baseColor`.
 
 ## Component Library Organization
 
-**IMPORTANT:** Organize components by source library in subfolders to avoid conflicts and keep track of where components came from.
+**IMPORTANT:** Organize components by source library in subfolders to avoid conflicts.
 
-### Folder Structure (VoltrixCRM)
+### Folder Structure
 
 Base shadcn/ui primitives live in `components/ui/`. Third-party library components each get their own folder under `components/`:
 
 ```
 src/components/
-├── ui/                   # Base shadcn/ui primitives (button, card, dialog, input, etc.)
-│   ├── button.tsx        # NEVER overwrite these with third-party installs
-│   ├── card.tsx
-│   └── ...
-├── reui/                 # ReUI library components
-│   └── area-chart-1.tsx
-├── shadcn-studio/        # Shadcn Studio blocks and components
-│   ├── blocks/
-│   ├── sonner/
-│   └── table/
-├── kibo-ui/              # Kibo UI components
-│   └── kanban/
-├── admin/                # App-specific: admin components
-├── contacts/             # App-specific: contacts components
-├── deals/                # App-specific: deals components
-├── companies/            # App-specific: companies components
-├── products/             # App-specific: products components
-└── layout/               # App-specific: layout components
+  ui/                   # Base shadcn/ui primitives (button, card, dialog, etc.)
+  magic-ui/             # Magic UI animated components
+  aceternity/           # Aceternity UI 3D/effect components
+  kibo-ui/              # Kibo UI components
+  shadcn-studio/        # Shadcn Studio blocks
 ```
-
-### Adding Components from Different Libraries
-
-**Rule: NEVER override existing base components in `ui/`. Always use library subfolders under `components/`.**
 
 | Source | Folder | Import Path |
 |--------|--------|-------------|
 | shadcn/ui (base) | `components/ui/` | `@/components/ui/card` |
-| ReUI | `components/reui/` | `@/components/reui/area-chart-1` |
-| Shadcn Studio | `components/shadcn-studio/` | `@/components/shadcn-studio/blocks/...` |
-| Kibo UI | `components/kibo-ui/` | `@/components/kibo-ui/kanban` |
 | Magic UI | `components/magic-ui/` | `@/components/magic-ui/shimmer-button` |
 | Aceternity | `components/aceternity/` | `@/components/aceternity/spotlight` |
+| Kibo UI | `components/kibo-ui/` | `@/components/kibo-ui/kanban` |
 
 ### CLI Install Safety
 
-When running any component CLI (`npx shadcn`, `npx reui`, etc.):
+When running any component CLI:
 1. **NEVER say yes to overwriting** existing files like `card.tsx`, `utils.ts`, etc.
-2. If the CLI places files in the wrong location, move them to the correct library subfolder after install
-3. Update imports inside the moved component if needed (though `@/` aliases usually still work)
+2. If the CLI places files in the wrong location, move them to the correct library subfolder
+3. Update imports inside the moved component if needed
 
 ### When User Provides Component Code
 
-When a user pastes component code from any site:
-
-1. **Always ask which library/site** it's from (unless they already mentioned it)
+1. **Always ask which library/site** it's from (unless already mentioned)
 2. **Create the subfolder** if it doesn't exist
 3. **Save with a clear name** (e.g., `shimmer-button.tsx` not `button.tsx`)
 4. **Install dependencies** (with approval) if the component needs them
 5. **Update imports** to use the correct path
-
-**Example - User mentions the source:**
-```
-User: "Add this component from Magic UI"
-[pastes code]
-
-Claude: "I'll add this to components/ui/magic-ui/shimmer-button.tsx
-
-This component needs framer-motion. Should I install it?"
-```
-
-**Example - User doesn't mention the source:**
-```
-User: "Add this component to my project"
-[pastes code]
-
-Claude: "Which site or library is this component from? I'll create a subfolder
-to keep your components organized (e.g., components/ui/[library-name]/)."
-
-User: "It's from Aceternity"
-
-Claude: "I'll add this to components/ui/aceternity/spotlight-card.tsx"
-```
-
-**Why this matters:** Knowing the source helps organize components, avoid naming conflicts, and makes it easy to update or find components later.
-
-### Handling CLI Installations
-
-Some libraries have CLIs (like ChatCN Studio). When using them:
-
-1. **Check if they support custom paths** - many do via config
-2. **If CLI creates in wrong location** - move to correct subfolder after install
-3. **Never let CLI override** existing components from other libraries
-
-For ChatCN Studio specifically, it already creates its own subfolder which is the correct pattern.
-
-## Instructions
-
-### Step 1: Initialize Shadcn
-
-```bash
-npx shadcn@latest init
-```
-
-When prompted, configure the components path to use subfolders if supported.
-
-### Step 2: Add Base Components
-
-```bash
-npx shadcn@latest add button
-npx shadcn@latest add card dialog form input
-```
-
-Base shadcn components go to `components/ui/` (or `components/ui/shadcn/` if you prefer full separation).
 
 ## Examples
 
@@ -220,31 +317,6 @@ export function MyForm() {
 }
 ```
 
-**Toast:**
-```tsx
-import { useToast } from "@/components/ui/use-toast";
-
-const { toast } = useToast();
-
-toast({ title: "Success", description: "Changes saved" });
-toast({ variant: "destructive", title: "Error", description: "Something went wrong" });
-```
-
-**Select:**
-```tsx
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-
-<Select>
-  <SelectTrigger>
-    <SelectValue placeholder="Choose..." />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="a">Option A</SelectItem>
-    <SelectItem value="b">Option B</SelectItem>
-  </SelectContent>
-</Select>
-```
-
 **Loading Button:**
 ```tsx
 import { Loader2 } from "lucide-react";
@@ -259,12 +331,6 @@ import { Loader2 } from "lucide-react";
 
 - [forms.md](forms.md) - Form patterns with validation
 - [dark-mode.md](dark-mode.md) - Theme setup
-
-## Common Components
-
-```bash
-npx shadcn@latest add button card dialog form input label select table tabs toast dropdown-menu sheet alert-dialog
-```
 
 ## Dark Mode Setup
 
@@ -281,14 +347,31 @@ import { ThemeProvider } from "next-themes";
 </ThemeProvider>
 ```
 
+## Agent Workflow Tips
+
+When working as a coding agent with shadcn/ui:
+
+1. **Use `shadcn info --json`** to get the project's full config (framework, version, CSS vars, preset, installed components)
+2. **Use `shadcn docs [component]`** to check component APIs before using them
+3. **Use `--dry-run`** before adding components to see what will be new, identical, or overwritten
+4. **Use `--diff`** to check for component updates and merge with local changes
+5. **Use `--view`** to inspect third-party registry code before installing (security)
+6. **Use presets** when the user wants to try different designs - one command switches everything (colors, fonts, radius, even base library)
+7. **Use `shadcn add demo`** to give the user a visual preview of their current design system
+8. **Use `shadcn add font <name>`** to switch fonts instantly
+9. **Check `components.json`** for framework, aliases, base library, and icon library
+10. **Trusted registries** - The skills file includes registries like react-bits, tailark that can be used directly
+
 ## Tips
 
 - Components are in `components/ui/` - modify directly
 - Use `cn()` utility for conditional classes
-- All components are accessible (Radix UI)
+- All components are accessible (Radix UI or Base UI primitives)
 - Check https://ui.shadcn.com for component docs
 - **Always use subfolders** for components from different libraries
 - **Never override** existing components without checking usage first
+- Use `--base radix` (default) or `--base base` when initializing to choose primitives
+- Use `shadcn migrate radix` to migrate from individual `@radix-ui/react-*` packages to unified `radix-ui`
 
 ## Popular Component Libraries
 
@@ -321,3 +404,4 @@ import { ThemeProvider } from "next-themes";
 - Dialog not opening: Verify DialogTrigger wraps the trigger element
 - Component conflict: Two libraries have same component name - use subfolders
 - Override warning from CLI: Don't override - install to subfolder instead
+- Radix import errors after migration: Run `shadcn migrate radix` to unify imports
