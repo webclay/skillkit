@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.18
+**Version:** 1.2.19
 **Author:** Manu
 **License:** MIT
-**Date:** 06/03/2026
+**Date:** 07/03/2026
 
 ---
 
@@ -377,6 +377,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.19 (2026-03-07)
+- **React Native skill - 2026 update** - Rewrote the React Native skill to reflect modern best practices: Expo is now the recommended approach for all new RN projects (no longer "for rapid prototyping only"); added opinionated `src/` folder structure with `app/`, `components/`, `lib/`, `hooks/`, `types/` subdirectories; added API layer separation pattern (fetch logic in `lib/`, types in `types/`); added FlatList with infinite scroll pattern using `onEndReached` + limit/offset pagination; updated run commands to use bun. Added Android drawable icon support for native tabs in the Expo `advanced-router.md` (the iOS-only `sfSymbol` issue + fix with built-in Android drawables).
 
 ### v1.2.18 (2026-03-06)
 - **Shadcn UI skill - CLI v4 update** - Rewrote the shadcn skill for CLI v4. Now covers: shadcn/skills (official AI skills via skills.sh with `shadcn info --json` for project context), presets (design config codes for scaffolding and switching themes/fonts/radius/base library in one command), monorepo support (`--monorepo` flag with Turborepo, `@workspace/ui` imports), Base UI primitives (`--base radix` or `--base base`), dry-run/diff/view flags for previewing and security-inspecting changes before writing, project templates (Next.js, Vite, TanStack Start, React Router, Astro, Laravel), new CLI commands (`search`, `view`, `docs`, `info`, `build`, `migrate`), demo component for design system preview (`shadcn add demo`), first-class font management (`shadcn add font <name>`), trusted registries (react-bits, tailark, etc.), registry types (`registry:base`, `registry:font`), and `shadcn migrate radix` for unified radix-ui package migration. Removed project-specific VoltrixCRM references.

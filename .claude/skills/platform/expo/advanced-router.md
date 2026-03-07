@@ -221,6 +221,35 @@ Benefits:
 - Native badges
 - Native search integration
 
+### Android Icons for Native Tabs
+
+`sfSymbol` is iOS-only. For Android, use `drawable` with built-in system drawables:
+
+```tsx
+<NativeTabs.Screen
+  name="index"
+  options={{
+    title: 'Home',
+    tabBarIcon: {
+      sfSymbol: 'house.fill',          // iOS
+      drawable: 'ic_menu_today',        // Android (built-in drawable)
+    },
+  }}
+/>
+<NativeTabs.Screen
+  name="favorites"
+  options={{
+    title: 'Favorites',
+    tabBarIcon: {
+      sfSymbol: 'heart.fill',
+      drawable: 'btn_star_big_on',      // Android built-in star icon
+    },
+  }}
+/>
+```
+
+Common Android built-in drawables: `ic_menu_today`, `ic_menu_search`, `ic_menu_preferences`, `ic_menu_info_details`, `btn_star_big_on`, `ic_menu_compass`. If none fit, use a custom image asset instead.
+
 ## 7. React Server Components (SDK 52+, Beta)
 
 Run React components on the server. Stream results to client.
