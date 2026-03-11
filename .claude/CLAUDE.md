@@ -129,7 +129,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Payments, checkout, subscriptions | `payments/stripe` |
 | UI components, forms, dialogs, shadcn presets, monorepo UI | `ui/shadcn` |
 | AI features, chat, text generation | `ai/vercel-ai-sdk` |
-| Sending emails, notifications | `email/resend` or `email/autosend` |
+| Sending emails, notifications | `email/resend`, `email/autosend`, or `email/unosend` |
 | Email deliverability, SPF/DKIM/DMARC, spam | `email/resend` |
 | Email compliance, GDPR, CAN-SPAM | `email/resend` |
 | Receiving emails, inbound webhooks | `email/resend` |

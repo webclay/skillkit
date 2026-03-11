@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.19
+**Version:** 1.2.20
 **Author:** Manu
 **License:** MIT
-**Date:** 07/03/2026
+**Date:** 11/03/2026
 
 ---
 
@@ -262,6 +262,7 @@ Next session, Claude picks up exactly where you left off.
 |-------|--------------|
 | `autosend` | AutoSend transactional and marketing email (volume-based pricing, Resend drop-in compatible) |
 | `resend` | Resend email platform - sending, receiving, React Email templates, deliverability, compliance (includes official Resend skills) |
+| `unosend` | Unosend email, SMS, and WhatsApp API - transactional/bulk sending, templates, email validation, audiences, contacts, webhooks, scheduled delivery |
 
 ### Platform
 | Skill | What It Does |
@@ -377,6 +378,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.20 (2026-03-11)
+- **Unosend email skill** - Email, SMS, and WhatsApp API platform with competitive pricing and high limits. Covers transactional and bulk email sending (up to 100 per batch), template management with mustache variables, scheduled delivery, priority levels, attachments, email validation (syntax, MX, disposable, catch-all, typo detection), audience and contact management, webhook event tracking, domain setup (SPF/DKIM), Better Auth integration (verification, password reset, OTP), and full TypeScript SDK with error handling patterns.
 
 ### v1.2.19 (2026-03-07)
 - **React Native skill - 2026 update** - Rewrote the React Native skill to reflect modern best practices: Expo is now the recommended approach for all new RN projects (no longer "for rapid prototyping only"); added opinionated `src/` folder structure with `app/`, `components/`, `lib/`, `hooks/`, `types/` subdirectories; added API layer separation pattern (fetch logic in `lib/`, types in `types/`); added FlatList with infinite scroll pattern using `onEndReached` + limit/offset pagination; updated run commands to use bun. Added Android drawable icon support for native tabs in the Expo `advanced-router.md` (the iOS-only `sfSymbol` issue + fix with built-in Android drawables).
