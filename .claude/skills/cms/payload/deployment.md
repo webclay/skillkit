@@ -16,7 +16,7 @@ Railway is the simplest option for Payload with PostgreSQL. It provides managed 
 
 **Monorepo setup:** Set root directory to `/backend` and configure Dockerfile builder pointing to `backend/Dockerfile`.
 
-For the complete step-by-step Railway deployment guide (project creation, Postgres, GitHub connection, monorepo paths, domain setup), see the [Railway Payload deployment guide](../../workflow/project-setup/railway-payload-deploy.md).
+For the complete step-by-step Railway deployment guide (project creation, Postgres, GitHub connection, monorepo paths, domain setup), see the [Railway Payload deployment guide](../../web-development/astro-payload-website/railway-payload-deploy.md).
 
 ## Deploying Payload on Cloudflare Workers
 

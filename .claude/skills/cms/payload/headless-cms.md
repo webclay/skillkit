@@ -118,7 +118,7 @@ export default buildConfig({
 
 **When it runs:** Only on first startup when the `users` collection is empty. Subsequent startups skip seeding entirely. See the auto-seeding section in [SKILL.md](SKILL.md) for full details.
 
-**Where the values come from:** The setup wizard reads admin seeding preferences from `dev-context.md` and writes the appropriate values into the project's `.env` file. See [content-questionnaire.md](../../workflow/project-setup/content-questionnaire.md) for the wizard flow.
+**Where the values come from:** The setup wizard reads admin seeding preferences from `dev-context.md` and writes the appropriate values into the project's `.env` file. See [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md) for the wizard flow.
 
 ## Monorepo Development Workflow
 

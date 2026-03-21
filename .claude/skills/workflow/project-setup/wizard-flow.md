@@ -212,7 +212,7 @@ What would you like to work on?
 
 The content website flow is for projects using Astro + Payload CMS. **The template code is already in the project folder** (Astro frontend + Payload backend monorepo). The wizard only creates documentation and configures environment variables.
 
-**Reference:** [content-questionnaire.md](content-questionnaire.md)
+**Reference:** [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md)
 
 ### Step 1: Content Website Questionnaire
 
@@ -270,13 +270,13 @@ Does this look good?
 
 Create `.env` files in both backend and frontend based on the user's hosting choices. Content websites do not use `.env.production` - production variables are set directly in the deployment platform's dashboard. The wizard generates `.env` files directly (no `.env.example` to copy from).
 
-**See:** [content-questionnaire.md](content-questionnaire.md) → Environment Variables section
+**See:** [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md) → Environment Variables section
 
 ### Step 5: Complete Setup & Getting Started
 
 Mark `.setup-complete`, then walk the user through getting the project running locally.
 
-**See:** [content-questionnaire.md](content-questionnaire.md) -> Getting Started Guide
+**See:** [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md) -> Getting Started Guide
 
 **Example output:**
 ```

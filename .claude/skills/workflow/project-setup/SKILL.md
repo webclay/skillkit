@@ -54,7 +54,7 @@ Look for Astro + Payload in the project folder:
 
 **If Astro + Payload detected:** Skip the project type question entirely. Go straight to the content website questionnaire (deployment questions only). The template code is already in place - the wizard only creates documentation files and updates environment variables.
 
-**Important:** Before starting the questionnaire, read `project/projectbrief.md`. If it already contains technical content (collections, routes, components, design tokens, etc.), this is a pre-filled template reference - preserve it. The questionnaire only updates deployment config, project description, and relevant skills. Do NOT overwrite existing technical sections. See [content-questionnaire.md](content-questionnaire.md).
+**Important:** Before starting the questionnaire, read `project/projectbrief.md`. If it already contains technical content (collections, routes, components, design tokens, etc.), this is a pre-filled template reference - preserve it. The questionnaire only updates deployment config, project description, and relevant skills. Do NOT overwrite existing technical sections. See [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md).
 
 **If other code detected:** Run the existing codebase detection flow. See [detection.md](detection.md).
 
@@ -78,7 +78,7 @@ B. Content website (blog, marketing site, portfolio - powered by CMS)
 - Any technology preferences (recommend if unsure)
 
 See [questionnaire.md](questionnaire.md) for the web app question flow.
-See [content-questionnaire.md](content-questionnaire.md) for the content website question flow.
+See [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md) for the content website question flow.
 See [detection.md](detection.md) for codebase analysis patterns.
 
 ### The "No Assumptions" Principle

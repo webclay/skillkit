@@ -75,7 +75,7 @@ Pick the one that fits best!
 
 **Routing:**
 - **Web application** → Continue with Question 0b (package manager) and the full web app questionnaire below (Q1-Q8)
-- **Content website** → Switch to the content website questionnaire: [content-questionnaire.md](content-questionnaire.md)
+- **Content website** → Switch to the content website questionnaire: [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md)
 
 ---
 
@@ -353,7 +353,7 @@ When creating documentation files, map questionnaire answers to template section
 | Q7: Timeline | `## Project Overview` → "Target launch" |
 | Q8: Code review | `## Code Review` in dev-context.md (if Greptile) |
 
-**Note:** If the user selects "Content website" in Q0a, the web app questions above are skipped entirely. See [content-questionnaire.md](content-questionnaire.md) for the content website field mapping.
+**Note:** If the user selects "Content website" in Q0a, the web app questions above are skipped entirely. See [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md) for the content website field mapping.
 
 ### Additional Fields to Populate
 

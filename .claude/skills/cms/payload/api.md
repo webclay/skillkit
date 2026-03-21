@@ -160,6 +160,64 @@ const cars = await payload.find({
 
 Only requested fields are returned and typed accordingly.
 
+## Seeding Globals with Locales (updateGlobal)
+
+**Critical behavior:** `updateGlobal` with an explicit `locale` param does NOT correctly save localized fields inside array items. It only saves group-level localized fields. Localized fields nested inside arrays are silently skipped.
+
+### Correct pattern - seed default locale (no locale param)
+
+```typescript
+// CORRECT: No locale param - uses defaultLocale, correctly saves all nested localized fields
+await payload.updateGlobal({
+  slug: 'home-page',
+  draft: true,
+  data: homePageSeedDE as any,
+})
+await payload.updateGlobal({
+  slug: 'home-page',
+  draft: false,
+  data: homePageSeedDE as any,
+})
+```
+
+### Wrong pattern - explicit locale param
+
+```typescript
+// WRONG: Specifying locale: 'de' only saves group-level fields, NOT array item fields
+await payload.updateGlobal({
+  slug: 'home-page',
+  locale: 'de',  // BUG: silently skips localized fields inside arrays
+  data: homePageSeedDE as any,
+})
+```
+
+### The EN locale destruction bug
+
+When you call `updateGlobal({ locale: 'en', data: ... })` after a no-locale seed, Payload replaces the array item rows entirely. This destroys DE values because the EN call creates new DB rows with only EN content, leaving DE null.
+
+**Rule: Never mix locale-specific calls with no-locale calls for the same global in one migration.**
+
+```typescript
+// WRONG - EN call destroys the DE array item values
+await payload.updateGlobal({ slug: 'home-page', data: seedDE })     // saves DE ok
+await payload.updateGlobal({ slug: 'home-page', locale: 'en', data: seedEN }) // DESTROYS DE arrays
+
+// CORRECT - seed one locale at a time in separate migrations if needed
+// Migration A: seed DE (no locale param)
+await payload.updateGlobal({ slug: 'home-page', draft: true, data: seedDE })
+await payload.updateGlobal({ slug: 'home-page', draft: false, data: seedDE })
+```
+
+### Draft + Published pattern
+
+Always call `draft: true` then `draft: false` to populate both the admin draft view and the published version:
+
+```typescript
+// Admin reads the latest draft - only calling draft: false leaves admin fields blank
+await payload.updateGlobal({ slug: 'home-page', draft: true, data: seedData })
+await payload.updateGlobal({ slug: 'home-page', draft: false, data: seedData })
+```
+
 ## Common Patterns
 
 ### Blog with Categories and Authors
