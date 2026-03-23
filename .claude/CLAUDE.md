@@ -135,6 +135,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Receiving emails, inbound webhooks | `email/resend` |
 | React Email templates | `email/resend` |
 | File uploads, image storage, S3/R2 | `storage/cloudflare-r2` |
+| Internationalization, i18n, translations, multi-language | `platform/expo` (for mobile) |
 | Framework-specific patterns | `framework/nextjs`, `framework/tanstack-start`, or `framework/astro` |
 | CMS, admin panel, content management, Payload | `cms/payload` |
 | Railway deployment, services, databases, domains, troubleshooting | `deployment/railway` |

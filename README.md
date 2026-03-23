@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.20
+**Version:** 1.2.21
 **Author:** Manu
 **License:** MIT
-**Date:** 11/03/2026
+**Date:** 23/03/2026
 
 ---
 
@@ -268,7 +268,7 @@ Next session, Claude picks up exactly where you left off.
 | Skill | What It Does |
 |-------|--------------|
 | `chrome-extension` | Chrome Extension (MV3) |
-| `expo` | Expo mobile apps |
+| `expo` | Expo mobile apps, i18n with react-i18next |
 | `react-native` | React Native patterns |
 | `wordpress` | WordPress plugins |
 
@@ -378,6 +378,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.21 (2026-03-23)
+- **Expo i18n (internationalization)** - Added multi-language support section to the Expo skill using react-i18next + expo-localization. Covers setup, typed locale files with TypeScript safety, i18next configuration with device language detection via `getLocales()`, `useTranslation()` hook usage, user language override with expo-sqlite KV store persistence, runtime language switching via `i18n.changeLanguage()`, adding new languages (AI-friendly task), and RTL support for Arabic/Hebrew. Works with Expo Go - no prebuild needed.
 
 ### v1.2.20 (2026-03-11)
 - **Unosend email skill** - Email, SMS, and WhatsApp API platform with competitive pricing and high limits. Covers transactional and bulk email sending (up to 100 per batch), template management with mustache variables, scheduled delivery, priority levels, attachments, email validation (syntax, MX, disposable, catch-all, typo detection), audience and contact management, webhook event tracking, domain setup (SPF/DKIM), Better Auth integration (verification, password reset, OTP), and full TypeScript SDK with error handling patterns.
