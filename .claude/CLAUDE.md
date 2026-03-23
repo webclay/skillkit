@@ -136,6 +136,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | React Email templates | `email/resend` |
 | File uploads, image storage, S3/R2 | `storage/cloudflare-r2` |
 | Internationalization, i18n, translations, multi-language | `platform/expo` (for mobile) |
+| Expo UI, SwiftUI, Jetpack Compose, Host view, platform colors | `platform/expo` |
 | Animations, transitions, React Native Ease | `platform/react-native` |
 | Framework-specific patterns | `framework/nextjs`, `framework/tanstack-start`, or `framework/astro` |
 | CMS, admin panel, content management, Payload | `cms/payload` |
