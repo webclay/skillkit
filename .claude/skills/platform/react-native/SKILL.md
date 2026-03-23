@@ -1,6 +1,6 @@
 ---
 name: react-native
-description: Use this skill when building mobile apps with React Native for iOS and Android, including native modules or navigation. Activate when the user mentions React Native, native mobile development, native modules, React Native Navigation, or platform-specific mobile code.
+description: Use this skill when building mobile apps with React Native for iOS and Android, including native modules, navigation, or animations. Activate when the user mentions React Native, native mobile development, native modules, React Native Navigation, platform-specific mobile code, React Native Ease, or mobile animations.
 ---
 
 # React Native
@@ -277,6 +277,188 @@ const styles = StyleSheet.create({ container: { flex: 1 } });
 // Memoize callbacks passed to list items
 const handlePress = useCallback((id: string) => {}, []);
 ```
+
+## Animations
+
+### Choosing the Right Library
+
+| Animation type | Use | Why |
+|----------------|-----|-----|
+| Fade, slide, scale, opacity, background color, border radius | **React Native Ease** | Runs on native platform APIs (Core Animation / Animator) - zero JS overhead |
+| Gesture-driven (pan, pinch, drag) | **Reanimated** | Needs frame-by-frame JS control on UI thread |
+| Layout animations (width, height changes) | **Reanimated** | Ease doesn't support layout prop changes |
+| Shared element transitions | **Reanimated** | Not supported by Ease |
+| Complex interpolation chains | **Reanimated** | Ease is for simple declarative animations |
+
+### React Native Ease
+
+A lightweight animation library by App and Flow that delegates animations entirely to the operating system. No JavaScript animation loop, no worklets, no shared values. Animations stay smooth even when the UI thread is busy.
+
+```bash
+npx expo install react-native-ease
+# Requires prebuild (not available in Expo Go)
+npx expo prebuild
+```
+
+#### EaseView - Basic Usage
+
+Replace `Animated.View` with `EaseView` for simple animations:
+
+```tsx
+import { EaseView } from 'react-native-ease';
+
+function FadeToggle({ visible }: { visible: boolean }) {
+  return (
+    <EaseView
+      animate={{ opacity: visible ? 1 : 0 }}
+      transition={{ type: 'timing', duration: 300 }}
+    >
+      <Text>Hello</Text>
+    </EaseView>
+  );
+}
+```
+
+#### Enter Animation with initialAnimate
+
+Use `initialAnimate` to set starting values and trigger an enter animation on mount:
+
+```tsx
+import { EaseView } from 'react-native-ease';
+
+function FadeInCard({ children }: { children: React.ReactNode }) {
+  return (
+    <EaseView
+      initialAnimate={{ opacity: 0, translateY: 20 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ type: 'spring', damping: 15, stiffness: 120 }}
+      style={styles.card}
+    >
+      {children}
+    </EaseView>
+  );
+}
+```
+
+#### Cross-Fade Between States
+
+Animate multiple properties on state change. Properties are flat (not wrapped in a transform array):
+
+```tsx
+import { EaseView } from 'react-native-ease';
+
+function SelectableItem({ selected }: { selected: boolean }) {
+  return (
+    <EaseView
+      animate={{
+        opacity: selected ? 1 : 0.5,
+        scale: selected ? 1 : 0.95,
+      }}
+      transition={{ type: 'timing', duration: 200 }}
+      style={styles.item}
+    >
+      <Text>{selected ? 'Selected' : 'Tap to select'}</Text>
+    </EaseView>
+  );
+}
+```
+
+#### Staggered Reveal
+
+Animate items in sequence with delays:
+
+```tsx
+import { EaseView } from 'react-native-ease';
+
+const STAGGER_DELAYS = [0, 150, 300, 450, 600];
+
+function StaggeredList({ items, revealed }: { items: string[]; revealed: boolean }) {
+  return (
+    <>
+      {items.map((item, index) => (
+        <EaseView
+          key={item}
+          initialAnimate={{ opacity: 0, translateY: 20 }}
+          animate={{
+            opacity: revealed ? 1 : 0,
+            translateY: revealed ? 0 : 20,
+          }}
+          transition={{
+            type: 'timing',
+            duration: 400,
+            delay: STAGGER_DELAYS[index] ?? index * 150,
+          }}
+        >
+          <Text>{item}</Text>
+        </EaseView>
+      ))}
+    </>
+  );
+}
+```
+
+#### EaseView Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `animate` | object | Target animation values |
+| `initialAnimate` | object | Starting values (triggers enter animation on mount) |
+| `transition` | object | Animation config (type, duration, easing, delay) |
+| `onTransitionEnd` | function | Callback fired when animation completes |
+
+#### Supported Animatable Properties
+
+All properties are flat in the `animate` object (not wrapped in a `transform` array):
+
+- `opacity` (0 to 1)
+- `translateX`, `translateY` (pixels)
+- `scale` (1 = normal), `scaleX`, `scaleY`
+- `rotate`, `rotateX`, `rotateY` (degrees)
+- `borderRadius` (pixels, hardware-accelerated)
+- `backgroundColor` (any RN color value)
+
+**Not supported:** width, height, border color, or any layout-affecting properties.
+
+#### Transition Types
+
+```tsx
+// Timing (default)
+transition={{ type: 'timing', duration: 300, easing: 'easeOut', delay: 0 }}
+// easing options: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | [x1, y1, x2, y2]
+
+// Spring
+transition={{ type: 'spring', damping: 15, stiffness: 120, mass: 1 }}
+
+// Instant (no animation)
+transition={{ type: 'none' }}
+```
+
+#### Migration from Reanimated (Simple Animations)
+
+For simple enter/exit or state-change animations, replace Reanimated patterns:
+
+```tsx
+// Before (Reanimated) - requires shared values + animated styles
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+
+const opacity = useSharedValue(0);
+const animatedStyle = useAnimatedStyle(() => ({ opacity: withTiming(opacity.value) }));
+// Need to manually trigger: opacity.value = 1;
+<Animated.View style={animatedStyle}>...</Animated.View>
+
+// After (Ease) - declarative, no shared values
+import { EaseView } from 'react-native-ease';
+
+<EaseView
+  initialAnimate={{ opacity: 0, translateY: 20 }}
+  animate={{ opacity: visible ? 1 : 0, translateY: visible ? 0 : 20 }}
+  transition={{ type: 'spring', damping: 15, stiffness: 120 }}
+>
+  ...
+</EaseView>
+```
+
+**Keep Reanimated** for gestures, layout animations, shared element transitions, and complex interpolation.
 
 ## Tips
 

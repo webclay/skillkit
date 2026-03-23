@@ -269,7 +269,7 @@ Next session, Claude picks up exactly where you left off.
 |-------|--------------|
 | `chrome-extension` | Chrome Extension (MV3) |
 | `expo` | Expo mobile apps, i18n with react-i18next |
-| `react-native` | React Native patterns |
+| `react-native` | React Native patterns, animations with React Native Ease |
 | `wordpress` | WordPress plugins |
 
 ### Scraping
@@ -381,6 +381,7 @@ The `project-setup` skill automatically recommends this stack and detects your p
 
 ### v1.2.21 (2026-03-23)
 - **Expo i18n (internationalization)** - Added multi-language support section to the Expo skill using react-i18next + expo-localization. Covers setup, typed locale files with TypeScript safety, i18next configuration with device language detection via `getLocales()`, `useTranslation()` hook usage, user language override with expo-sqlite KV store persistence, runtime language switching via `i18n.changeLanguage()`, adding new languages (AI-friendly task), and RTL support for Arabic/Hebrew. Works with Expo Go - no prebuild needed.
+- **React Native animations with React Native Ease** - Added animations section to React Native skill. Covers React Native Ease by App and Flow - a zero-JS-overhead animation library that runs entirely on native platform APIs (Core Animation on iOS, Animator on Android). Includes decision table for when to use Ease vs Reanimated, EaseView usage (fade, scale, opacity, transforms, background color), cross-fade between states, staggered reveal with delays, supported animatable properties, and migration guide from Reanimated for simple animations. Ease requires prebuild (not Expo Go).
 
 ### v1.2.20 (2026-03-11)
 - **Unosend email skill** - Email, SMS, and WhatsApp API platform with competitive pricing and high limits. Covers transactional and bulk email sending (up to 100 per batch), template management with mustache variables, scheduled delivery, priority levels, attachments, email validation (syntax, MX, disposable, catch-all, typo detection), audience and contact management, webhook event tracking, domain setup (SPF/DKIM), Better Auth integration (verification, password reset, OTP), and full TypeScript SDK with error handling patterns.
