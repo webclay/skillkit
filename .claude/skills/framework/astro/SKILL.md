@@ -3,9 +3,9 @@ name: astro
 description: Use this skill when building content-focused websites with Astro, including blogs, documentation sites, or marketing pages. Activate when the user mentions Astro, content collections, islands architecture, partial hydration, MDX, or static site generation.
 ---
 
-# Astro
+# Astro 6
 
-Fast, content-focused web framework with islands architecture and zero JavaScript by default.
+Fast, content-focused web framework with islands architecture and zero JavaScript by default. Requires **Node 22+**.
 
 ## When to Use This Skill
 
@@ -26,6 +26,11 @@ Fast, content-focused web framework with islands architecture and zero JavaScrip
 
 ```bash
 npm create astro@latest
+```
+
+**Upgrade existing project:**
+```bash
+npx @astrojs/upgrade
 ```
 
 ## Project Structure
@@ -112,11 +117,14 @@ Usage:
 </Card>
 ```
 
-## Content Collections
+## Content Collections (Build-Time)
+
+Standard collections are built at build time from local files. Use `z` from `astro/zod` (not `astro:content`).
 
 ```typescript
 // src/content.config.ts
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const blog = defineCollection({
@@ -185,6 +193,169 @@ const { Content } = await render(post);
 </article>
 ```
 
+## Live Content Collections
+
+Fetch content at request time without rebuilds. Perfect for CMS content and API data that changes frequently.
+
+```typescript
+// src/live.config.ts
+import { defineLiveCollection } from 'astro:content';
+import { z } from 'astro/zod';
+import { cmsLoader } from './loaders/my-cms';
+
+const updates = defineLiveCollection({
+  loader: cmsLoader({ apiKey: import.meta.env.MY_API_KEY }),
+  schema: z.object({
+    slug: z.string(),
+    title: z.string(),
+    excerpt: z.string(),
+    publishedAt: z.coerce.date(),
+  }),
+});
+
+export const collections = { updates };
+```
+
+### Query Live Content
+
+```astro
+---
+import { getLiveEntry } from 'astro:content';
+
+const { entry: update, error } = await getLiveEntry(
+  'updates',
+  Astro.params.slug,
+);
+
+if (error || !update) {
+  return Astro.redirect('/404');
+}
+---
+
+<h1>{update.data.title}</h1>
+<p>{update.data.excerpt}</p>
+<time>{update.data.publishedAt.toDateString()}</time>
+```
+
+**Key points:**
+- Same APIs as build-time collections - `getCollection`, `getEntry`
+- Both types coexist in the same project
+- No rebuild needed when CMS content changes
+- Requires SSR mode (`output: 'server'`)
+
+## Built-in Fonts API
+
+Astro 6 handles font downloading, caching, self-hosting, optimized fallbacks, and preload links automatically.
+
+```javascript
+// astro.config.mjs
+import { defineConfig, fontProviders } from 'astro/config';
+
+export default defineConfig({
+  fonts: [
+    {
+      name: 'Roboto',
+      cssVariable: '--font-roboto',
+      provider: fontProviders.fontsource(),
+    },
+  ],
+});
+```
+
+```astro
+---
+import { Font } from 'astro:assets';
+---
+
+<head>
+  <Font cssVariable="--font-roboto" preload />
+</head>
+
+<style is:global>
+  body {
+    font-family: var(--font-roboto);
+  }
+</style>
+```
+
+**Key points:**
+- Fonts are self-hosted automatically (no external requests at runtime)
+- Generates optimized fallback fonts to reduce layout shift
+- Use `preload` attribute for above-the-fold fonts
+
+## Content Security Policy
+
+Automatically hashes scripts and styles, generates CSP headers. Works for static and SSR pages.
+
+```javascript
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  security: {
+    csp: true,  // Basic - auto-hashes everything
+  },
+});
+```
+
+Advanced configuration:
+
+```javascript
+export default defineConfig({
+  security: {
+    csp: {
+      algorithm: 'SHA-512',
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' https://images.cdn.example.com",
+      ],
+      styleDirective: { hashes: ['sha384-styleHash'] },
+      scriptDirective: { hashes: ['sha384-scriptHash'] },
+    },
+  },
+});
+```
+
+## Route Caching (Experimental)
+
+Platform-agnostic caching for server-rendered pages with automatic dependency tracing.
+
+```javascript
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import { memoryCache } from 'astro/config';
+
+export default defineConfig({
+  experimental: {
+    cache: { provider: memoryCache() },
+  },
+});
+```
+
+```astro
+---
+Astro.cache.set({
+  maxAge: 120,  // Cache for 2 minutes
+  swr: 60,      // Serve stale for 1 minute while revalidating
+  tags: ['home'],
+});
+---
+
+<html><body>Cached page</body></html>
+```
+
+Content-aware invalidation:
+
+```astro
+---
+import { getEntry } from 'astro:content';
+const product = await getEntry('products', Astro.params.slug);
+
+// When the product changes, Astro invalidates this cached page automatically
+Astro.cache.set(product);
+---
+```
+
 ## Framework Components (Islands)
 
 Install a framework integration:
@@ -242,6 +413,9 @@ export default function Counter({ initialCount = 0 }) {
 ```astro
 ---
 // src/layouts/BaseLayout.astro
+import { ViewTransitions } from 'astro:transitions';
+import { Font } from 'astro:assets';
+
 interface Props {
   title: string;
   description?: string;
@@ -257,6 +431,8 @@ const { title, description } = Astro.props;
   <meta name="viewport" content="width=device-width" />
   <meta name="description" content={description} />
   <title>{title}</title>
+  <Font cssVariable="--font-body" preload />
+  <ViewTransitions />
 </head>
 <body>
   <nav>
@@ -279,19 +455,19 @@ const { title, description } = Astro.props;
 
 ```
 src/pages/
-├── index.astro          → /
-├── about.astro          → /about
+├── index.astro          -> /
+├── about.astro          -> /about
 ├── blog/
-│   ├── index.astro      → /blog
-│   └── [slug].astro     → /blog/:slug (dynamic)
-└── [...slug].astro      → catch-all route
+│   ├── index.astro      -> /blog
+│   └── [slug].astro     -> /blog/:slug (dynamic)
+└── [...slug].astro      -> catch-all route
 ```
 
 ## Configuration
 
 ```javascript
 // astro.config.mjs
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
@@ -304,6 +480,16 @@ export default defineConfig({
     mdx(),
   ],
   output: 'static',  // or 'server' for SSR
+  fonts: [
+    {
+      name: 'Inter',
+      cssVariable: '--font-body',
+      provider: fontProviders.fontsource(),
+    },
+  ],
+  security: {
+    csp: true,
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
@@ -329,7 +515,12 @@ npx astro add mdx
 # Deployment
 npx astro add vercel
 npx astro add netlify
+npx astro add cloudflare
 ```
+
+## Cloudflare Support
+
+The `@astrojs/cloudflare` adapter runs `workerd` runtime at every stage: development, prerendering, and production. Access platform bindings (KV, D1, R2, Durable Objects) directly via `cloudflare:workers` - no simulation layers needed.
 
 ## View Transitions (SPA-like Navigation)
 
@@ -386,6 +577,36 @@ export default defineConfig({
 
 **Why this matters for Astro + Payload:** Since Astro builds static HTML at build time, there's no data fetching at runtime. Combined with View Transitions and prefetching, users navigate between pages with zero loading states - the content is already there.
 
+## Experimental Features
+
+### Rust Compiler
+
+New successor to Go-based `.astro` compiler with improved speed and diagnostics. Planned as default in a future major version.
+
+```bash
+npm install @astrojs/compiler-rs
+```
+
+```javascript
+export default defineConfig({
+  experimental: {
+    rustCompiler: true,
+  },
+});
+```
+
+### Queued Rendering
+
+Two-pass rendering strategy showing up to 2x faster rendering with improved memory efficiency. Planned as default in Astro v7.
+
+```javascript
+export default defineConfig({
+  experimental: {
+    queuedRendering: { enabled: true },
+  },
+});
+```
+
 ## Tips
 
 - Use `client:visible` for below-fold interactive components
@@ -395,6 +616,9 @@ export default defineConfig({
 - Use `getStaticPaths()` for dynamic routes in static mode
 - Enable View Transitions for SPA-like navigation feel
 - Use prefetching with `hover` strategy for instant page loads
+- Use the Fonts API instead of manually loading fonts
+- Enable CSP for automatic security headers
+- Use Live Collections for CMS content that changes without rebuilds
 
 ## Reference Files
 
@@ -407,9 +631,12 @@ export default defineConfig({
 - Pages render at correct routes
 - Content collections query correctly
 - Framework components hydrate with client directives
+- Fonts load without external requests (self-hosted)
 
 ### Common Issues
 - "Cannot find module 'astro:content'": Run `astro sync` or restart dev server
 - Component not interactive: Add a `client:*` directive
 - TypeScript errors in content: Check schema matches frontmatter
 - Build fails: Ensure `getStaticPaths` returns all dynamic routes
+- Zod import errors: Use `import { z } from 'astro/zod'` (not `astro:content`)
+- Node version errors: Astro 6 requires Node 22+
