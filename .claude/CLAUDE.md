@@ -163,6 +163,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Swiss company lookup, Zefix, UID search | `api/zefix` |
 | People/company enrichment, Apollo, sales intelligence | `api/apollo` |
 | Typography, font sizes, line height, readability | `design/typography` |
+| Animations, transitions, hover effects, scroll reveals, motion | `design/animation` |
 
 ## Common Mistakes to Avoid
 

@@ -2,7 +2,7 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.21
+**Version:** 1.2.23
 **Author:** Manu
 **License:** MIT
 **Date:** 23/03/2026
@@ -288,6 +288,7 @@ Next session, Claude picks up exactly where you left off.
 | Skill | What It Does |
 |-------|--------------|
 | `typography` | Web typography rules - font sizes, line height, line length, font pairing, headings, spacing |
+| `animation` | Web animation rules - where to animate, anti-patterns, exact durations/easing, hover effects, scroll reveals, form feedback |
 
 ### Tools
 | Skill | What It Does |
@@ -378,6 +379,10 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.23 (2026-03-23)
+- **Astro 6 update** - Rewrote Astro skill for v6. Added Built-in Fonts API (auto self-hosting, optimized fallbacks, preload), Live Content Collections (request-time CMS content without rebuilds), Content Security Policy (auto script/style hashing), Route Caching (experimental, platform-agnostic with stale-while-revalidate), improved Cloudflare support (workerd runtime at all stages), experimental Rust compiler and Queued Rendering. Updated breaking changes: Node 22+ required, Zod import from `astro/zod`, Vite 7, Shiki 4.
+- **Web animation skill** - Opinionated animation rules for web projects based on analysis of 200+ SaaS websites. Covers the 5 places to animate (hero fade-in, card hover, scroll reveals, FAQ accordions, form validation) with exact durations, easing functions, and transform values. Includes anti-patterns list (no parallax on everything, no auto-playing carousels, no scroll-jacking), a quick reference table, performance tips, and the "animation test" checklist. Works with Tailwind, vanilla CSS, and Framer Motion.
 
 ### v1.2.21 (2026-03-23)
 - **Expo i18n (internationalization)** - Added multi-language support section to the Expo skill using react-i18next + expo-localization. Covers setup, typed locale files with TypeScript safety, i18next configuration with device language detection via `getLocales()`, `useTranslation()` hook usage, user language override with expo-sqlite KV store persistence, runtime language switching via `i18n.changeLanguage()`, adding new languages (AI-friendly task), and RTL support for Arabic/Hebrew. Works with Expo Go - no prebuild needed.
