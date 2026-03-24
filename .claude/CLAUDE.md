@@ -140,6 +140,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Animations, transitions, React Native Ease | `platform/react-native` |
 | Framework-specific patterns | `framework/nextjs`, `framework/tanstack-start`, or `framework/astro` |
 | CMS, admin panel, content management, Payload | `cms/payload` |
+| Push local content to live backend, content sync, update live database | `cms/payload` (see content-sync.md) |
 | Railway deployment, services, databases, domains, troubleshooting | `deployment/railway` |
 | Cloudflare Pages, Astro + Payload monorepo deploy, deploy hooks | `deployment/cloudflare-pages` |
 | Project setup, new projects | `workflow/project-setup` |

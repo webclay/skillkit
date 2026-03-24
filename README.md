@@ -2,7 +2,7 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.23
+**Version:** 1.2.24
 **Author:** Manu
 **License:** MIT
 **Date:** 23/03/2026
@@ -379,6 +379,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.24 (2026-03-23)
+- **Payload content sync** - Added `content-sync.md` reference to the Payload CMS skill. Documents two approaches for pushing local content to a live Payload backend when `onInit` seeding can't update existing data: Local API (recommended - boots Payload against the target database, no auth needed) and REST API (alternative - requires running backend and admin credentials). Includes battle-tested script template, locale handling, draft/published workflow, common migration bugs (timestamp defaults, non-idempotent enum renames, missing version locale records), and key takeaways about Payload's version table architecture.
 
 ### v1.2.23 (2026-03-23)
 - **Astro 6 update** - Rewrote Astro skill for v6. Added Built-in Fonts API (auto self-hosting, optimized fallbacks, preload), Live Content Collections (request-time CMS content without rebuilds), Content Security Policy (auto script/style hashing), Route Caching (experimental, platform-agnostic with stale-while-revalidate), improved Cloudflare support (workerd runtime at all stages), experimental Rust compiler and Queued Rendering. Updated breaking changes: Node 22+ required, Zod import from `astro/zod`, Vite 7, Shiki 4.

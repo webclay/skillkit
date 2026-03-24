@@ -278,6 +278,7 @@ Content website templates can include an `onInit` hook in `payload.config.ts` th
 - In production, change `PAYLOAD_ADMIN_PASSWORD` to a strong password via the deployment platform's environment variables
 - The seeded accounts have full admin access to all collections
 - See [headless-cms.md](headless-cms.md) for the full `payload.config.ts` template with the `onInit` hook
+- **Updating existing content?** The `onInit` hook only seeds empty databases. To push updated content to a live backend that already has data, see [content-sync.md](content-sync.md) for the Local API sync script pattern
 
 ## How to Verify
 
@@ -320,4 +321,5 @@ Payload handles the backend - you focus on the data model and frontend.
 | [api.md](api.md) | REST API endpoints and query params, Local API methods, Select API, common patterns (blog, e-commerce) |
 | [form-builder.md](form-builder.md) | Form Builder plugin setup, admin usage, frontend rendering, viewing submissions |
 | [headless-cms.md](headless-cms.md) | Headless CMS architecture (Payload + Astro), monorepo setup, fetching, block rendering, deployment options, build triggers, live preview |
+| [content-sync.md](content-sync.md) | Pushing local content to a live Payload backend via Local API (recommended) or REST API, common migration bugs, version table gotchas |
 | [deployment.md](deployment.md) | Cloudflare Workers deployment (D1 + R2), Wrangler config, read replicas, Postgres + Hyperdrive, staging, costs, Bun/Node.js runtime compatibility |
