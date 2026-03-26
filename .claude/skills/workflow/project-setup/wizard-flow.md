@@ -212,7 +212,7 @@ What would you like to work on?
 
 The content website flow is for projects using Astro + Payload CMS. **The template code is already in the project folder** (Astro frontend + Payload backend monorepo). The wizard only creates documentation and configures environment variables.
 
-**Reference:** [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md)
+**Reference:** [content-questionnaire.md](content-questionnaire.md)
 
 ### Step 1: Content Website Questionnaire
 
@@ -250,7 +250,21 @@ and configure environment variables for your chosen hosting platforms.
 Does this look good?
 ```
 
-### Step 3: Create Documentation Files
+### Step 3: Reset Environment Files (MANDATORY FIRST)
+
+**This step MUST happen before creating documentation files.** Duplicated templates carry the old project's R2 bucket, database, and deploy hook credentials. If not cleared, the new project silently uses the old project's resources (e.g., media uploads go to the wrong R2 bucket).
+
+1. Check `backend/.env` for non-empty R2/database/deploy hook values
+2. If found: reset all template-specific values (see [content-questionnaire.md](content-questionnaire.md) -> Template Environment Reset)
+3. Auto-generate new `PAYLOAD_SECRET`
+4. Keep admin account credentials from auto-memory
+5. Clear: `DATABASE_URI`, all `R2_*` values, `CLOUDFLARE_DEPLOY_HOOK_URL`
+6. Set localhost defaults for `PAYLOAD_PUBLIC_SERVER_URL` and `CLIENT_URI`
+7. Also reset `backend/.env.production`
+
+**When in doubt, always reset** - clearing values is safer than leaving old credentials.
+
+### Step 4: Create Documentation Files
 
 **Check projectbrief.md first:**
 
@@ -266,17 +280,11 @@ Does this look good?
 
 **Sections to skip in projectbrief (when generating new):** Auth, Payments, AI Integration, Database Schema, API Endpoints, Real-time features (all handled by the Payload template).
 
-### Step 4: Create Environment Files
-
-Create `.env` files in both backend and frontend based on the user's hosting choices. Content websites do not use `.env.production` - production variables are set directly in the deployment platform's dashboard. The wizard generates `.env` files directly (no `.env.example` to copy from).
-
-**See:** [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md) → Environment Variables section
-
 ### Step 5: Complete Setup & Getting Started
 
 Mark `.setup-complete`, then walk the user through getting the project running locally.
 
-**See:** [content-questionnaire.md](../../web-development/astro-payload-website/content-questionnaire.md) -> Getting Started Guide
+**See:** [content-questionnaire.md](content-questionnaire.md) -> Getting Started Guide
 
 **Example output:**
 ```
@@ -293,15 +301,17 @@ Your content website is configured!
 - Payload CMS with admin panel, SEO, media handling
 - Pre-configured content types
 
-Let's get your project running locally. First, I'll set up your environment files...
+Let's get your project running locally...
 ```
 
-Then walk through the Getting Started steps one at a time:
+Then walk through the Getting Started steps one at a time. **CRITICAL: Always present install commands before dev server commands.** Users duplicating the template won't have node_modules installed.
+
 1. Set up .env files (Claude creates these directly, no .env.example)
-2. Install dependencies
-3. Start both dev servers
-4. Create admin account
-5. Start adding content
+2. **Install dependencies** - `cd backend && [pm] install` then `cd frontend && [pm] install` (MUST come before starting servers)
+3. **Run database migrations** - `cd backend && pnpm payload migrate` (MUST run before starting servers - creates all tables in fresh database)
+4. Start both dev servers - backend: `cd backend && pnpm run dev`, frontend: `cd frontend && [pm] run dev`
+5. Log into admin panel
+6. Start adding content
 
 ---
 

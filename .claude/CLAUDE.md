@@ -155,16 +155,16 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Deployment security, headers, secrets | `security/deployment-security-audit` |
 | TanStack Start security headers (Nitro) | `security/tanstack-nitro-security` |
 | Debugging errors | `workflow/debugger` |
-| Linting before commits | `workflow/ultracite` |
+| Linting before commits | `tooling/ultracite-setup` |
 | Development best practices | `workflow/best-practices` |
 | Updating SkillKit | `workflow/update-system` (trigger: "skillkit update") |
-| Migrating from old claude-memory | `workflow/migrate-from-memory` |
 | Updating dependencies | `workflow/update-stack` |
 | Background jobs, workflows, event-driven | `backend/motia` |
 | Swiss company lookup, Zefix, UID search | `api/zefix` |
 | People/company enrichment, Apollo, sales intelligence | `api/apollo` |
 | Typography, font sizes, line height, readability | `design/typography` |
 | Animations, transitions, hover effects, scroll reveals, motion | `design/animation` |
+| Web design, UI polish, redesigns, visual style | `web-development/webdesign` |
 
 ## Common Mistakes to Avoid
 

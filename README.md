@@ -184,7 +184,6 @@ Next session, Claude picks up exactly where you left off.
 | `skill-creator` | Create new skills from successful patterns |
 | `code-reviewer` | Review code for quality, security, maintainability |
 | `debugger` | Systematically investigate and fix errors |
-| `ultracite` | Run linting and TypeScript checks before commits |
 | `update-stack` | Safely update all dependencies with breaking change detection |
 
 ### Framework
@@ -289,6 +288,11 @@ Next session, Claude picks up exactly where you left off.
 |-------|--------------|
 | `typography` | Web typography rules - font sizes, line height, line length, font pairing, headings, spacing |
 | `animation` | Web animation rules - where to animate, anti-patterns, exact durations/easing, hover effects, scroll reveals, form feedback |
+
+### Web Development
+| Skill | What It Does |
+|-------|--------------|
+| `webdesign` | Master web design skill - orchestrates sub-skills for design philosophy, Tailwind implementation, UI polish, redesigns, and visual style systems |
 
 ### Tools
 | Skill | What It Does |
