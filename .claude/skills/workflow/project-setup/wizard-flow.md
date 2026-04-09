@@ -156,6 +156,39 @@ I've created your environment files:
 Fill in your API keys as you set up each service. The production file shows exactly where to find each value.
 ```
 
+### Step 5b: Configure Deployment & Branching (if Railway)
+
+**Reference:** [railway-webapp-deploy.md](railway-webapp-deploy.md)
+
+**What to do:**
+- If the user selected Railway in Q9, walk them through the two-environment setup
+- Document the branching strategy and PR target in `project/dev-context.md`
+- Add Railway setup tasks to `project/tasks.md`
+
+**Add to `project/dev-context.md`:**
+```markdown
+## Deployment
+
+Platform: Railway
+Environments: Production (main branch) + Staging (staging branch)
+Branching: feature/* → staging → main
+PR target for feature branches: staging
+PR target for staging: main
+DB sync: GitHub Action syncs production DB to staging on every push to main
+```
+
+**Add to `project/tasks.md` (under a "Deployment Setup" section):**
+- Create `staging` branch and push to GitHub
+- Create Railway project with Production and Staging environments
+- Configure Production: connect to `main`, add postgres/redis, set env vars, generate domain
+- Configure Staging: connect to `staging`, duplicate services, set env vars, generate domain
+- Add custom domains (production + staging.yourdomain.com)
+- Add DB sync GitHub Action and set `PRODUCTION_DATABASE_URL` + `STAGING_DATABASE_URL` secrets
+
+**Note on PR targeting:** The default `/branch` and `/wrap-up` skills create PRs. With this branching strategy, feature branch PRs target `staging` - Claude reads `## Deployment` in dev-context.md to determine the PR target automatically.
+
+---
+
 ### Step 6: Map Skills to Tech Stack
 
 **What to do:**
@@ -201,7 +234,9 @@ Your project is now set up!
 **Next steps:**
 1. Review project/projectbrief.md to make sure it looks right
 2. Fill in API keys in .env as you set up each service
-3. Tell me what feature you want to build first!
+3. Run `git checkout -b staging && git push -u origin staging` to create the staging branch (if using Railway)
+4. Follow the Railway setup checklist in project/tasks.md to configure Production and Staging environments
+5. Tell me what feature you want to build first!
 
 What would you like to work on?
 ```

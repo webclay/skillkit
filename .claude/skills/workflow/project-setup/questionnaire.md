@@ -191,6 +191,40 @@ This helps me prioritize features.
 
 ---
 
+#### Question 9: Deployment
+
+```
+Where do you want to deploy this app?
+
+A. Railway (Recommended - two environments, auto-deploys from GitHub branches)
+B. Vercel
+C. Fly.io
+D. Not sure yet
+
+I recommend Railway: you get a Production environment connected to your `main` branch
+and a Staging environment connected to a `staging` branch, so you can test changes
+before they go live. Both deploy automatically when you push.
+```
+
+**If Railway is selected:** Add a `## Deployment` section to `project/dev-context.md`:
+
+```markdown
+## Deployment
+
+Platform: Railway
+Environments: Production (main branch) + Staging (staging branch)
+Branching: feature/* → staging → main
+PR target for feature branches: staging
+PR target for staging: main
+DB sync: GitHub Action syncs production DB to staging on every push to main
+```
+
+Also reference [railway-webapp-deploy.md](railway-webapp-deploy.md) for setup steps and include Railway setup tasks in `project/tasks.md`.
+
+**If not Railway:** Skip the Railway-specific tasks and branching setup. The user will configure deployment separately.
+
+---
+
 #### Question 8: Code Review
 
 ```
@@ -267,6 +301,8 @@ Does this look good? I can explain any choice or swap alternatives.
 | Auth | Better Auth | Flexible, works with any DB |
 | UI | Tailwind + shadcn/ui | Copy-paste components, easy customization |
 | Data Fetching | TanStack Query | Caching, loading states handled |
+| Deployment | Railway | Two environments (production + staging), auto-deploys from GitHub |
+| Branching | main + staging | `feature/*` → `staging` → `main`, Railway follows each branch |
 
 Based on specific needs, recommend:
 
@@ -352,6 +388,7 @@ When creating documentation files, map questionnaire answers to template section
 | Q6: Tech preferences | `## Tech Stack` → All subsections |
 | Q7: Timeline | `## Project Overview` → "Target launch" |
 | Q8: Code review | `## Code Review` in dev-context.md (if Greptile) |
+| Q9: Deployment | `## Deployment` in dev-context.md (if Railway, include branching strategy + PR target) |
 
 **Note:** If the user selects "Content website" in Q0a, the web app questions above are skipped entirely. See [content-questionnaire.md](content-questionnaire.md) for the content website field mapping.
 
@@ -388,6 +425,7 @@ Initial tasks are generated based on recommended tech stack:
 | Better Auth | "Configure authentication", "Add login/signup pages" |
 | shadcn/ui | "Install UI components", "Set up theme" |
 | Stripe | "Configure Stripe", "Add checkout flow" |
+| Railway | "Create staging branch (`git checkout -b staging && git push -u origin staging`)", "Set up Railway project with Production and Staging environments (see railway-webapp-deploy.md)", "Configure production environment - connect to main branch", "Configure staging environment - connect to staging branch", "Set up custom domains for both environments", "Add DB sync GitHub Action (optional)" |
 
 ### Starter Commands by Package Manager
 

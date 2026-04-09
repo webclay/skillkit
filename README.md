@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.24
+**Version:** 1.2.25
 **Author:** Manu
 **License:** MIT
-**Date:** 23/03/2026
+**Date:** 09/04/2026
 
 ---
 
@@ -383,6 +383,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.25 (2026-04-09)
+- **Web app staging & Railway deployment** - Added `railway-webapp-deploy.md` to the project-setup skill. Documents the full two-environment Railway setup (Production connected to `main`, Staging connected to `staging`) with step-by-step CLI commands, DB sync GitHub Action, and auth/CORS config for both domains. Updated `questionnaire.md` with Q9 (deployment platform, Railway recommended), added Railway + three-branch strategy to the default recommended stack, mapped deployment config to `dev-context.md`, and added Railway setup tasks to the task generator. Updated `wizard-flow.md` with Step 5b that writes the branching strategy and PR target into `dev-context.md` so `/wrap-up` automatically targets `staging` instead of `main` for feature branch PRs.
 
 ### v1.2.24 (2026-03-23)
 - **Payload content sync** - Added `content-sync.md` reference to the Payload CMS skill. Documents two approaches for pushing local content to a live Payload backend when `onInit` seeding can't update existing data: Local API (recommended - boots Payload against the target database, no auth needed) and REST API (alternative - requires running backend and admin credentials). Includes battle-tested script template, locale handling, draft/published workflow, common migration bugs (timestamp defaults, non-idempotent enum renames, missing version locale records), and key takeaways about Payload's version table architecture.
