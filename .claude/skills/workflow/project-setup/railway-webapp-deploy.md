@@ -162,40 +162,44 @@ staging.yourdomain.com
 
 If you have a separate backend, whitelist both production and staging origins in your CORS config.
 
-## Step 11: Database Sync (Recommended)
+## Step 11: Database Strategy
 
-Keep staging in sync with production data by adding a GitHub Action that dumps production and restores into staging on every push to `main`.
+The two environments are fully isolated - no data ever flows between them.
 
-Create `.github/workflows/sync-db-to-staging.yml`:
+**Per-environment data approach:**
 
-```yaml
-name: Sync Production DB to Staging
+| Environment | Data | Strategy |
+|-------------|------|----------|
+| Production | Real user data | Never exported or synced anywhere |
+| Staging | Test data only | Seed script or manually created, disposable |
+| Local dev | Empty or seeded | Seed script or empty DB, fully disposable |
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+**Schema migrations:**
 
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install postgres client
-        run: sudo apt-get install -y postgresql-client
+Migrations are code - they live in the repo and are version controlled. Each environment runs migrations independently on deploy. Never run migrations manually in production; always through the deploy pipeline.
 
-      - name: Sync production DB to staging
-        run: |
-          pg_dump $PRODUCTION_DATABASE_URL | psql $STAGING_DATABASE_URL
-        env:
-          PRODUCTION_DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
-          STAGING_DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
-```
+The flow:
+1. Create a feature branch from `staging`
+2. Make schema changes locally, generate migration files (`drizzle-kit generate` or `prisma migrate dev`)
+3. Commit migration files with your code
+4. Push to `staging` - staging deploy runs the migrations against the staging DB
+5. Test with seed/fake data on staging
+6. Merge `staging` → `main` - production deploy runs the same migration files against the production DB
+7. User data is untouched - only structure changes
 
-Add both secrets to the GitHub repo (Settings > Secrets and variables > Actions):
-- `PRODUCTION_DATABASE_URL` - the Railway Postgres URL from production environment
-- `STAGING_DATABASE_URL` - the Railway Postgres URL from staging environment
+**Breaking change protocol:**
 
-**Effect:** Staging gets a fresh copy of production data on every production deploy. Staging and production share the same data shape; staging is a snapshot.
+Never rename or drop columns directly. Use multi-step migrations:
+1. Add new column (deploy + migrate)
+2. Copy data from old column to new column
+3. Drop old column (deploy + migrate)
+
+For large tables, run data backfills as separate scripts outside the deploy pipeline.
+
+**What NOT to do:**
+- Never sync production data to staging (security risk, overwrites test state)
+- Never sync staging data to production (would destroy user data)
+- Never run migrations manually in production
 
 ## Step 12: Update Wrap-up Workflow
 
@@ -238,7 +242,7 @@ Push a commit to `staging` to verify Railway auto-deploys. Push to `main` to ver
 - [ ] Staging domain generated + staging.yourdomain.com added
 - [ ] Auth trusted origins include both domains
 - [ ] CORS config includes both domains (if applicable)
-- [ ] DB sync GitHub Action added (optional but recommended)
+- [ ] Staging DB populated with seed data (never sync from production)
 - [ ] `project/dev-context.md` updated with git workflow (PR target: staging)
 
 ## Troubleshooting

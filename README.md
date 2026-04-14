@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.25
+**Version:** 1.2.26
 **Author:** Manu
 **License:** MIT
-**Date:** 09/04/2026
+**Date:** 14/04/2026
 
 ---
 
@@ -383,6 +383,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.26 (2026-04-14)
+- **Web app isolated DB strategy** - Removed the production-to-staging DB sync recommendation from the web app wizard. Replaced with the correct isolated environment approach: migrations-as-code (generate locally, commit to repo, run on deploy per environment), seed data for staging, and a full breaking change protocol. Production data never leaves production. Updated `railway-webapp-deploy.md`, `questionnaire.md`, and `wizard-flow.md`.
 
 ### v1.2.25 (2026-04-09)
 - **Web app staging & Railway deployment** - Added `railway-webapp-deploy.md` to the project-setup skill. Documents the full two-environment Railway setup (Production connected to `main`, Staging connected to `staging`) with step-by-step CLI commands, DB sync GitHub Action, and auth/CORS config for both domains. Updated `questionnaire.md` with Q9 (deployment platform, Railway recommended), added Railway + three-branch strategy to the default recommended stack, mapped deployment config to `dev-context.md`, and added Railway setup tasks to the task generator. Updated `wizard-flow.md` with Step 5b that writes the branching strategy and PR target into `dev-context.md` so `/wrap-up` automatically targets `staging` instead of `main` for feature branch PRs.
