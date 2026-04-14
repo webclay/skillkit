@@ -174,7 +174,9 @@ Environments: Production (main branch) + Staging (staging branch)
 Branching: feature/* → staging → main
 PR target for feature branches: staging
 PR target for staging: main
-DB sync: GitHub Action syncs production DB to staging on every push to main
+Database: Fully isolated - no data sync between environments
+Migrations: Run automatically on deploy, never manually in production
+Staging data: Seed data only - never production data
 ```
 
 **Add to `project/tasks.md` (under a "Deployment Setup" section):**

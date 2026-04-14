@@ -8,6 +8,28 @@ This file tracks work completed across sessions to help maintain context.
 
 ## Session Log
 
+### 2026-04-14 - Web App Staging: Align Wizard with Isolated DB Strategy
+
+**Summary:** Removed the production-to-staging DB sync recommendation from the web app project wizard and replaced it with the correct isolated environment strategy: migrations-as-code, seed data for staging, no data ever flowing between environments.
+
+**Completed:**
+- Removed Step 11 (DB sync GitHub Action) from `railway-webapp-deploy.md` and replaced with a full Database Strategy section covering migrations flow, per-environment data approach, breaking change protocol, and what NOT to do
+- Updated `questionnaire.md` dev-context template: removed `DB sync:` line, added `Database:`, `Migrations:`, and `Staging data:` lines
+- Updated `questionnaire.md` Railway tasks: replaced "Add DB sync GitHub Action (optional)" with "Add seed script for staging DB (never sync from production)"
+- Updated `wizard-flow.md` Step 5b dev-context template to match
+
+**Key Decisions:**
+- DB sync (production → staging) is only valid for content websites (private skill), never for web apps
+- Web apps use migrations-as-code: generate locally, commit to repo, run automatically on deploy per environment
+- Production data never leaves production - staging uses seed data only
+
+**Files Changed:**
+- `.claude/skills/workflow/project-setup/railway-webapp-deploy.md`
+- `.claude/skills/workflow/project-setup/questionnaire.md`
+- `.claude/skills/workflow/project-setup/wizard-flow.md`
+
+---
+
 ### 2026-03-02 - Content Website Checklist: Database URL Warning
 
 **Summary:** Added critical Step 3 to the personal content website checklist emphasizing that the template's `DATABASE_URI` must be changed to the new project's Postgres database URL before running anything. The template ships with a connection string pointing to the template's own database.

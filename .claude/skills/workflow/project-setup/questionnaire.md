@@ -216,7 +216,9 @@ Environments: Production (main branch) + Staging (staging branch)
 Branching: feature/* → staging → main
 PR target for feature branches: staging
 PR target for staging: main
-DB sync: GitHub Action syncs production DB to staging on every push to main
+Database: Fully isolated - no data sync between environments
+Migrations: Run automatically on deploy, never manually in production
+Staging data: Seed data only - never production data
 ```
 
 Also reference [railway-webapp-deploy.md](railway-webapp-deploy.md) for setup steps and include Railway setup tasks in `project/tasks.md`.
@@ -425,7 +427,7 @@ Initial tasks are generated based on recommended tech stack:
 | Better Auth | "Configure authentication", "Add login/signup pages" |
 | shadcn/ui | "Install UI components", "Set up theme" |
 | Stripe | "Configure Stripe", "Add checkout flow" |
-| Railway | "Create staging branch (`git checkout -b staging && git push -u origin staging`)", "Set up Railway project with Production and Staging environments (see railway-webapp-deploy.md)", "Configure production environment - connect to main branch", "Configure staging environment - connect to staging branch", "Set up custom domains for both environments", "Add DB sync GitHub Action (optional)" |
+| Railway | "Create staging branch (`git checkout -b staging && git push -u origin staging`)", "Set up Railway project with Production and Staging environments (see railway-webapp-deploy.md)", "Configure production environment - connect to main branch", "Configure staging environment - connect to staging branch", "Set up custom domains for both environments", "Add seed script for staging DB (never sync from production)" |
 
 ### Starter Commands by Package Manager
 
