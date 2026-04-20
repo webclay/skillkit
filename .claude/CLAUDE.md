@@ -125,6 +125,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Saving session progress (no push) | `workflow/session-log` |
 | Task tracking, what's next | `workflow/task-tracker` |
 | Database, schema, migrations, queries | `database/prisma`, `database/drizzle`, or `database/supabase` |
+| PostgreSQL naming conventions, table/column names, schema standards | `database/postgres-naming` |
 | User login, signup, sessions, OAuth | `auth/better-auth` |
 | Payments, checkout, subscriptions | `payments/stripe` |
 | UI components, forms, dialogs, shadcn presets, monorepo UI | `ui/shadcn` |

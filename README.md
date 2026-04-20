@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.26
+**Version:** 1.2.27
 **Author:** Manu
 **License:** MIT
-**Date:** 14/04/2026
+**Date:** 20/04/2026
 
 ---
 
@@ -202,6 +202,7 @@ Next session, Claude picks up exactly where you left off.
 | `convex` | Convex real-time backend |
 | `electric-sql` | Electric SQL local-first sync (for self-hosted Postgres only) |
 | `neon` | Neon serverless Postgres |
+| `postgres-naming` | PostgreSQL naming conventions - snake_case in DB, camelCase in code, with ORM mapping examples |
 
 ### Auth
 | Skill | What It Does |
@@ -383,6 +384,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.2.27 (2026-04-20)
+- **PostgreSQL naming conventions skill** - Enforces snake_case naming in the database layer (tables, columns, indexes, constraints, enums) and camelCase mapping in the TypeScript codebase. Covers all naming rules (plural tables, singular columns, `{table_singular}_id` foreign keys, `is_`/`has_`/`can_` booleans, `_at` timestamps, `idx_` indexes, alphabetical junction tables), recommended data types (TEXT over VARCHAR, TIMESTAMPTZ over TIMESTAMP, JSONB over JSON), anti-patterns to avoid (Hungarian notation, quoted identifiers, camelCase in DB), and complete ORM mapping examples for both Drizzle and Prisma. Based on PostgreSQL community standards.
 
 ### v1.2.26 (2026-04-14)
 - **Web app isolated DB strategy** - Removed the production-to-staging DB sync recommendation from the web app wizard. Replaced with the correct isolated environment approach: migrations-as-code (generate locally, commit to repo, run on deploy per environment), seed data for staging, and a full breaking change protocol. Production data never leaves production. Updated `railway-webapp-deploy.md`, `questionnaire.md`, and `wizard-flow.md`.
