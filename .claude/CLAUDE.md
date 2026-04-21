@@ -144,6 +144,12 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Push local content to live backend, content sync, update live database | `cms/payload` (see content-sync.md) |
 | Railway deployment, services, databases, domains, troubleshooting | `deployment/railway` |
 | Cloudflare Pages, Astro + Payload monorepo deploy, deploy hooks | `deployment/cloudflare-pages` |
+| Cloudflare Workers setup, wrangler, bindings, secrets, custom domains | `cloudflare/workers-core` |
+| Deploy TanStack Start to Cloudflare Workers | `cloudflare/tanstack-start` |
+| Deploy Astro to Cloudflare Workers (static or SSR) | `cloudflare/astro` |
+| Deploy React + Vite SPA to Cloudflare Workers | `cloudflare/react-vite` |
+| Deploy React Router v7 to Cloudflare Workers | `cloudflare/react-router` |
+| Deploy Next.js to Cloudflare Workers (OpenNext) | `cloudflare/nextjs` |
 | Project setup, new projects | `workflow/project-setup` |
 | Feature planning, "plan feature" | `workflow/feature-planner` |
 | Server issues, port conflicts | `workflow/dev-server` |

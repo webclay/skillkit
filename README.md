@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.2.27
+**Version:** 1.3.0
 **Author:** Manu
 **License:** MIT
-**Date:** 20/04/2026
+**Date:** 21/04/2026
 
 ---
 
@@ -248,13 +248,23 @@ Next session, Claude picks up exactly where you left off.
 | `motia` | Event-driven workflows, background jobs, multi-step processing |
 | `workflow-devkit` | Vercel durable workflows |
 
+### Cloudflare
+| Skill | What It Does |
+|-------|--------------|
+| `workers-core` | Foundation for Cloudflare Workers - wrangler CLI, bindings (KV, R2, D1, Durable Objects, Queues, AI, Hyperdrive), secrets, custom domains, static assets, Workers Builds CI/CD, Pages migration |
+| `tanstack-start` | Deploy TanStack Start to Workers - Cloudflare Vite Plugin, bindings via cloudflare:workers, custom entrypoints for queues/crons, migration from Nitro |
+| `astro` | Deploy Astro to Workers - static (SSG) and server-rendered (SSR), @astrojs/cloudflare adapter, bindings, Payload CMS integration |
+| `react-vite` | Deploy React + Vite SPA to Workers - Worker API backend, SPA routing, Cloudflare Vite Plugin |
+| `react-router` | Deploy React Router v7 (ex-Remix) to Workers - Cloudflare Vite Plugin, bindings via context.cloudflare.env, Durable Objects export |
+| `nextjs` | Deploy Next.js to Workers - OpenNext adapter (@opennextjs/cloudflare), ISR with R2, dev vs preview, remote bindings |
+
 ### Deployment
 | Skill | What It Does |
 |-------|--------------|
 | `vercel` | Vercel deployment |
 | `netlify-edge` | Netlify Edge Functions |
 | `railway` | Railway deployment platform - projects, services, databases, domains, CLI, GraphQL API (official Railway skill) |
-| `cloudflare-pages` | Astro + Payload CMS monorepo deployment to Railway (backend) + Cloudflare Pages (frontend), deploy hooks, R2 storage |
+| `cloudflare-pages` | Astro + Payload CMS monorepo deployment to Railway (backend) + Cloudflare Pages (frontend), deploy hooks, R2 storage (legacy - see Cloudflare skills) |
 | `appwrite` | Appwrite BaaS |
 
 ### Email
@@ -384,6 +394,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.3.0 (2026-04-21)
+- **Cloudflare Workers skills** - New `cloudflare/` skill category with 6 skills for deploying frameworks to Cloudflare Workers (replacing Pages as the primary deployment target). Includes `workers-core` (wrangler, bindings, secrets, custom domains, CI/CD, Pages migration), `tanstack-start` (Cloudflare Vite Plugin, migration from Nitro), `astro` (SSG and SSR with adapter), `react-vite` (SPA with Worker API), `react-router` (React Router v7 full-stack), and `nextjs` (OpenNext adapter). Skills cover the full lifecycle: setup, configuration, bindings access, deployment, and common gotchas. Marked `deployment/cloudflare-pages` as legacy.
 
 ### v1.2.27 (2026-04-20)
 - **PostgreSQL naming conventions skill** - Enforces snake_case naming in the database layer (tables, columns, indexes, constraints, enums) and camelCase mapping in the TypeScript codebase. Covers all naming rules (plural tables, singular columns, `{table_singular}_id` foreign keys, `is_`/`has_`/`can_` booleans, `_at` timestamps, `idx_` indexes, alphabetical junction tables), recommended data types (TEXT over VARCHAR, TIMESTAMPTZ over TIMESTAMP, JSONB over JSON), anti-patterns to avoid (Hungarian notation, quoted identifiers, camelCase in DB), and complete ORM mapping examples for both Drizzle and Prisma. Based on PostgreSQL community standards.
