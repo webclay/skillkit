@@ -1,11 +1,11 @@
 ---
 name: tanstack-start
-description: Use this skill when building with TanStack Start for type-safe routing, server functions, or SSR patterns. Activate when the user mentions TanStack Start, TanStack Router, createFileRoute, createServerFn, Vinxi, or type-safe server functions.
+description: Use this skill when building with TanStack Start for type-safe routing, server functions, SSR, or RSC patterns. Activate when the user mentions TanStack Start, TanStack Router, createFileRoute, createServerFn, renderServerComponent, createCompositeComponent, Vinxi, RSC, React Server Components, SSR modes, or type-safe server functions.
 ---
 
 # TanStack Start
 
-Full-stack React framework with type-safe file-based routing, server functions, and TanStack Query integration.
+Full-stack React framework with type-safe file-based routing, server functions, TanStack Query integration, and 5 rendering modes (CSR, SSR, data-only SSR, RSC low-level, RSC composite).
 
 ## When to Use This Skill
 
@@ -14,6 +14,8 @@ Full-stack React framework with type-safe file-based routing, server functions, 
 - User mentions type-safe routing or server functions
 - Working with file-based routing in React
 - User wants to use TanStack Query with SSR
+- User asks about React Server Components (RSC) in TanStack Start
+- User needs to choose between SSR, CSR, or RSC rendering modes
 
 ## Security Requirements
 
@@ -268,8 +270,25 @@ function ProductsPage() {
 }
 ```
 
+## Rendering Modes (5 Options)
+
+TanStack Start supports 5 rendering modes per route. All use the same loader pattern - only the route config changes:
+
+| Mode | Config | Best For |
+|------|--------|----------|
+| CSR | `ssr: false` | SPAs, auth-gated pages where SEO doesn't matter |
+| SSR (default) | `ssr: true` | Most pages - SEO, fast first paint |
+| Data-only SSR | `ssr: 'data-only'` | Dashboards - secure data, no CDN-cached HTML |
+| RSC Low-Level | `renderServerComponent()` | Server-only content, zero client JS |
+| RSC Composite | `createCompositeComponent()` | Page shells with interactive client slots |
+
+**RSC requires setup** - add the Vite RSC plugin and enable `rsc: true` on the TanStack Start plugin. See [rendering-modes.md](rendering-modes.md) for full examples.
+
+**Key difference between SSR and RSC:** SSR renders on the server, then the client re-renders during hydration (standard React hydration cycle). RSC components only render on the server and are sent to the client as-is - no hydration re-render.
+
 ## Reference Files
 
+- [rendering-modes.md](rendering-modes.md) - All 5 rendering modes with examples, decision tree, and RSC setup
 - [data-fetching.md](data-fetching.md) - Data fetching strategy, loaders vs TanStack Query, preventing UI flash, caching
 - [routing.md](routing.md) - Advanced routing patterns
 - [server-functions.md](server-functions.md) - Server function patterns
