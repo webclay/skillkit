@@ -139,7 +139,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Internationalization, i18n, translations, multi-language | `platform/expo` (for mobile) |
 | Expo UI, SwiftUI, Jetpack Compose, Host view, platform colors | `platform/expo` |
 | Animations, transitions, React Native Ease | `platform/react-native` |
-| Framework-specific patterns | `framework/nextjs`, `framework/tanstack-start`, or `framework/astro` |
+| Framework-specific patterns, SSR/RSC rendering modes | `framework/nextjs`, `framework/tanstack-start`, or `framework/astro` |
 | CMS, admin panel, content management, Payload | `cms/payload` |
 | Push local content to live backend, content sync, update live database | `cms/payload` (see content-sync.md) |
 | Railway deployment, services, databases, domains, troubleshooting | `deployment/railway` |

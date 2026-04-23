@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.3.0
+**Version:** 1.3.1
 **Author:** Manu
 **License:** MIT
-**Date:** 21/04/2026
+**Date:** 23/04/2026
 
 ---
 
@@ -191,7 +191,7 @@ Next session, Claude picks up exactly where you left off.
 |-------|--------------|
 | `astro` | Content-focused sites with islands architecture |
 | `nextjs` | Next.js App Router patterns |
-| `tanstack-start` | TanStack Start full-stack patterns |
+| `tanstack-start` | TanStack Start full-stack patterns, 5 rendering modes (CSR, SSR, data-only, RSC low-level, RSC composite) |
 
 ### Database
 | Skill | What It Does |
@@ -394,6 +394,9 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.3.1 (2026-04-23)
+- **TanStack Start rendering modes** - Added new `rendering-modes.md` reference file covering all 5 SSR/RSC rendering modes: CSR (`ssr: false`), SSR (default), Data-only SSR (`ssr: 'data-only'`), RSC Low-Level API (`renderServerComponent()`), and RSC Composite Components (`createCompositeComponent()`). Includes per-mode code examples, Vite RSC plugin setup, decision tree for choosing the right mode, and patterns for mixing modes in a single app. Updated SKILL.md with quick reference table and RSC trigger words.
 
 ### v1.3.0 (2026-04-21)
 - **Cloudflare Workers skills** - New `cloudflare/` skill category with 6 skills for deploying frameworks to Cloudflare Workers (replacing Pages as the primary deployment target). Includes `workers-core` (wrangler, bindings, secrets, custom domains, CI/CD, Pages migration), `tanstack-start` (Cloudflare Vite Plugin, migration from Nitro), `astro` (SSG and SSR with adapter), `react-vite` (SPA with Worker API), `react-router` (React Router v7 full-stack), and `nextjs` (OpenNext adapter). Skills cover the full lifecycle: setup, configuration, bindings access, deployment, and common gotchas. Marked `deployment/cloudflare-pages` as legacy.
