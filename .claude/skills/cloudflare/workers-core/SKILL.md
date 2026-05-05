@@ -7,6 +7,14 @@ description: Foundation skill for deploying to Cloudflare Workers. Covers wrangl
 
 Foundation for deploying applications to Cloudflare Workers. All framework-specific Cloudflare skills reference this skill for shared concepts.
 
+## Source of Truth
+
+Use the official Cloudflare developer documentation as the primary source of truth for Cloudflare guidance:
+
+- https://developers.cloudflare.com/
+
+When Cloudflare behavior, limits, product names, configuration fields, CLI commands, framework adapters, or pricing could have changed, verify against the official docs before giving implementation guidance. Treat this skill as a curated working guide, but prefer the official docs when there is any conflict.
+
 ## When to Use This Skill
 
 - Setting up a new Cloudflare Workers project
@@ -440,6 +448,45 @@ Standard `package.json` scripts for Workers projects:
 6. **Free tier billing**: If requests match `run_worker_first` patterns and you exceed daily limits, you get 429 errors
 7. **Configuration format**: Prefer `wrangler.jsonc` over `.toml` for comment support
 8. **Type generation**: Run `wrangler types` after adding/changing bindings to get TypeScript types
+
+## Local Explorer
+
+A browser-based interface for viewing and editing local binding data during development. Available at `/cdn-cgi/explorer` on your local dev server.
+
+### Requirements
+
+- Wrangler 4.82.1+ or Cloudflare Vite Plugin 1.32.0+
+
+### Usage
+
+1. Start local dev (`wrangler dev` or `vite dev` with Cloudflare plugin)
+2. Press `e` in the terminal to open Local Explorer, or navigate to `http://localhost:8787/cdn-cgi/explorer`
+
+Local Explorer auto-detects bindings from your wrangler config. No additional setup needed.
+
+### Supported Bindings
+
+| Binding | View | Edit |
+|---------|------|------|
+| KV | Browse keys, view values and metadata | Create, update, delete key-value pairs |
+| R2 | List objects, view metadata | Upload and delete objects |
+| D1 | Browse tables/rows, run SQL queries | Insert, update, delete rows via SQL |
+| Durable Objects (SQLite) | Browse tables/rows, run SQL queries | Insert, update, delete rows via SQL |
+| Workflows | List instances, view status/step history | Trigger new runs, retry failed instances |
+
+### SQL Studio
+
+For D1 and Durable Objects with SQLite storage, Local Explorer includes a SQL studio with a visual table browser (inline editing) and a SQL query editor for arbitrary queries.
+
+### API Access
+
+Local Explorer exposes a programmatic API at `/cdn-cgi/explorer/api` that serves an OpenAPI spec:
+
+```bash
+curl http://localhost:8787/cdn-cgi/explorer/api
+```
+
+AI coding agents can fetch this spec to programmatically interact with local bindings - useful for seeding test data, inspecting Durable Object state, triggering Workflows, or uploading files to R2 during development.
 
 ## How to Verify
 
