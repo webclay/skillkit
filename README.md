@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.3.1
+**Version:** 1.3.3
 **Author:** Manu
 **License:** MIT
-**Date:** 23/04/2026
+**Date:** 11/05/2026
 
 ---
 
@@ -249,6 +249,8 @@ Next session, Claude picks up exactly where you left off.
 | `workflow-devkit` | Vercel durable workflows |
 
 ### Cloudflare
+Primary source of truth for Cloudflare-related skills: https://developers.cloudflare.com/
+
 | Skill | What It Does |
 |-------|--------------|
 | `workers-core` | Foundation for Cloudflare Workers - wrangler CLI, bindings (KV, R2, D1, Durable Objects, Queues, AI, Hyperdrive), secrets, custom domains, static assets, Workers Builds CI/CD, Pages migration |
@@ -257,6 +259,7 @@ Next session, Claude picks up exactly where you left off.
 | `react-vite` | Deploy React + Vite SPA to Workers - Worker API backend, SPA routing, Cloudflare Vite Plugin |
 | `react-router` | Deploy React Router v7 (ex-Remix) to Workers - Cloudflare Vite Plugin, bindings via context.cloudflare.env, Durable Objects export |
 | `nextjs` | Deploy Next.js to Workers - OpenNext adapter (@opennextjs/cloudflare), ISR with R2, dev vs preview, remote bindings |
+| `agents` | Cloudflare Agents SDK - stateful AI agents with AIChatAgent, state management (setState, SQL), tools (server/client/human-in-the-loop), scheduling (cron, delayed, interval), sub-agents, workflows, MCP, React hooks (useAgent, useAgentChat) |
 
 ### Deployment
 | Skill | What It Does |
@@ -394,6 +397,12 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.3.3 (11/05/2026)
+- **Cloudflare Agents SDK skill** - New `cloudflare/agents` skill for building stateful AI applications on Cloudflare. Covers the Agent class with TypeScript decorators (`@callable()`), AIChatAgent for streaming chat with automatic message persistence, state management (`setState` with real-time client sync, embedded SQLite via `this.sql`, validation), three tool types (server-side auto-execute, client-side browser tools, human-in-the-loop approval with `needsApproval`), scheduling (`schedule()` for delayed/date/cron, `scheduleEvery()` for intervals, idempotency rules), React hooks (`useAgent` for state sync, `useAgentChat` for chat UI), and AI model integration (Workers AI with no API key, OpenAI, Anthropic, Gemini via AI SDK, AI Gateway). Includes advanced reference covering sub-agents (parallel execution, isolated SQLite, typed RPC), AgentWorkflow for durable multi-step processing with retry, MCP server/client integration, browser tools via Chrome DevTools Protocol, and WebSocket streaming patterns that solve the Workers runtime limit for long-running AI workloads. Architecture patterns reference provides ready-to-use recipes: simple chat, tool-using agents, orchestrator-workers, scheduled processing, and multi-model routing.
+
+### v1.3.2 (30/04/2026)
+- **Cloudflare source of truth** - Marked the official Cloudflare developer documentation (https://developers.cloudflare.com/) as the primary source of truth for Cloudflare-related skills. Added the rule to the Cloudflare Workers core skill and the skill router so framework-specific Cloudflare skills inherit the guidance.
 
 ### v1.3.1 (2026-04-23)
 - **TanStack Start rendering modes** - Added new `rendering-modes.md` reference file covering all 5 SSR/RSC rendering modes: CSR (`ssr: false`), SSR (default), Data-only SSR (`ssr: 'data-only'`), RSC Low-Level API (`renderServerComponent()`), and RSC Composite Components (`createCompositeComponent()`). Includes per-mode code examples, Vite RSC plugin setup, decision tree for choosing the right mode, and patterns for mixing modes in a single app. Updated SKILL.md with quick reference table and RSC trigger words.
