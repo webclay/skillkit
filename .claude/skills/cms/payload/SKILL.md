@@ -1,325 +1,413 @@
 ---
 name: payload
-description: Use this skill when building with Payload CMS for content management, admin panels, or headless backend features. Activate when the user mentions Payload, CMS collections, media management, content blocks, layout builder, or admin panel customization.
+description: Use when working with Payload projects (payload.config.ts, collections, fields, hooks, access control, Payload API). Use when debugging validation errors, security issues, relationship queries, transactions, or hook behavior.
 ---
 
-# Payload CMS
+# Payload Application Development
 
-Open-source backend framework that drops into Next.js and provides a full admin UI, REST API, authentication, and database management out of the box. Works excellently as a headless CMS with any frontend (Astro, Next.js, SvelteKit, etc.).
+Payload is a Next.js native CMS with TypeScript-first architecture, providing admin panel, database management, REST/GraphQL APIs, authentication, and file storage.
 
-## What Payload Is
+## Quick Reference
 
-Payload is a config-based backend framework written in TypeScript that gives you:
+| Task                     | Solution                                  | Details                                                                                                                          |
+| ------------------------ | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Auto-generate slugs      | `slugField()`                             | [FIELDS.md#slug-field-helper](reference/FIELDS.md#slug-field-helper)                                                             |
+| Restrict content by user | Access control with query                 | [ACCESS-CONTROL.md#row-level-security-with-complex-queries](reference/ACCESS-CONTROL.md#row-level-security-with-complex-queries) |
+| Local API user ops       | `user` + `overrideAccess: false`          | [QUERIES.md#access-control-in-local-api](reference/QUERIES.md#access-control-in-local-api)                                       |
+| Draft/publish workflow   | `versions: { drafts: true }`              | [COLLECTIONS.md#versioning--drafts](reference/COLLECTIONS.md#versioning--drafts)                                                 |
+| Computed fields          | `virtual: true` with afterRead            | [FIELDS.md#virtual-fields](reference/FIELDS.md#virtual-fields)                                                                   |
+| Conditional fields       | `admin.condition`                         | [FIELDS.md#conditional-fields](reference/FIELDS.md#conditional-fields)                                                           |
+| Custom field validation  | `validate` function                       | [FIELDS.md#text-field](reference/FIELDS.md#text-field)                                                                           |
+| Filter relationship list | `filterOptions` on field                  | [FIELDS.md#relationship](reference/FIELDS.md#relationship)                                                                       |
+| Select specific fields   | `select` parameter                        | [QUERIES.md#local-api](reference/QUERIES.md#local-api)                                                                           |
+| Auto-set author/dates    | beforeChange hook                         | [HOOKS.md#collection-hooks](reference/HOOKS.md#collection-hooks)                                                                 |
+| Prevent hook loops       | `req.context` check                       | [HOOKS.md#hook-context](reference/HOOKS.md#hook-context)                                                                         |
+| Cascading deletes        | beforeDelete hook                         | [HOOKS.md#collection-hooks](reference/HOOKS.md#collection-hooks)                                                                 |
+| Geospatial queries       | `point` field with `near`/`within`        | [FIELDS.md#point-geolocation](reference/FIELDS.md#point-geolocation)                                                             |
+| Reverse relationships    | `join` field type                         | [FIELDS.md#join-fields](reference/FIELDS.md#join-fields)                                                                         |
+| Next.js revalidation     | Context control in afterChange            | [HOOKS.md#nextjs-revalidation-with-context-control](reference/HOOKS.md#nextjs-revalidation-with-context-control)                 |
+| Query by relationship    | Nested property syntax                    | [QUERIES.md#nested-properties](reference/QUERIES.md#nested-properties)                                                           |
+| Complex queries          | AND/OR logic                              | [QUERIES.md#andor-logic](reference/QUERIES.md#andor-logic)                                                                       |
+| Transactions             | Pass `req` to operations                  | [ADAPTERS.md#threading-req-through-operations](reference/ADAPTERS.md#threading-req-through-operations)                           |
+| Background jobs          | Jobs queue with tasks                     | [ADVANCED.md#jobs-queue](reference/ADVANCED.md#jobs-queue)                                                                       |
+| Custom API routes        | Collection custom endpoints               | [ADVANCED.md#custom-endpoints](reference/ADVANCED.md#custom-endpoints)                                                           |
+| Cloud storage            | Storage adapter plugins                   | [ADAPTERS.md#storage-adapters](reference/ADAPTERS.md#storage-adapters)                                                           |
+| Multi-language           | `localization` config + `localized: true` | [ADVANCED.md#localization](reference/ADVANCED.md#localization)                                                                   |
+| Create plugin            | `(options) => (config) => Config`         | [PLUGIN-DEVELOPMENT.md#plugin-architecture](reference/PLUGIN-DEVELOPMENT.md#plugin-architecture)                                 |
+| Plugin package setup     | Package structure with SWC                | [PLUGIN-DEVELOPMENT.md#plugin-package-structure](reference/PLUGIN-DEVELOPMENT.md#plugin-package-structure)                       |
+| Add fields to collection | Map collections, spread fields            | [PLUGIN-DEVELOPMENT.md#adding-fields-to-collections](reference/PLUGIN-DEVELOPMENT.md#adding-fields-to-collections)               |
+| Plugin hooks             | Preserve existing hooks in array          | [PLUGIN-DEVELOPMENT.md#adding-hooks](reference/PLUGIN-DEVELOPMENT.md#adding-hooks)                                               |
+| Check field type         | Type guard functions                      | [FIELD-TYPE-GUARDS.md](reference/FIELD-TYPE-GUARDS.md)                                                                           |
 
-- Full admin UI (auto-generated)
-- Complete backend architecture
-- Authentication built-in
-- Auto-mounted REST API endpoints
-- Database management (MongoDB, PostgreSQL, SQLite)
-- File/media handling with image processing
-
-**Key advantage:** Truly open source - no tiers, no quotas. Host anywhere (Vercel, Netlify, Railway, etc.).
-
-**Use cases:** CMS, e-commerce, digital asset management, app backends - anything needing a backend with admin panel.
-
-## When to Use This Skill
-
-- Building a headless CMS
-- Need an admin panel for content management
-- Want a type-safe backend framework with Next.js
-- Building e-commerce or digital asset management
-- Need versioning, drafts, and content workflows
-- Want REST APIs auto-generated from your schema
-- Need file uploads with image processing
-- Backend for Astro/React/Vue frontends (see `framework/astro` skill)
-
-## When NOT to Use
-
-- Simple static sites (use Astro or vanilla Next.js)
-- No admin panel needed (use direct database access)
-- Real-time collaborative editing (use dedicated realtime platforms)
-- Extremely high-traffic APIs (consider specialized API frameworks)
-
-## Installation
+## Quick Start
 
 ```bash
-pnpx create-payload-app@latest
-# Also works with: npx, bunx, yarn
+npx create-payload-app@latest my-app
+cd my-app
+pnpm dev
 ```
 
-The CLI guides you through:
-1. Project name
-2. Template selection (blank, website, etc.)
-3. Database choice (MongoDB, SQLite, PostgreSQL)
+### Minimal Config
 
-After installation:
-```bash
-cd <project-name>
-[runner] dev
+```ts
+import { buildConfig } from 'payload'
+import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
+export default buildConfig({
+  admin: {
+    user: 'users',
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+  },
+  collections: [Users, Media],
+  editor: lexicalEditor(),
+  secret: process.env.PAYLOAD_SECRET,
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URL,
+  }),
+})
 ```
 
-Server runs on `localhost:3000`. Admin panel lives at `/admin`.
+## Essential Patterns
 
-### Templates
+### Basic Collection
 
-- **Blank** - Minimal (users + media collections only)
-- **Website** - Production-grade with live preview, revalidation, static rendering, forms, redirects, sitemap
+```ts
+import type { CollectionConfig } from 'payload'
 
-## Core Concept: Config-Based Architecture
-
-Everything starts with the **Payload config file** (`payload.config.ts`). This is the single source of truth for your entire backend.
-
-Changes are picked up instantly via Next.js HMR - no restart needed.
-
-## Collections
-
-Collections are the primary building blocks. They map to database tables and auto-generate admin UI, REST API endpoints, and TypeScript types.
-
-```typescript
-{
-  slug: 'cars',
-  fields: [
-    { name: 'title', type: 'text', required: true }
-  ],
+export const Posts: CollectionConfig = {
+  slug: 'posts',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'status', 'updatedAt'],
+    defaultColumns: ['title', 'author', 'status', 'createdAt'],
   },
-  versions: { drafts: true, maxPerDoc: 50 },
-  access: {
-    read: () => true,
-    create: ({ req: { user } }) => !!user,
-  },
+  fields: [
+    { name: 'title', type: 'text', required: true },
+    { name: 'slug', type: 'text', unique: true, index: true },
+    { name: 'content', type: 'richText' },
+    { name: 'author', type: 'relationship', relationTo: 'users' },
+  ],
+  timestamps: true,
+}
+```
+
+For more collection patterns (auth, upload, drafts, live preview), see [COLLECTIONS.md](reference/COLLECTIONS.md).
+
+### Common Fields
+
+```ts
+// Text field
+{ name: 'title', type: 'text', required: true }
+
+// Relationship
+{ name: 'author', type: 'relationship', relationTo: 'users', required: true }
+
+// Rich text
+{ name: 'content', type: 'richText', required: true }
+
+// Select
+{ name: 'status', type: 'select', options: ['draft', 'published'], defaultValue: 'draft' }
+
+// Upload
+{ name: 'image', type: 'upload', relationTo: 'media' }
+```
+
+For all field types (array, blocks, point, join, virtual, conditional, etc.), see [FIELDS.md](reference/FIELDS.md).
+
+### Hook Example
+
+```ts
+export const Posts: CollectionConfig = {
+  slug: 'posts',
   hooks: {
-    beforeChange: [],
-    afterRead: [],
+    beforeChange: [
+      async ({ data, operation }) => {
+        if (operation === 'create') {
+          data.slug = slugify(data.title)
+        }
+        return data
+      },
+    ],
   },
+  fields: [{ name: 'title', type: 'text' }],
 }
 ```
 
-> Full collection options, field types, blocks, and media handling: see **collections-and-fields.md**
+For all hook patterns, see [HOOKS.md](reference/HOOKS.md). For access control, see [ACCESS-CONTROL.md](reference/ACCESS-CONTROL.md).
 
-## Field Types Summary
+### Access Control with Type Safety
 
-| Type | Purpose |
-|------|---------|
-| `text` | Single-line text input |
-| `number` | Numeric input |
-| `select` | Dropdown with options |
-| `checkbox` | Boolean toggle |
-| `date` | Date picker |
-| `email` | Email input with validation |
-| `textarea` | Multi-line text |
-| `upload` | File/image (links to media collection) |
-| `relationship` | Link to another collection (single or hasMany) |
-| `join` | Bidirectional relationship (reverse side) |
-| `richText` | Lexical editor with extensible features |
-| `blocks` | Array of typed block components (layout building) |
-| `array` | Repeatable groups of fields |
-| `group` | Grouped fields (nested object) |
+```ts
+import type { Access } from 'payload'
+import type { User } from '@/payload-types'
 
-> Full field examples and block patterns: see **collections-and-fields.md**
+// Type-safe access control
+export const adminOnly: Access = ({ req }) => {
+  const user = req.user as User
+  return user?.roles?.includes('admin') || false
+}
 
-## Rich Text and Custom Components
+// Row-level access control
+export const ownPostsOnly: Access = ({ req }) => {
+  const user = req.user as User
+  if (!user) return false
+  if (user.roles?.includes('admin')) return true
 
-Payload uses Lexical for rich text. You can add custom full-width blocks (`BlocksFeature`) and inline blocks (`InlineBlocksFeature`) inside the editor. Custom React components can replace field labels, entire fields, error displays, and descriptions in the admin UI.
+  return {
+    author: { equals: user.id },
+  }
+}
+```
 
-> Full examples: see **rich-text-and-components.md**
+### Query Example
 
-## Access Control
-
-Functional, fully typed per-operation access rules. Return `true`/`false` for simple checks, or return query constraints for filtered access.
-
-```typescript
-access: {
-  read: ({ req: { user } }) => {
-    if (user) return true;
-    return { _status: { equals: 'published' } };
+```ts
+// Local API
+const posts = await payload.find({
+  collection: 'posts',
+  where: {
+    status: { equals: 'published' },
+    'author.name': { contains: 'john' },
   },
-  create: ({ req: { user } }) => !!user,
-  delete: ({ req: { user } }) => user?.role === 'admin',
-}
-```
-
-Applies automatically to Admin UI, REST API, and Local API.
-
-> Full access control and hooks reference: see **access-hooks-versions.md**
-
-## Hooks
-
-Inject custom logic at lifecycle points: `beforeChange`, `beforeRead`, `beforeDelete`, `afterChange`, `afterRead`, `afterDelete`.
-
-```typescript
-hooks: {
-  beforeChange: [({ data }) => { data.slug = slugify(data.title); return data; }],
-  afterChange: [async ({ doc, operation }) => {
-    if (operation === 'create') await sendNotification(doc);
-  }],
-}
-```
-
-> Full hooks reference: see **access-hooks-versions.md**
-
-## REST API
-
-Auto-generated endpoints for every collection:
-
-```
-GET    /api/cars          - List (supports where, limit, page, sort, depth)
-GET    /api/cars/:id      - Get by ID
-POST   /api/cars          - Create
-PATCH  /api/cars/:id      - Update
-DELETE /api/cars/:id      - Delete
-```
-
-> Query parameter examples and common patterns: see **api.md**
-
-## Local API (Next.js Integration)
-
-Use Payload directly in server components, route handlers, and server actions:
-
-```typescript
-import { getPayload } from 'payload';
-import config from '@payload-config';
-
-const payload = await getPayload({ config });
-
-const cars = await payload.find({
-  collection: 'cars',
-  where: { featured: { equals: true } },
-  select: { title: true, price: true },
+  depth: 2,
   limit: 10,
-});
+  sort: '-createdAt',
+})
+
+// Query with populated relationships
+const post = await payload.findByID({
+  collection: 'posts',
+  id: '123',
+  depth: 2, // Populates relationships (default is 2)
+})
+// Returns: { author: { id: "user123", name: "John" } }
+
+// Without depth, relationships return IDs only
+const post = await payload.findByID({
+  collection: 'posts',
+  id: '123',
+  depth: 0,
+})
+// Returns: { author: "user123" }
 ```
 
-Methods: `find`, `findByID`, `create`, `update`, `delete`, `auth`.
+For all query operators and REST/GraphQL examples, see [QUERIES.md](reference/QUERIES.md).
 
-**Select API:** Pass a `select` object to return only specific fields with full TypeScript inference.
+### Getting Payload Instance
 
-> Full Local API examples, Select API, and common patterns (blog, e-commerce): see **api.md**
+```ts
+// In API routes (Next.js)
+import { getPayload } from 'payload'
+import config from '@payload-config'
 
-## Auto-Generated Types
+export async function GET() {
+  const payload = await getPayload({ config })
 
-Payload generates TypeScript types for all collections automatically. Import from `@/payload-types`:
+  const posts = await payload.find({
+    collection: 'posts',
+  })
 
-```typescript
-import type { Car, Page } from '@/payload-types';
+  return Response.json(posts)
+}
+
+// In Server Components
+import { getPayload } from 'payload'
+import config from '@payload-config'
+
+export default async function Page() {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({ collection: 'posts' })
+
+  return <div>{docs.map(post => <h1 key={post.id}>{post.title}</h1>)}</div>
+}
 ```
 
-Types regenerate when you change your config.
+### Logger Usage
 
-## Versions and Drafts
+```ts
+// ✅ Valid: single string
+payload.logger.error('Something went wrong')
 
-Enable with `versions: { drafts: true, maxPerDoc: 50 }` and optionally `autosave: true`. Provides draft/published status, version history with rollback, and compare.
+// ✅ Valid: object with msg and err
+payload.logger.error({ msg: 'Failed to process', err: error })
 
-> Full details: see **access-hooks-versions.md**
+// ❌ Invalid: don't pass error as second argument
+payload.logger.error('Failed to process', error)
 
-## Form Builder Plugin
+// ❌ Invalid: use `err` not `error`, use `msg` not `message`
+payload.logger.error({ message: 'Failed', error: error })
+```
 
-The `@payloadcms/plugin-form-builder` adds complete form management - create forms in admin, manage submissions, render on frontend.
+## Security Pitfalls
 
-> Full setup, configuration, and rendering: see **form-builder.md**
+### 1. Local API Access Control (CRITICAL)
 
-## Headless CMS Pattern (Payload + Astro)
+**By default, Local API operations bypass ALL access control**, even when passing a user.
 
-Use Payload as a backend with any frontend framework. Recommended architecture: monorepo with Payload backend and Astro (or other) frontend, communicating via REST API.
+```ts
+// ❌ SECURITY BUG: Passes user but ignores their permissions
+await payload.find({
+  collection: 'posts',
+  user: someUser, // Access control is BYPASSED!
+})
 
-> Full architecture, setup, fetching, block rendering, deployment options, build triggers, live preview: see **headless-cms.md**
+// ✅ SECURE: Actually enforces the user's permissions
+await payload.find({
+  collection: 'posts',
+  user: someUser,
+  overrideAccess: false, // REQUIRED for access control
+})
+```
 
-## Deploying on Cloudflare Workers
+**When to use each:**
 
-Official support for Cloudflare Workers with D1 (SQLite) and R2 (storage). Recommended for full Cloudflare stack (~$5/month). Uses `@payloadcms/db-d1-sqlite`, `@payloadcms/storage-r2`, and OpenNext.
+- `overrideAccess: true` (default) - Server-side operations you trust (cron jobs, system tasks)
+- `overrideAccess: false` - When operating on behalf of a user (API routes, webhooks)
 
-Alternative: Postgres + Hyperdrive for connection pooling on Workers.
+See [QUERIES.md#access-control-in-local-api](reference/QUERIES.md#access-control-in-local-api).
 
-> Full Cloudflare deployment guide, Wrangler config, read replicas, staging, cost estimates: see **deployment.md**
+### 2. Transaction Failures in Hooks
 
-## Runtime Compatibility (Bun / Node.js)
+**Nested operations in hooks without `req` break transaction atomicity.**
 
-Payload does NOT officially support Bun as a runtime. Use Bun as package manager, Node.js as runtime for Payload CLI commands. The `--disable-transpile` flag is the workaround for Bun runtime.
+```ts
+// ❌ DATA CORRUPTION RISK: Separate transaction
+hooks: {
+  afterChange: [
+    async ({ doc, req }) => {
+      await req.payload.create({
+        collection: 'audit-log',
+        data: { docId: doc.id },
+        // Missing req - runs in separate transaction!
+      })
+    },
+  ]
+}
 
-> Full compatibility details: see **deployment.md**
+// ✅ ATOMIC: Same transaction
+hooks: {
+  afterChange: [
+    async ({ doc, req }) => {
+      await req.payload.create({
+        collection: 'audit-log',
+        data: { docId: doc.id },
+        req, // Maintains atomicity
+      })
+    },
+  ]
+}
+```
 
-## Tips and Best Practices
+See [ADAPTERS.md#threading-req-through-operations](reference/ADAPTERS.md#threading-req-through-operations).
 
-1. **Start with the blank template** - Build up from minimal config
-2. **Use relationships over duplication** - Keep data normalized
-3. **Use join fields** for bidirectional relationships - Better admin UX
-4. **Leverage Select API** - Only fetch fields you need
-5. **Use hooks for computed fields** - Keep logic in one place
-6. **Version control important content** - Pages, posts, products
-7. **Set up access control early** - Think about permissions upfront
-8. **Use auto-generated types** - Let Payload handle TypeScript
-9. **Custom React components** for better UX - Make admin friendly for editors
-10. **Image sizes in media collection** - Define all sizes upfront
+### 3. Infinite Hook Loops
 
-## Auto-Seeding Admin Users
+**Hooks triggering operations that trigger the same hooks create infinite loops.**
 
-Content website templates can include an `onInit` hook in `payload.config.ts` that automatically creates admin accounts on first startup. This removes the manual "create first admin" step.
+```ts
+// ❌ INFINITE LOOP
+hooks: {
+  afterChange: [
+    async ({ doc, req }) => {
+      await req.payload.update({
+        collection: 'posts',
+        id: doc.id,
+        data: { views: doc.views + 1 },
+        req,
+      }) // Triggers afterChange again!
+    },
+  ]
+}
 
-**How it works:**
-1. On every Payload startup, the `onInit` hook checks if the `users` collection is empty
-2. If no users exist (first run), it reads `PAYLOAD_ADMIN_EMAILS` (comma-separated) and creates an admin account for each email
-3. All accounts use the password from `PAYLOAD_ADMIN_PASSWORD`
-4. On subsequent startups, the hook finds existing users and skips seeding entirely
+// ✅ SAFE: Use context flag
+hooks: {
+  afterChange: [
+    async ({ doc, req, context }) => {
+      if (context.skipHooks) return
 
-**Environment variables:**
+      await req.payload.update({
+        collection: 'posts',
+        id: doc.id,
+        data: { views: doc.views + 1 },
+        context: { skipHooks: true },
+        req,
+      })
+    },
+  ]
+}
+```
 
-| Variable | Purpose | Default |
-|----------|---------|---------|
-| `PAYLOAD_ADMIN_EMAILS` | Comma-separated list of admin emails to create | (empty - no seeding) |
-| `PAYLOAD_ADMIN_PASSWORD` | Password for all seeded accounts | `changeme123` |
+See [HOOKS.md#context](reference/HOOKS.md#context).
 
-**Where values come from:** The admin seeding config (email templates, default password) is user-specific and stored in each project's `dev-context.md` under `## Admin Seeding`. The setup wizard reads this config and writes the resolved emails into `.env`. Email templates can use `{project}` as a placeholder for the lowercase project folder name.
+## Project Structure
 
-**Important notes:**
-- Seeding only happens when the users collection is completely empty - it's safe to restart Payload
-- If `PAYLOAD_ADMIN_EMAILS` is empty, no seeding occurs and Payload shows the manual registration form
-- In production, change `PAYLOAD_ADMIN_PASSWORD` to a strong password via the deployment platform's environment variables
-- The seeded accounts have full admin access to all collections
-- See [headless-cms.md](headless-cms.md) for the full `payload.config.ts` template with the `onInit` hook
-- **Updating existing content?** The `onInit` hook only seeds empty databases. To push updated content to a live backend that already has data, see [content-sync.md](content-sync.md) for the Local API sync script pattern
+```txt
+src/
+├── app/
+│   ├── (frontend)/
+│   │   └── page.tsx
+│   └── (payload)/
+│       └── admin/[[...segments]]/page.tsx
+├── collections/
+│   ├── Posts.ts
+│   ├── Media.ts
+│   └── Users.ts
+├── globals/
+│   └── Header.ts
+├── components/
+│   └── CustomField.tsx
+├── hooks/
+│   └── slugify.ts
+└── payload.config.ts
+```
 
-## How to Verify
+## Type Generation
 
-### Quick Checks
-- `[runner] dev` starts without errors
-- Admin panel loads at `/admin`
-- Collections appear in admin UI
-- Can create/read/update/delete documents
-- API endpoints respond at `/api/<collection-slug>`
-- Types are generated in `payload-types.ts`
+```ts
+// payload.config.ts
+export default buildConfig({
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  // ...
+})
 
-### Common Issues
-- **"Cannot find module '@payload-config'"**: Check import path matches your config file location
-- **Types not updating**: Restart dev server or run `payload generate:types`
-- **Images not uploading**: Check `upload` directory permissions and config
-- **Access denied in admin**: Check `access` rules on collections
-- **Hooks not firing**: Verify hook array syntax and placement
+// Usage
+import type { Post, User } from '@/payload-types'
+```
 
-## Next Steps
+## Reference Documentation
 
-After basic setup:
-1. Define your collections and fields
-2. Set up relationships between collections
-3. Configure media handling and image sizes
-4. Add access control rules
-5. Implement hooks for business logic
-6. Customize rich text with blocks
-7. Build your frontend using the Local API
-8. Deploy (Vercel, Netlify, Railway, etc.)
+- **[FIELDS.md](reference/FIELDS.md)** - All field types, validation, admin options
+- **[FIELD-TYPE-GUARDS.md](reference/FIELD-TYPE-GUARDS.md)** - Type guards for runtime field type checking and narrowing
+- **[COLLECTIONS.md](reference/COLLECTIONS.md)** - Collection configs, auth, upload, drafts, live preview
+- **[HOOKS.md](reference/HOOKS.md)** - Collection hooks, field hooks, context patterns
+- **[ACCESS-CONTROL.md](reference/ACCESS-CONTROL.md)** - Collection, field, global access control, RBAC, multi-tenant
+- **[ACCESS-CONTROL-ADVANCED.md](reference/ACCESS-CONTROL-ADVANCED.md)** - Context-aware, time-based, subscription-based access, factory functions, templates
+- **[QUERIES.md](reference/QUERIES.md)** - Query operators, Local/REST/GraphQL APIs
+- **[ENDPOINTS.md](reference/ENDPOINTS.md)** - Custom API endpoints: authentication, helpers, request/response patterns
+- **[ADAPTERS.md](reference/ADAPTERS.md)** - Database, storage, email adapters, transactions
+- **[ADVANCED.md](reference/ADVANCED.md)** - Authentication, jobs, endpoints, components, plugins, localization
+- **[PLUGIN-DEVELOPMENT.md](reference/PLUGIN-DEVELOPMENT.md)** - Plugin architecture, monorepo structure, patterns, best practices
+- **[FORM-BUILDER.md](reference/FORM-BUILDER.md)** - Form Builder plugin setup, admin usage, frontend rendering, viewing submissions
+- **[HEADLESS-CMS.md](reference/HEADLESS-CMS.md)** - Headless CMS architecture (Payload + Astro), monorepo setup, fetching, block rendering, deployment options, build triggers, live preview
+- **[CONTENT-SYNC.md](reference/CONTENT-SYNC.md)** - Pushing local content to a live Payload backend via Local API or REST API, migration bugs, version table gotchas
+- **[DEPLOYMENT.md](reference/DEPLOYMENT.md)** - Cloudflare Workers deployment (D1 + R2), Wrangler config, read replicas, Postgres + Hyperdrive, staging, costs, Bun/Node.js runtime compatibility
 
-Payload handles the backend - you focus on the data model and frontend.
+## Resources
 
-## Reference Files
-
-| File | Contents |
-|------|----------|
-| [collections-and-fields.md](collections-and-fields.md) | Full collection options, all field types with examples, blocks (defining, using, rendering), media collection with image processing |
-| [rich-text-and-components.md](rich-text-and-components.md) | Lexical rich text customization (custom blocks, inline blocks), custom React admin components |
-| [access-hooks-versions.md](access-hooks-versions.md) | Access control (basic + query constraints), lifecycle hooks, auto-generated types, versions and drafts |
-| [api.md](api.md) | REST API endpoints and query params, Local API methods, Select API, common patterns (blog, e-commerce) |
-| [form-builder.md](form-builder.md) | Form Builder plugin setup, admin usage, frontend rendering, viewing submissions |
-| [headless-cms.md](headless-cms.md) | Headless CMS architecture (Payload + Astro), monorepo setup, fetching, block rendering, deployment options, build triggers, live preview |
-| [content-sync.md](content-sync.md) | Pushing local content to a live Payload backend via Local API (recommended) or REST API, common migration bugs, version table gotchas |
-| [deployment.md](deployment.md) | Cloudflare Workers deployment (D1 + R2), Wrangler config, read replicas, Postgres + Hyperdrive, staging, costs, Bun/Node.js runtime compatibility |
+- llms-full.txt: <https://payloadcms.com/llms-full.txt>
+- Docs: <https://payloadcms.com/docs>
+- GitHub: <https://github.com/payloadcms/payload>
+- Examples: <https://github.com/payloadcms/payload/tree/main/examples>
+- Templates: <https://github.com/payloadcms/payload/tree/main/templates>

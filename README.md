@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.3.4
+**Version:** 1.3.5
 **Author:** Manu
 **License:** MIT
-**Date:** 12/05/2026
+**Date:** 16/05/2026
 
 ---
 
@@ -230,7 +230,8 @@ Next session, Claude picks up exactly where you left off.
 ### CMS
 | Skill | What It Does |
 |-------|--------------|
-| `payload` | Payload CMS - headless backend with admin panel, blocks, media, REST API, Form Builder |
+| `payload` | Payload CMS - collections, fields, hooks, access control, queries, adapters, plugins, custom endpoints, Form Builder, headless CMS patterns, deployment (official Payload skills + SkillKit extensions) |
+| `cms-migration` | Migrate from any CMS (WordPress, Contentful, Strapi, Sanity, Webflow) to Payload - interactive config-first workflow with field type reference |
 
 ### API
 | Skill | What It Does |
@@ -398,6 +399,10 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.3.5 (16/05/2026)
+- **Official Payload CMS skills integration** - Replaced the custom Payload skill with the official skills from `payloadcms/skills`. The `payload` skill now includes SKILL.md + 11 reference docs covering collections, fields (all types with validation and admin options), field type guards, hooks (collection/field/context patterns), access control (basic + advanced with RBAC, multi-tenant, time-based, subscription-based, factory functions), queries (operators, Local/REST/GraphQL APIs), custom endpoints, adapters (database, storage, email, transactions), advanced patterns (auth, jobs queue, components, plugins, localization), and plugin development (architecture, monorepo structure, patterns, best practices). Our 4 custom reference files (Form Builder, headless CMS with Astro, content sync, Cloudflare deployment) are preserved alongside the official docs.
+- **CMS migration skill** - New `cms/cms-migration` skill for migrating from WordPress, Contentful, Strapi, Sanity, Webflow, and other CMS platforms to Payload. Interactive 5-phase config-first workflow: data analysis, propose collection config, iterate with user, additional collections, migration approach. Includes complete Payload field type reference with source patterns and migration mapping tables for WordPress, Contentful, and Strapi.
 
 ### v1.3.4 (12/05/2026)
 - **Cloudflare Queues skill** - New `cloudflare/queues` skill for asynchronous message processing on Workers. Covers producers (`send`, `sendBatch` with content types and delays), push consumers (batch `queue()` handler with explicit `ack()`/`retry()`, exponential backoff, `waitUntil` patterns), pull consumers (HTTP API with visibility timeout), dead letter queues, consumer settings (`max_batch_size`, `max_batch_timeout`, `max_retries`, `max_concurrency`), message delays (on send, on retry, queue-level defaults), and integration with the Agents SDK (agent as producer, queue consumer updating agent state). Includes CLI commands, limits reference, and 10 common gotchas.
