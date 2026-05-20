@@ -153,6 +153,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Deploy Next.js to Cloudflare Workers (OpenNext) | `cloudflare/nextjs` |
 | Cloudflare Agents SDK, AI agents, AIChatAgent, agent tools, agent scheduling | `cloudflare/agents` |
 | Cloudflare Queues, message queue, async processing, queue consumer, dead letter queue | `cloudflare/queues` |
+| Local dev tunnels, expose localhost, share preview, test webhooks | `cloudflare/local-dev-tunnels` |
 | Project setup, new projects | `workflow/project-setup` |
 | Feature planning, "plan feature" | `workflow/feature-planner` |
 | Server issues, port conflicts | `workflow/dev-server` |
@@ -175,6 +176,7 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Typography, font sizes, line height, readability | `design/typography` |
 | Animations, transitions, hover effects, scroll reveals, motion | `design/animation` |
 | Web design, UI polish, redesigns, visual style | `web-development/webdesign` |
+| Web scraping, crawling, Firecrawl, parse PDF/DOCX, extract web data, search web | `scraping/firecrawl` |
 
 Cloudflare-related skills must treat the official Cloudflare developer docs as the main source of truth: https://developers.cloudflare.com/
 

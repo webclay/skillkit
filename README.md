@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.3.5
+**Version:** 1.3.6
 **Author:** Manu
 **License:** MIT
-**Date:** 16/05/2026
+**Date:** 20/05/2026
 
 ---
 
@@ -262,6 +262,7 @@ Primary source of truth for Cloudflare-related skills: https://developers.cloudf
 | `nextjs` | Deploy Next.js to Workers - OpenNext adapter (@opennextjs/cloudflare), ISR with R2, dev vs preview, remote bindings |
 | `agents` | Cloudflare Agents SDK - stateful AI agents with AIChatAgent, state management (setState, SQL), tools (server/client/human-in-the-loop), scheduling (cron, delayed, interval), sub-agents, workflows, MCP, React hooks (useAgent, useAgentChat) |
 | `queues` | Cloudflare Queues - message queue for async processing with producers (send, sendBatch), push consumers (batch handler, ack/retry, exponential backoff), pull consumers (HTTP API), dead letter queues, message delays, Agents SDK integration |
+| `local-dev-tunnels` | Expose local dev server via Cloudflare Tunnel - quick tunnels (random trycloudflare.com URLs), named tunnels (stable hostnames), Wrangler flags (--tunnel, --tunnel-name), Vite plugin tunnel config, security considerations, Cloudflare Access protection |
 
 ### Deployment
 | Skill | What It Does |
@@ -290,7 +291,7 @@ Primary source of truth for Cloudflare-related skills: https://developers.cloudf
 ### Scraping
 | Skill | What It Does |
 |-------|--------------|
-| `firecrawl` | Firecrawl web scraping |
+| `firecrawl` | Firecrawl web scraping, crawling, search, and file parsing - scrape (markdown, extract, question, highlights, video, audio, branding), crawl (multi-page with streaming), search (domain filtering, categories), parse (local PDF/DOCX/XLSX upload), map, batch scrape, lockdown mode |
 
 ### Tooling
 | Skill | What It Does |
@@ -399,6 +400,10 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.3.6 (20/05/2026)
+- **Cloudflare Local Dev Tunnels skill** - New `cloudflare/local-dev-tunnels` skill for exposing local dev servers over Cloudflare Tunnel. Covers quick tunnels (random `*.trycloudflare.com` URLs, zero config, session-only) and named tunnels (stable hostnames with `cloudflared` setup and DNS routing). Includes Wrangler integration (`--tunnel` auto-start flag, `--tunnel-name` for named tunnels, interactive `[t]` toggle), Cloudflare Vite plugin config (`tunnel.name`, `tunnel.autoStart`), Vite preview host validation (`preview.allowedHosts`), security considerations (HMR source code exposure, remote bindings, admin endpoints), Cloudflare Access protection for stable environments, CLI reference table, and 10 common gotchas.
+- **Firecrawl skill update (v2.10)** - Major rewrite of the `scraping/firecrawl` skill to cover Firecrawl v2.10 features. Added: parse endpoint for local file upload (PDF, DOCX, XLSX up to 50MB with OCR modes), question format (natural-language Q&A about page content), highlights format (extract exact matching text), lockdown mode (index-only, no outbound requests), video/audio extraction, branding extraction (colors, fonts, UI components), search with `includeDomains`/`excludeDomains` domain filtering, map endpoint for URL discovery, batch scrape, async crawl with real-time WebSocket streaming, caching controls, complete format reference table with credit costs, and 10 common gotchas.
 
 ### v1.3.5 (16/05/2026)
 - **Official Payload CMS skills integration** - Replaced the custom Payload skill with the official skills from `payloadcms/skills`. The `payload` skill now includes SKILL.md + 11 reference docs covering collections, fields (all types with validation and admin options), field type guards, hooks (collection/field/context patterns), access control (basic + advanced with RBAC, multi-tenant, time-based, subscription-based, factory functions), queries (operators, Local/REST/GraphQL APIs), custom endpoints, adapters (database, storage, email, transactions), advanced patterns (auth, jobs queue, components, plugins, localization), and plugin development (architecture, monorepo structure, patterns, best practices). Our 4 custom reference files (Form Builder, headless CMS with Astro, content sync, Cloudflare deployment) are preserved alongside the official docs.
