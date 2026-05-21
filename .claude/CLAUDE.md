@@ -1,5 +1,14 @@
 # Project Instructions
 
+## Rules
+1. Ask, don't assume. If something is unclear, ask before writing a single line. Never make silent assumptions about intent, architecture, or requirements.
+
+2. Simplest solution first. Always implement the simplest thing that could work. Do not add abstractions or flexibility that weren't explicitly requested.
+
+3. Don't touch unrelated code. If a file or function is not directly part of the current task, do not modify it, even if you think it could be improved.
+
+4. Flag uncertainty explicitly. If you are not confident about an approach or technical detail, say so before proceeding. Confidence without certainty causes more damage than admitting a gap.
+
 ## First-Time Setup Check
 
 **On every conversation start, check if this project has been configured:**
@@ -151,7 +160,8 @@ Reusable across projects: `skills/`, `templates/`, `commands/`
 | Deploy React + Vite SPA to Cloudflare Workers | `cloudflare/react-vite` |
 | Deploy React Router v7 to Cloudflare Workers | `cloudflare/react-router` |
 | Deploy Next.js to Cloudflare Workers (OpenNext) | `cloudflare/nextjs` |
-| Cloudflare Agents SDK, AI agents, AIChatAgent, agent tools, agent scheduling | `cloudflare/agents` |
+| Cloudflare Agents SDK, AI agents, AIChatAgent, Think agent, stateful agent, agent tools, agent scheduling, sub-agents, facets, agentTool, runAgentTool, getCurrentAgent, managed fiber, chat-sdk, codemode, shell, multi-agent | `cloudflare/agents` |
+| Cloudflare Voice agents, voice pipeline, STT, TTS, real-time audio, barge-in, withVoice, withVoiceInput, WorkersAIFluxSTT, WorkersAINova3STT, useVoiceAgent, useVoiceInput, VoiceClient | `cloudflare/agents-voice` |
 | Cloudflare Queues, message queue, async processing, queue consumer, dead letter queue | `cloudflare/queues` |
 | Local dev tunnels, expose localhost, share preview, test webhooks | `cloudflare/local-dev-tunnels` |
 | Project setup, new projects | `workflow/project-setup` |

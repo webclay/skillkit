@@ -2,10 +2,10 @@
 
 > A skills system for Claude Code that teaches it exactly how to build your app, so you never have to explain the same thing twice.
 
-**Version:** 1.3.6
+**Version:** 1.4.0
 **Author:** Manu
 **License:** MIT
-**Date:** 20/05/2026
+**Date:** 21/05/2026
 
 ---
 
@@ -260,7 +260,8 @@ Primary source of truth for Cloudflare-related skills: https://developers.cloudf
 | `react-vite` | Deploy React + Vite SPA to Workers - Worker API backend, SPA routing, Cloudflare Vite Plugin |
 | `react-router` | Deploy React Router v7 (ex-Remix) to Workers - Cloudflare Vite Plugin, bindings via context.cloudflare.env, Durable Objects export |
 | `nextjs` | Deploy Next.js to Workers - OpenNext adapter (@opennextjs/cloudflare), ISR with R2, dev vs preview, remote bindings |
-| `agents` | Cloudflare Agents SDK - stateful AI agents with AIChatAgent, state management (setState, SQL), tools (server/client/human-in-the-loop), scheduling (cron, delayed, interval), sub-agents, workflows, MCP, React hooks (useAgent, useAgentChat) |
+| `agents` | Cloudflare Agents SDK - stateful AI agents with AIChatAgent and Think, state management (setState, SQL), tools (server/client/human-in-the-loop), scheduling (cron/delayed/interval), sub-agents (facets), managed fiber jobs, agent tool orchestration (agentTool), workflows, MCP, codemode (dynamic JS execution), shell/workspace, Chat SDK adapter, Postgres session providers, React hooks (useAgent, useAgentChat) |
+| `agents-voice` | Voice AI agents on Cloudflare Workers - withVoice/withVoiceInput mixins, STT providers (WorkersAIFluxSTT, WorkersAINova3STT), TTS, barge-in interruption, React hooks (useVoiceAgent, useVoiceInput), framework-agnostic VoiceClient |
 | `queues` | Cloudflare Queues - message queue for async processing with producers (send, sendBatch), push consumers (batch handler, ack/retry, exponential backoff), pull consumers (HTTP API), dead letter queues, message delays, Agents SDK integration |
 | `local-dev-tunnels` | Expose local dev server via Cloudflare Tunnel - quick tunnels (random trycloudflare.com URLs), named tunnels (stable hostnames), Wrangler flags (--tunnel, --tunnel-name), Vite plugin tunnel config, security considerations, Cloudflare Access protection |
 
@@ -400,6 +401,10 @@ The `project-setup` skill automatically recommends this stack and detects your p
 ---
 
 ## Changelog
+
+### v1.4.0 (21/05/2026)
+- **Cloudflare Agents SDK skill overhaul** - Major restructure of `cloudflare/agents` to cover agents@0.13.x and the sibling package ecosystem. Rewrote SKILL.md as a router pointing to dedicated reference files for each capability: sub-agents/facets (`subAgent()`, `parentAgent()`, facet-only wrangler config rules), agent tool orchestration (`agentTool()`, `runAgentTool()` from `agents/agent-tools`), managed fiber jobs (`runFiber()`, `keepAlive()`, terminal status, cancellation), Think class (`@cloudflare/think` - opinionated chat base with lifecycle hooks and workspace tools), codemode (`@cloudflare/codemode` - dynamic JS execution via LLM-generated code), shell/workspace (`@cloudflare/shell` - in-memory and durable filesystems with git), Chat SDK adapter (`agents/chat-sdk` - `createChatSdkState`, sharding), and Postgres session providers (experimental Hyperdrive-backed session/context/search). Updated patterns reference with agent tool orchestration pattern. Trimmed advanced.md to remove duplicated sub-agents content.
+- **New `cloudflare/agents-voice` skill** - Dedicated skill for real-time voice AI agents using `@cloudflare/voice`. Covers `withVoice` (full pipeline: continuous STT, LLM turn handling, streaming TTS, barge-in) and `withVoiceInput` (transcription only), STT providers (`WorkersAIFluxSTT` for full agents, `WorkersAINova3STT` for input-only), TTS, `onTurn` handler with streaming support, barge-in interruption semantics, React hooks (`useVoiceAgent`, `useVoiceInput` with `enabled` option), framework-agnostic `VoiceClient`, SFU utilities, and common gotchas (pin version, concise responses, keepAlive is automatic).
 
 ### v1.3.6 (20/05/2026)
 - **Cloudflare Local Dev Tunnels skill** - New `cloudflare/local-dev-tunnels` skill for exposing local dev servers over Cloudflare Tunnel. Covers quick tunnels (random `*.trycloudflare.com` URLs, zero config, session-only) and named tunnels (stable hostnames with `cloudflared` setup and DNS routing). Includes Wrangler integration (`--tunnel` auto-start flag, `--tunnel-name` for named tunnels, interactive `[t]` toggle), Cloudflare Vite plugin config (`tunnel.name`, `tunnel.autoStart`), Vite preview host validation (`preview.allowedHosts`), security considerations (HMR source code exposure, remote bindings, admin endpoints), Cloudflare Access protection for stable environments, CLI reference table, and 10 common gotchas.

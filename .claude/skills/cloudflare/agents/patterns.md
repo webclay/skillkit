@@ -311,6 +311,75 @@ export class SmartRouter extends AIChatAgent<Env> {
 
 **Best for:** Cost optimization, production agents with variable complexity, high-volume applications.
 
+## Pattern 6: Agent Tool Orchestration
+
+A parent Think agent uses specialist child agents as streaming tools. The parent's LLM decides when to invoke each specialist, events stream live to the UI, and the child runs its own full agentic loop.
+
+```typescript
+import { Think } from "@cloudflare/think";
+import { agentTool } from "agents/agent-tools";
+import { z } from "zod";
+import { createWorkersAI } from "workers-ai-provider";
+
+// Specialist sub-agents
+export class Researcher extends Think<Env> {
+  getModel() {
+    return createWorkersAI({ binding: this.env.AI })("@cf/meta/llama-4-scout-17b-16e-instruct");
+  }
+  getSystemPrompt() { return "Research topics and produce concise summaries."; }
+}
+
+export class Coder extends Think<Env> {
+  getModel() {
+    return createWorkersAI({ binding: this.env.AI })("@cf/meta/llama-4-scout-17b-16e-instruct");
+  }
+  getSystemPrompt() { return "Write clean, working TypeScript code."; }
+}
+
+// Orchestrator
+export class Manager extends Think<Env> {
+  getModel() {
+    return createWorkersAI({ binding: this.env.AI })("@cf/meta/llama-4-scout-17b-16e-instruct");
+  }
+
+  getTools() {
+    return {
+      research: agentTool(Researcher, {
+        description: "Research a topic in depth",
+        inputSchema: z.object({ topic: z.string() }),
+        displayName: "Researcher",
+      }),
+      code: agentTool(Coder, {
+        description: "Write code for a task",
+        inputSchema: z.object({ task: z.string() }),
+        displayName: "Coder",
+      }),
+    };
+  }
+}
+```
+
+```typescript
+// server.ts entry point - export all classes
+export { Manager } from "./agents/manager";
+export { Researcher } from "./agents/researcher";
+export { Coder } from "./agents/coder";
+```
+
+```jsonc
+// wrangler.jsonc - only the top-level agent needs a binding
+{
+  "durable_objects": {
+    "bindings": [{ "name": "Manager", "class_name": "Manager" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Manager"] }]
+}
+```
+
+**Best for:** Complex tasks that benefit from specialist LLMs, live streaming of sub-agent work, hierarchical AI pipelines.
+
+See [agent-tools.md](agent-tools.md) for the full API.
+
 ## Choosing the Right Pattern
 
 | Scenario | Pattern | Why |
@@ -322,5 +391,6 @@ export class SmartRouter extends AIChatAgent<Env> {
 | High-volume with cost concerns | Multi-Model | Route cheap queries to free models |
 | Long-running multi-step tasks | Orchestrator + Workflows | Durable execution with retry (see advanced.md) |
 | Real-time collaborative features | Basic Agent + WebSocket | State sync across clients via broadcast |
+| LLM delegates to specialist agents | Agent Tool Orchestration | Streaming specialist sub-agents with UI replay |
 
 Patterns can be combined. For example, an orchestrator-workers agent can also use scheduling for periodic research updates, and each worker can use tools for API access.

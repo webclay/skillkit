@@ -1,6 +1,6 @@
 ---
 name: cloudflare-agents
-description: Build stateful AI applications on Cloudflare with the Agents SDK. Covers Agent class, AIChatAgent for streaming chat, state management (setState, SQL), WebSocket connections, tools (server/client/human-in-the-loop), scheduling (delayed, cron, interval), React hooks (useAgent, useAgentChat), wrangler.jsonc configuration, and AI model integration (Workers AI, OpenAI, Anthropic via AI SDK). Trigger words - cloudflare agents, agents sdk, AIChatAgent, stateful agent, agent state, agent tools, agent scheduling, cloudflare ai chat, durable agent, useAgent, useAgentChat, cloudflare durable objects agent, ai agent cloudflare, cloudflare chat, workers agent
+description: Build stateful AI applications on Cloudflare with the Agents SDK. Covers Agent class, AIChatAgent, Think (opinionated chat base), state management (setState, SQL), WebSocket connections, tools (server/client/human-in-the-loop), scheduling, React hooks (useAgent, useAgentChat), sub-agents (facets), agentTool orchestration, managed fiber jobs, wrangler.jsonc configuration, and AI model integration. Trigger words - cloudflare agents, agents sdk, AIChatAgent, Think agent, stateful agent, agent state, agent tools, agent scheduling, cloudflare ai chat, durable agent, useAgent, useAgentChat, cloudflare durable objects agent, ai agent cloudflare, cloudflare chat, workers agent, sub-agent, facet agent, agentTool, runAgentTool, getCurrentAgent, managed fiber, chat-sdk, agents/chat-sdk, CloudflareAgents, AIChatAgent, MCP server, MCP client, multi-agent
 ---
 
 # Cloudflare Agents SDK
@@ -10,6 +10,7 @@ Build stateful AI applications on Cloudflare Workers using the Agents SDK. Each 
 ## Source of Truth
 
 Official documentation: https://developers.cloudflare.com/agents/
+GitHub: https://github.com/cloudflare/agents
 
 Always check the official docs when the skill content conflicts or when you need the latest API details.
 
@@ -21,7 +22,8 @@ Always check the official docs when the skill content conflicts or when you need
 - Scheduling delayed, cron, or interval tasks from an agent
 - Using WebSocket connections with Durable Objects for real-time features
 - Connecting a React frontend to a Cloudflare agent
-- Building multi-agent systems with sub-agents
+- Building multi-agent systems with sub-agents (facets)
+- Running sub-agents as streaming tools from a parent agent
 
 ## When NOT to Use This Skill
 
@@ -29,6 +31,7 @@ Always check the official docs when the skill content conflicts or when you need
 - Simple stateless API endpoints (use `cloudflare/workers-core`)
 - Using Vercel AI SDK without Cloudflare (use `ai/vercel-ai-sdk`)
 - Raw Durable Objects without the Agents SDK convenience layer (use `cloudflare/workers-core` Durable Objects binding)
+- Voice agents with STT/TTS (use `cloudflare/agents-voice`)
 
 ## Prerequisites
 
@@ -39,11 +42,14 @@ Read [workers-core](../workers-core/SKILL.md) for wrangler CLI, bindings, and de
 ### Install Packages
 
 ```bash
-# Base agents package (required)
+# Core agents package (required)
 npm i agents
 
 # For AI chat agents (streaming chat with message persistence)
 npm i @cloudflare/ai-chat
+
+# For the Think opinionated chat base (preferred over AIChatAgent for new projects)
+npm i @cloudflare/think
 
 # For AI SDK integration (streamText, tool definitions)
 npm i ai workers-ai-provider zod
@@ -175,12 +181,10 @@ Default route pattern: `/agents/{agent-name}/{instance-name}`
 ### Scaffolding a New Project
 
 ```bash
-npx create-cloudflare@latest --template cloudflare/agents-starter
+npx create-cloudflare@latest -- --template cloudflare/agents-starter
 cd agents-starter && npm install
 npm run dev
 ```
-
-This gives you a working chat agent with tools, scheduling, and a React UI at `http://localhost:5173`.
 
 ## Agent Class
 
@@ -249,9 +253,26 @@ export class MyAgent extends Agent<Env, MyState> {
 | `this.sql` | Template literal function | Embedded SQLite queries |
 | `this.name` | `string` | Instance name/ID |
 
+### getCurrentAgent()
+
+Access the current agent instance from anywhere within its execution context (e.g. from a utility function called during a request):
+
+```typescript
+import { getCurrentAgent } from "agents";
+
+function doSomething() {
+  const agent = getCurrentAgent<MyAgent>();
+  if (agent) {
+    agent.setState({ ...agent.state, processed: true });
+  }
+}
+```
+
 ## AIChatAgent
 
 The `AIChatAgent` class extends `Agent` with built-in chat message persistence, streaming, and automatic reconnection.
+
+> For new projects, consider `@cloudflare/think` instead - it has a more complete agentic loop, workspace tools, stream resumption, and lifecycle hooks. See [think.md](think.md).
 
 ### Streaming Chat
 
@@ -283,44 +304,9 @@ Key points:
 - `toUIMessageStreamResponse()` returns a streaming response the React hooks can consume
 - If a client disconnects mid-stream, the agent keeps running and the client can resume
 
-### With Tools
-
-```typescript
-import { tool } from "ai";
-import { z } from "zod";
-
-export class ChatAgent extends AIChatAgent<Env> {
-  async onChatMessage(onFinish: StreamTextOnFinishCallback) {
-    const workersai = createWorkersAI({ binding: this.env.AI });
-
-    const result = streamText({
-      model: workersai("@cf/meta/llama-4-scout-17b-16e-instruct"),
-      system: "You are a helpful assistant with tools.",
-      messages: convertToModelMessages(this.messages),
-      tools: {
-        getWeather: tool({
-          description: "Get weather for a city",
-          parameters: z.object({
-            city: z.string().describe("City name"),
-          }),
-          execute: async ({ city }) => {
-            return { temperature: 22, conditions: "sunny", city };
-          },
-        }),
-      },
-      onFinish,
-    });
-
-    return result.toUIMessageStreamResponse();
-  }
-}
-```
-
 ## AI Model Integration
 
 ### Workers AI (No API Key)
-
-Free, built-in, no configuration beyond the binding:
 
 ```typescript
 import { createWorkersAI } from "workers-ai-provider";
@@ -365,35 +351,6 @@ const result = streamText({
 });
 ```
 
-### Gemini (via OpenAI-compatible endpoint)
-
-```typescript
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: this.env.GEMINI_API_KEY,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
-});
-```
-
-### AI Gateway
-
-Route requests through AI Gateway for caching, rate limiting, and observability:
-
-```typescript
-const response = await this.env.AI.run(
-  "@cf/meta/llama-4-scout-17b-16e-instruct",
-  { prompt: "Your prompt" },
-  {
-    gateway: {
-      id: "my-gateway-id",
-      skipCache: false,
-      cacheTtl: 3360,
-    },
-  },
-);
-```
-
 ## State Management
 
 ### setState and state
@@ -420,17 +377,6 @@ this.setState({
 
 **State must be JSON-serializable.** Plain objects, arrays, strings, numbers, booleans work. Functions, class instances, Maps, Sets, and circular references do not. Use ISO strings for dates.
 
-### onStateChanged
-
-React to state changes with source tracking:
-
-```typescript
-onStateChanged(state: MyState, source: Connection | "server") {
-  if (source === "server") return; // Ignore own updates
-  console.log(`Client ${source.id} updated state`);
-}
-```
-
 ### validateStateChange
 
 Synchronous validation before state is persisted. Throw to reject:
@@ -448,18 +394,15 @@ validateStateChange(nextState: MyState, source: Connection | "server") {
 Each agent instance has its own embedded SQLite database for structured data beyond simple state:
 
 ```typescript
-// Template literal queries with parameterized values
 type User = { id: string; name: string; email: string };
 const [user] = this.sql<User>`SELECT * FROM users WHERE id = ${userId}`;
 
-// Create tables
 this.sql`CREATE TABLE IF NOT EXISTS logs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   action TEXT NOT NULL,
   timestamp TEXT DEFAULT (datetime('now'))
 )`;
 
-// Insert
 this.sql`INSERT INTO logs (action) VALUES (${action})`;
 ```
 
@@ -478,8 +421,6 @@ Three types of tools supported in agents:
 
 ### Server-Side Tools (Auto-Execute)
 
-Run on the server automatically when the LLM calls them:
-
 ```typescript
 getWeather: tool({
   description: "Get current weather for a city",
@@ -495,7 +436,7 @@ getWeather: tool({
 
 ### Client-Side Tools (Browser)
 
-No `execute` function - the browser handles execution. Results feed back to the LLM automatically:
+No `execute` function - the browser handles execution:
 
 ```typescript
 // In agent (server)
@@ -517,8 +458,6 @@ const { messages } = useAgentChat({
 
 ### Human-in-the-Loop (Approval Required)
 
-Pauses execution until the user approves or rejects:
-
 ```typescript
 calculate: tool({
   description: "Perform a calculation",
@@ -528,7 +467,6 @@ calculate: tool({
     operation: z.enum(["add", "subtract", "multiply", "divide"]),
   }),
   needsApproval: async ({ a, b }) => {
-    // Require approval for large numbers
     return a > 1000 || b > 1000;
   },
   execute: async ({ a, b, operation }) => {
@@ -541,8 +479,6 @@ calculate: tool({
   },
 }),
 ```
-
-The React UI can render approval UI by checking `part.state === "approval-required"` on tool invocation parts.
 
 ## Scheduling
 
@@ -571,36 +507,19 @@ Common cron patterns:
 ### scheduleEvery() - Fixed Interval
 
 ```typescript
-// Run every 300 seconds (5 minutes)
 await this.scheduleEvery(300, "checkForUpdates", { source: "api" });
 ```
-
-If a callback takes longer than the interval, the next execution is skipped (not queued).
 
 ### Managing Schedules
 
 ```typescript
-// List all schedules
 const schedules = await this.listSchedules();
-
-// List by type
 const crons = await this.listSchedules({ type: "cron" });
-
-// Get by ID
 const schedule = await this.getScheduleById(scheduleId);
-
-// Cancel
 await this.cancelSchedule(scheduleId);
 ```
 
-### Idempotency
-
-- **Cron schedules** are idempotent by default - same callback + cron + payload returns the existing schedule
-- **Delayed/date-based** schedules need explicit `idempotent: true`:
-  ```typescript
-  await this.schedule(60, "processData", payload, { idempotent: true });
-  ```
-- **Intervals** are idempotent by callback name + interval + payload
+Cron schedules are idempotent by default. Delayed/date-based schedules need `{ idempotent: true }`.
 
 ### Schedule Callbacks
 
@@ -609,19 +528,49 @@ Scheduled callbacks must be methods on the agent class:
 ```typescript
 export class MyAgent extends Agent<Env, MyState> {
   async processData(payload: { itemId: string }) {
-    const item = this.sql`SELECT * FROM items WHERE id = ${payload.itemId}`;
     // Process...
     this.broadcast(JSON.stringify({ type: "processed", itemId: payload.itemId }));
   }
 }
 ```
 
-### Limits
+## Sub-Agents (Facets)
 
-- Max tasks per agent: tens of thousands
-- Task payload: up to 2 MB
-- Cron precision: minute-level
-- Interval precision: second-level
+Sub-agents are child agents co-located inside a parent Durable Object. Each child gets isolated SQLite storage and runs as a facet of the parent.
+
+See [sub-agents.md](sub-agents.md) for the full API.
+
+```typescript
+import { Agent, callable } from "agents";
+
+export class Orchestrator extends Agent<Env, {}> {
+  @callable()
+  async research(topic: string) {
+    const researcher = await this.subAgent(Researcher, "researcher-1");
+    return researcher.analyze(topic);
+  }
+}
+
+export class Researcher extends Agent<Env, {}> {
+  async analyze(topic: string) {
+    return { topic, result: "..." };
+  }
+}
+```
+
+**wrangler.jsonc** - only the parent needs a binding. Facet-only classes must NOT be in `new_sqlite_classes`:
+
+```jsonc
+{
+  "durable_objects": {
+    "bindings": [{ "name": "Orchestrator", "class_name": "Orchestrator" }]
+  },
+  "migrations": [{
+    "tag": "v1",
+    "new_sqlite_classes": ["Orchestrator"]
+  }]
+}
+```
 
 ## React Frontend Integration
 
@@ -634,17 +583,8 @@ function GameUI() {
   const agent = useAgent({
     agent: "GameAgent",
     name: "room-123",
-    onStateUpdate: (state) => {
-      console.log("State updated:", state);
-    },
+    onStateUpdate: (state) => console.log("State updated:", state),
   });
-
-  const addPlayer = (name: string) => {
-    agent.setState({
-      ...agent.state,
-      players: [...agent.state.players, name],
-    });
-  };
 
   return <div>Players: {agent.state?.players.join(", ")}</div>;
 }
@@ -681,13 +621,14 @@ function ChatUI() {
 }
 ```
 
-### useAgent with Callable Methods
+### Connecting to a Sub-Agent from the Client
 
 ```typescript
-const agent = useAgent({ agent: "CounterAgent" });
-
-// Call @callable() methods directly
-const count = await agent.call("increment");
+const agent = useAgent({
+  agent: "Inbox",
+  name: userId,
+  sub: [{ agent: "Chat", name: chatId }],
+});
 ```
 
 ### Vanilla JavaScript (AgentClient)
@@ -702,13 +643,9 @@ const client = new AgentClient({
     document.getElementById("score").textContent = state.score;
   },
 });
-
-client.setState({ ...client.state, score: 100 });
 ```
 
 ### Server-Side Agent Access
-
-Access an agent instance from your Worker fetch handler:
 
 ```typescript
 import { getAgentByName } from "agents";
@@ -725,38 +662,45 @@ const result = await agent.increment();
 | CPU per event | 30 seconds (refreshes on each HTTP request / WebSocket message) |
 | Wall clock duration | Unlimited (waiting for external ops does not count) |
 | Concurrent agents per account | Tens of millions |
-| Agent definitions per account | ~250,000+ |
 | Script size | 10 MB (Workers Paid Plan) |
 | Schedule payloads | 2 MB per task |
 | Schedules per agent | Tens of thousands |
-
-The 30-second CPU limit resets on every incoming HTTP request, WebSocket message, or scheduled task execution. Wall clock time for waiting on LLM responses, database queries, or API calls is unlimited.
 
 ## Common Gotchas
 
 1. **Use `new_sqlite_classes` not `new_classes`** in migrations - agents require SQLite storage. Using `new_classes` creates a Durable Object without SQLite and the agent SDK will fail.
 
-2. **State must be JSON-serializable** - no Date objects (use ISO strings), no Maps/Sets (use plain objects/arrays), no functions or class instances.
+2. **Facet-only child classes must NOT be in `new_sqlite_classes`** - sub-agent child classes are discovered via `ctx.exports`, not as top-level DO namespaces. Only add to `new_sqlite_classes` if the class is also used as a standalone top-level agent.
 
-3. **`routeAgentRequest()` is required** in your Worker's fetch handler for WebSocket upgrades and agent HTTP requests to work. Without it, agents are unreachable.
+3. **State must be JSON-serializable** - no Date objects (use ISO strings), no Maps/Sets (use plain objects/arrays), no functions or class instances.
 
-4. **Agent names are case-sensitive** - `useAgent({ agent: "ChatAgent" })` must match the exact binding name in wrangler.jsonc.
+4. **`routeAgentRequest()` is required** in your Worker's fetch handler for WebSocket upgrades and agent HTTP requests to work. Without it, agents are unreachable.
 
-5. **Workers AI binding is separate** - `ai: { binding: "AI" }` goes at the root of wrangler.jsonc, NOT inside `durable_objects`.
+5. **Agent names are case-sensitive** - `useAgent({ agent: "ChatAgent" })` must match the exact binding name in wrangler.jsonc.
 
-6. **`nodejs_compat` is mandatory** - add to `compatibility_flags` or agents will fail with cryptic import errors.
+6. **Workers AI binding is separate** - `ai: { binding: "AI" }` goes at the root of wrangler.jsonc, NOT inside `durable_objects`.
 
-7. **Each agent instance is a Durable Object** - state is per-instance (per name/ID), not global. Two users connecting to different instance names get separate state.
+7. **`nodejs_compat` is mandatory** - add to `compatibility_flags` or agents will fail with cryptic import errors.
 
-8. **Schedule callbacks must be agent methods** - you cannot schedule arbitrary functions. The callback parameter is a method name on the agent class (type-safe via `keyof this`).
+8. **Each agent instance is a Durable Object** - state is per-instance (per name/ID), not global. Two users connecting to different instance names get separate state.
 
-9. **Don't forget to export agent classes** - the agent class must be exported from your Worker entry point file for Durable Object routing to discover it.
+9. **Schedule callbacks must be agent methods** - you cannot schedule arbitrary functions. The callback parameter is a method name on the agent class (type-safe via `keyof this`).
 
-10. **Dev vs Preview** - `wrangler dev` runs your Worker locally. Use `wrangler dev --remote` or the Vite dev server for testing with actual Workers AI models and bindings.
+10. **Don't forget to export agent classes** - the agent class must be exported from your Worker entry point file for Durable Object routing to discover it.
+
+11. **Use async schedule APIs inside sub-agents** - `getSchedule()` and `getSchedules()` (synchronous, deprecated) throw inside sub-agents. Use `getScheduleById()` and `listSchedules()` (async) instead.
 
 ## Reference Files
 
 Read these when working on specific topics:
 
-- [advanced.md](advanced.md) - Sub-agents, workflows, browser tools, MCP server/client, WebSocket details
-- [patterns.md](patterns.md) - Architecture patterns (chat agent, tool-using agent, orchestrator-workers, scheduled processing, multi-model routing)
+- [sub-agents.md](sub-agents.md) - Facet API, spawning/managing child agents, identity, access control
+- [agent-tools.md](agent-tools.md) - Running sub-agents as streaming tools with `agentTool()` / `runAgentTool()`
+- [think.md](think.md) - `@cloudflare/think`: opinionated chat base with agentic loop, workspace, lifecycle hooks
+- [fibers.md](fibers.md) - Managed fiber jobs: durable background jobs with idempotency, cancellation, recovery
+- [codemode.md](codemode.md) - `@cloudflare/codemode`: let LLMs write JS code instead of calling tools
+- [shell.md](shell.md) - `@cloudflare/shell`: virtual filesystem + git for agent workspaces
+- [chat-sdk.md](chat-sdk.md) - `agents/chat-sdk`: Chat SDK state adapter backed by sub-agent facets
+- [postgres-sessions.md](postgres-sessions.md) - Experimental Postgres-backed session/context providers via Hyperdrive
+- [advanced.md](advanced.md) - Workflows, MCP server/client, browser tools, WebSocket details
+- [patterns.md](patterns.md) - Architecture patterns (chat agent, orchestrator-workers, agent tool orchestration, etc.)
